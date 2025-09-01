@@ -2219,51 +2219,43 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   async function checkChannelMembership(channelName) {
-    if (!userData) return;
+  if (!userData) return;
+  
+  try {
+    const response = await fetch('/api/telegram/check-membership', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: userData.id,
+        channelNames: [channelName] // Changed from 'channels' to 'channelNames'
+      })
+    });
     
-    try {
-      // Map channel names to actual Telegram channel IDs
-      const channelMap = {
-        'Channel 1': '@allinonepayout', // Replace with actual channel username
-        'Channel 2': '@ALL1N_0NE'  // Replace with actual channel username
-      };
+    if (response.ok) {
+      const data = await response.json();
       
-      const channelId = channelMap[channelName];
-      
-      if (!channelId) {
-        alert(`Channel configuration error for ${channelName}`);
-        return;
-      }
-      
-      const response = await fetch('/api/telegram/check-membership', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          userId: userData.id,
-          channels: [channelId]
-        })
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        
-        if (data.membership[channelId]) {
-          alert(`You've already joined ${channelName}!`);
-        } else {
-          // Open the channel for user to join
-          window.open(`https://t.me/${channelId.replace('@', '')}`, '_blank');
-          alert(`Please join ${channelName} to continue.`);
-        }
+      if (data.membership[channelName]) {
+        alert(`You've already joined ${channelName}!`);
       } else {
-        alert('Failed to check channel membership.');
+        // Open the channel for user to join
+        const channelMap = {
+          'Channel 1': 'allinonepayout',
+          'Channel 2': 'ALL1N_0NE'
+        };
+        const channelUsername = channelMap[channelName];
+        window.open(`https://t.me/${channelUsername}`, '_blank');
+        alert(`Please join ${channelName} to continue.`);
       }
-    } catch (error) {
-      console.error('Membership check error:', error);
-      alert('An error occurred while checking channel membership.');
+    } else {
+      alert('Failed to check channel membership.');
     }
+  } catch (error) {
+    console.error('Membership check error:', error);
+    alert('An error occurred while checking channel membership.');
   }
+}
   
   function updateUI() {
     if (isLoggedIn && userData) {
