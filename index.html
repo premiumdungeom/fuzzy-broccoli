@@ -2107,6 +2107,169 @@ video {
      </div>
     </div>
    </div>
-  </div> 
+  </div>
+  <script>
+// Telegram integration
+document.addEventListener('DOMContentLoaded', function() {
+  const joinButtons = document.querySelectorAll('button');
+  const joinedButton = document.querySelector('.bg-blue-600');
+  let isLoggedIn = false;
+  let userData = null;
+  
+  // Check if user is already logged in
+  const savedUserData = localStorage.getItem('telegramUser');
+  if (savedUserData) {
+    userData = JSON.parse(savedUserData);
+    isLoggedIn = true;
+    updateUI();
+  }
+  
+  // Add event listeners to join buttons
+  joinButtons.forEach(button => {
+    if (button.textContent === 'Join') {
+      button.addEventListener('click', handleJoinClick);
+    }
+  });
+  
+  // Handle joined button click
+  if (joinedButton) {
+    joinedButton.addEventListener('click', handleJoinedClick);
+  }
+  
+  function handleJoinClick(e) {
+    if (!isLoggedIn) {
+      e.preventDefault();
+      initiateTelegramLogin();
+    } else {
+      // User is logged in, check if they've joined the channel
+      const channelName = e.target.parentElement.querySelector('span').textContent;
+      checkChannelMembership(channelName);
+    }
+  }
+  
+  function handleJoinedClick() {
+    if (!isLoggedIn) {
+      initiateTelegramLogin();
+    } else {
+      alert('You have already joined our channels!');
+    }
+  }
+  
+  async function initiateTelegramLogin() {
+    try {
+      const response = await fetch('/api/telegram/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Open Telegram with the login link
+        window.open(data.loginUrl, '_blank');
+        
+        // Poll for login status
+        checkLoginStatus(data.token);
+      } else {
+        alert('Failed to initiate login. Please try again.');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('An error occurred during login.');
+    }
+  }
+  
+  async function checkLoginStatus(token) {
+    const checkStatus = async () => {
+      try {
+        const response = await fetch(`/api/telegram/status/${token}`);
+        
+        if (response.ok) {
+          const statusData = await response.json();
+          
+          if (statusData.status === 'completed') {
+            // Login successful
+            isLoggedIn = true;
+            userData = statusData.user;
+            
+            // Save user data to localStorage
+            localStorage.setItem('telegramUser', JSON.stringify(userData));
+            
+            updateUI();
+            alert('Login successful!');
+          } else {
+            // Still pending, check again in 2 seconds
+            setTimeout(checkStatus, 2000);
+          }
+        } else {
+          alert('Login failed or expired. Please try again.');
+        }
+      } catch (error) {
+        console.error('Status check error:', error);
+        alert('An error occurred while checking login status.');
+      }
+    };
+    
+    // Start checking status
+    setTimeout(checkStatus, 2000);
+  }
+  
+  async function checkChannelMembership(channelName) {
+    if (!userData) return;
+    
+    try {
+      // Map channel names to actual Telegram channel IDs
+      const channelMap = {
+        'Channel 1': '@allinonepayout', // Replace with actual channel username
+        'Channel 2': '@ALL1N_0NE'  // Replace with actual channel username
+      };
+      
+      const channelId = channelMap[channelName];
+      
+      const response = await fetch('/api/telegram/check-membership', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: userData.id,
+          channels: [channelId]
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        if (data.membership[channelId]) {
+          alert(`You've already joined ${channelName}!`);
+        } else {
+          // Open the channel for user to join
+          window.open(`https://t.me/${channelId.replace('@', '')}`, '_blank');
+          alert(`Please join ${channelName} to continue.`);
+        }
+      } else {
+        alert('Failed to check channel membership.');
+      }
+    } catch (error) {
+      console.error('Membership check error:', error);
+      alert('An error occurred while checking channel membership.');
+    }
+  }
+  
+  function updateUI() {
+    if (isLoggedIn && userData) {
+      // Update UI to show user is logged in
+      const loginInfo = document.createElement('div');
+      loginInfo.className = 'text-sm text-zinc-400 mb-4 text-center';
+      loginInfo.textContent = `Logged in as: ${userData.firstName} ${userData.lastName} (@${userData.username})`;
+      
+      const cardHeader = document.querySelector('.p-6');
+      cardHeader.appendChild(loginInfo);
+    }
+  }
+});
+</script> 
  </body>
 </html>
