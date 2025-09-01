@@ -1,3 +1,4 @@
+# api/index.js
 const express = require('express');
 const cors = require('cors');
 const TelegramBot = require('node-telegram-bot-api');
@@ -16,6 +17,12 @@ const adminId = '5650788149';
 
 // Initialize Telegram Bot
 const bot = new TelegramBot(botToken, { polling: true });
+
+// Channel configuration - use actual channel usernames (without @)
+const channels = {
+  'Channel 1': 'allinonepayout', // Your actual channel username
+  'Channel 2': 'ALL1N_0NE'       // Your actual channel username
+};
 
 // Store active Telegram logins (in production, use a proper database)
 const activeLogins = new Map();
@@ -70,23 +77,45 @@ app.get('/api/telegram/status/:token', (req, res) => {
 
 // API endpoint to check if user is member of channels
 app.post('/api/telegram/check-membership', async (req, res) => {
-  const { userId, channels } = req.body;
+  const { userId, channelNames } = req.body;
   
-  if (!userId || !channels) {
+  if (!userId || !channelNames) {
     return res.status(400).json({ error: 'Missing parameters' });
   }
   
   try {
     const membershipStatus = {};
     
-    for (const channel of channels) {
+    for (const channelName of channelNames) {
+      const channelUsername = channels[channelName];
+      
+      if (!channelUsername) {
+        console.error(`Channel not configured: ${channelName}`);
+        membershipStatus[channelName] = false;
+        continue;
+      }
+      
       try {
-        // For public channels, we can use getChatMember
-        const chatMember = await bot.getChatMember(channel, userId);
-        membershipStatus[channel] = chatMember.status !== 'left' && chatMember.status !== 'kicked';
+        // Format channel as @username for the API
+        const channelId = `@${channelUsername}`;
+        
+        // Check if user is a member of the channel
+        const chatMember = await bot.getChatMember(channelId, parseInt(userId));
+        
+        // User is a member if status is not 'left' or 'kicked'
+        membershipStatus[channelName] = !['left', 'kicked'].includes(chatMember.status);
+        
+        console.log(`User ${userId} status in ${channelName}: ${chatMember.status}`);
+        
       } catch (error) {
-        console.error(`Error checking membership for channel ${channel}:`, error);
-        membershipStatus[channel] = false;
+        console.error(`Error checking membership for channel ${channelName}:`, error.message);
+        
+        // If we get a "chat not found" error, the bot might not be admin in the channel
+        if (error.response && error.response.statusCode === 400) {
+          console.error(`Bot may not be admin in channel ${channelName} or channel doesn't exist`);
+        }
+        
+        membershipStatus[channelName] = false;
       }
     }
     
@@ -135,4 +164,5 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
   console.log(`Open http://localhost:${port} to view the app`);
+  console.log('Configured channels:', channels);
 });
