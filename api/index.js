@@ -23,55 +23,9 @@ const channels = {
   'Channel 2': 'ALL1N_0NE'       // Your actual channel username
 };
 
-// Store active Telegram logins (in production, use a proper database)
-const activeLogins = new Map();
-
-// Generate a random string for login token
-function generateToken() {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-}
-
 // Serve the main page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
-});
-
-// API endpoint to initiate Telegram login
-app.post('/api/telegram/login', (req, res) => {
-  const token = generateToken();
-  const expires = Date.now() + 10 * 60 * 1000; // 10 minutes expiration
-  
-  activeLogins.set(token, { 
-    expires,
-    status: 'pending',
-    userData: null
-  });
-  
-  res.json({ 
-    token,
-    botUsername: 'EchoEARN_robot', // Replace with your bot's username
-    loginUrl: `https://t.me/EchoEARN_robot?start=${token}` // Replace with your bot's username
-  });
-});
-
-// API endpoint to check login status
-app.get('/api/telegram/status/:token', (req, res) => {
-  const { token } = req.params;
-  const loginData = activeLogins.get(token);
-  
-  if (!loginData) {
-    return res.status(404).json({ error: 'Token not found' });
-  }
-  
-  if (Date.now() > loginData.expires) {
-    activeLogins.delete(token);
-    return res.status(410).json({ error: 'Token expired' });
-  }
-  
-  res.json({
-    status: loginData.status,
-    user: loginData.userData
-  });
 });
 
 // API endpoint to check if user is member of channels
@@ -125,33 +79,27 @@ app.post('/api/telegram/check-membership', async (req, res) => {
   }
 });
 
-// Handle Telegram bot commands
-bot.onText(/\/start (.+)/, async (msg, match) => {
-  const chatId = msg.chat.id;
-  const token = match[1];
-  const loginData = activeLogins.get(token);
-  
-  if (!loginData || Date.now() > loginData.expires) {
-    bot.sendMessage(chatId, 'This login link has expired. Please generate a new one from the website.');
-    return;
+// Handle data from Mini App
+bot.on('message', (msg) => {
+  if (msg.web_app_data) {
+    try {
+      const data = JSON.parse(msg.web_app_data.data);
+      
+      if (data.action === 'channels_joined' && data.userId) {
+        // User has completed the channel joining process
+        const userInfo = `User ${data.userId} has joined all channels`;
+        console.log(userInfo);
+        
+        // Notify admin
+        bot.sendMessage(adminId, userInfo);
+        
+        // Send confirmation to user
+        bot.sendMessage(msg.chat.id, 'Thank you for joining our channels! 🎉');
+      }
+    } catch (error) {
+      console.error('Error processing web app data:', error);
+    }
   }
-  
-  // Store user data
-  loginData.status = 'completed';
-  loginData.userData = {
-    id: msg.from.id,
-    username: msg.from.username,
-    firstName: msg.from.first_name,
-    lastName: msg.from.last_name || '',
-    photoUrl: msg.from.photo ? `https://api.telegram.org/bot${botToken}/getFile?file_id=${msg.from.photo.big_file_id}` : null
-  };
-  
-  activeLogins.set(token, loginData);
-  
-  bot.sendMessage(chatId, 'Login successful! You can return to the website now.');
-  
-  // Notify admin
-  bot.sendMessage(adminId, `New user login: ${msg.from.first_name} ${msg.from.last_name || ''} (@${msg.from.username || 'no username'})`);
 });
 
 // Basic error handling
