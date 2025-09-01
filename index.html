@@ -2108,7 +2108,7 @@ video {
     </div>
    </div>
   </div>
-  <script>
+<script>
 // Telegram integration
 document.addEventListener('DOMContentLoaded', function() {
   const joinButtons = document.querySelectorAll('button');
@@ -2199,9 +2199,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             updateUI();
             alert('Login successful!');
-          } else {
+          } else if (statusData.status === 'pending') {
             // Still pending, check again in 2 seconds
             setTimeout(checkStatus, 2000);
+          } else {
+            alert('Login failed. Please try again.');
           }
         } else {
           alert('Login failed or expired. Please try again.');
@@ -2227,6 +2229,11 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       
       const channelId = channelMap[channelName];
+      
+      if (!channelId) {
+        alert(`Channel configuration error for ${channelName}`);
+        return;
+      }
       
       const response = await fetch('/api/telegram/check-membership', {
         method: 'POST',
@@ -2263,13 +2270,19 @@ document.addEventListener('DOMContentLoaded', function() {
       // Update UI to show user is logged in
       const loginInfo = document.createElement('div');
       loginInfo.className = 'text-sm text-zinc-400 mb-4 text-center';
-      loginInfo.textContent = `Logged in as: ${userData.firstName} ${userData.lastName} (@${userData.username})`;
+      const displayName = `${userData.firstName} ${userData.lastName || ''}`.trim();
+      loginInfo.textContent = `Logged in as: ${displayName} (@${userData.username || 'no username'})`;
       
       const cardHeader = document.querySelector('.p-6');
+      // Remove existing login info if any
+      const existingInfo = cardHeader.querySelector('.text-sm.text-zinc-400');
+      if (existingInfo) {
+        cardHeader.removeChild(existingInfo);
+      }
       cardHeader.appendChild(loginInfo);
     }
   }
 });
-</script> 
+</script>
  </body>
 </html>
