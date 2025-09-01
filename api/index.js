@@ -1,12 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const TelegramBot = require('node-telegram-bot-api');
+const path = require('path');
 const app = express();
 const port = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '..'))); // Serve static files
 
 // Replace with your bot token
 const botToken = '8488159096:AAHnzzdhE2wrIKCS5OtR2o3K_1Cw3PL38kg';
@@ -22,6 +24,11 @@ const activeLogins = new Map();
 function generateToken() {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
+
+// Serve the main page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'index.html'));
+});
 
 // API endpoint to initiate Telegram login
 app.post('/api/telegram/login', (req, res) => {
@@ -107,7 +114,7 @@ bot.onText(/\/start (.+)/, async (msg, match) => {
     id: msg.from.id,
     username: msg.from.username,
     firstName: msg.from.first_name,
-    lastName: msg.from.last_name,
+    lastName: msg.from.last_name || '',
     photoUrl: msg.from.photo ? `https://api.telegram.org/bot${botToken}/getFile?file_id=${msg.from.photo.big_file_id}` : null
   };
   
@@ -116,7 +123,7 @@ bot.onText(/\/start (.+)/, async (msg, match) => {
   bot.sendMessage(chatId, 'Login successful! You can return to the website now.');
   
   // Notify admin
-  bot.sendMessage(adminId, `New user login: ${msg.from.first_name} ${msg.from.last_name} (@${msg.from.username})`);
+  bot.sendMessage(adminId, `New user login: ${msg.from.first_name} ${msg.from.last_name || ''} (@${msg.from.username || 'no username'})`);
 });
 
 // Basic error handling
@@ -127,4 +134,5 @@ app.use((err, req, res, next) => {
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  console.log(`Open http://localhost:${port} to view the app`);
 });
