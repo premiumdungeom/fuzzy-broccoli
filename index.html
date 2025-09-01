@@ -1,247 +1,374 @@
-<html lang="en" class="dark" style="--tg-viewport-height: 100vh; --tg-viewport-stable-height: 100vh;">
- <head>
-  <style>[data-mimo-alpha-selected] {
-  position: relative;
-}
-[data-mimo-alpha-selected]::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 0px;
-  outline: 2px dashed #2b5dd1 !important;
-  outline-offset: 3px;
-  transition: outline-offset 0.2s ease-in-out;
-  z-index: 10000;
-  pointer-events: none;
-}
-[data-mimo-alpha-selected--overflow]::before {
-  outline-offset: -5px !important;
-}
-</style>
-  <meta charset="UTF-8"> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg"> 
-  <link rel="icon" type="image/x-icon" href="/favicon.ico"> 
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"> 
-  <link rel="manifest" href="/site.webmanifest"> 
-  <meta name="theme-color" content="#0c0a09"> 
-  <title>AdHive</title> 
-
-[data-slot=card-content] .\[\[data-slot\=card-content\]_\&\]\:bg-transparent {
-  background-color: transparent;
-}
-
-[data-slot=popover-content] .\[\[data-slot\=popover-content\]_\&\]\:bg-transparent {
-  background-color: transparent;
-}
-
-/*# sourceMappingURL=data:application/json;base64,eyJmaWxlIjoiL2hvbWUvYXBwL2NsaWVudC9zcmMvaW5kZXguY3NzIiwibWFwcGluZ3MiOiJBQUNBO0VBQUEsd0JBQWM7RUFBZCx3QkFBYztFQUFkLG1CQUFjO0VBQWQsbUJBQWM7RUFBZCxjQUFjO0VBQWQsY0FBYztFQUFkLGNBQWM7RUFBZCxlQUFjO0VBQWQsZUFBYztFQUFkLGFBQWM7RUFBZCxhQUFjO0VBQWQsa0JBQWM7RUFBZCxzQ0FBYztFQUFkLDhCQUFjO0VBQWQsNkJBQWM7RUFBZCw0QkFBYztFQUFkLGVBQWM7RUFBZCxvQkFBYztFQUFkLHNCQUFjO0VBQWQsdUJBQWM7RUFBZCx3QkFBYztFQUFkLGtCQUFjO0VBQWQsMkJBQWM7RUFBZCw0QkFBYztFQUFkLHNDQUFjO0VBQWQsa0NBQWM7RUFBZCwyQkFBYztFQUFkLHNCQUFjO0VBQWQsOEJBQWM7RUFBZCxZQUFjO0VBQWQsa0JBQWM7RUFBZCxnQkFBYztFQUFkLGlCQUFjO0VBQWQsa0JBQWM7RUFBZCxjQUFjO0VBQWQsZ0JBQWM7RUFBZCxhQUFjO0VBQWQsbUJBQWM7RUFBZCxxQkFBYztFQUFkLDJCQUFjO0VBQWQseUJBQWM7RUFBZCwwQkFBYztFQUFkLDJCQUFjO0VBQWQsdUJBQWM7RUFBZCx3QkFBYztFQUFkLHlCQUFjO0VBQWQsc0JBQWM7RUFBZCxvQkFBYztFQUFkLHNCQUFjO0VBQWQscUJBQWM7RUFBZDtBQUFjOztBQUFkO0VBQUEsd0JBQWM7RUFBZCx3QkFBYztFQUFkLG1CQUFjO0VBQWQsbUJBQWM7RUFBZCxjQUFjO0VBQWQsY0FBYztFQUFkLGNBQWM7RUFBZCxlQUFjO0VBQWQsZUFBYztFQUFkLGFBQWM7RUFBZCxhQUFjO0VBQWQsa0JBQWM7RUFBZCxzQ0FBYztFQUFkLDhCQUFjO0VBQWQsNkJBQWM7RUFBZCw0QkFBYztFQUFkLGVBQWM7RUFBZCxvQkFBYztFQUFkLHNCQUFjO0VBQWQsdUJBQWM7RUFBZCx3QkFBYztFQUFkLGtCQUFjO0VBQWQsMkJBQWM7RUFBZCw0QkFBYztFQUFkLHNDQUFjO0VBQWQsa0NBQWM7RUFBZCwyQkFBYztFQUFkLHNCQUFjO0VBQWQsOEJBQWM7RUFBZCxZQUFjO0VBQWQsa0JBQWM7RUFBZCxnQkFBYztFQUFkLGlCQUFjO0VBQWQsa0JBQWM7RUFBZCxjQUFjO0VBQWQsZ0JBQWM7RUFBZCxhQUFjO0VBQWQsbUJBQWM7RUFBZCxxQkFBYztFQUFkLDJCQUFjO0VBQWQseUJBQWM7RUFBZCwwQkFBYztFQUFkLDJCQUFjO0VBQWQsdUJBQWM7RUFBZCx3QkFBYztFQUFkLHlCQUFjO0VBQWQsc0JBQWM7RUFBZCxvQkFBYztFQUFkLHNCQUFjO0VBQWQscUJBQWM7RUFBZDtBQUFjLENBQWQ7O0NBQWMsQ0FBZDs7O0NBQWM7O0FBQWQ7OztFQUFBLHNCQUFjLEVBQWQsTUFBYztFQUFkLGVBQWMsRUFBZCxNQUFjO0VBQWQsbUJBQWMsRUFBZCxNQUFjO0VBQWQscUJBQWMsRUFBZCxNQUFjO0FBQUE7O0FBQWQ7O0VBQUEsZ0JBQWM7QUFBQTs7QUFBZDs7Ozs7Ozs7Q0FBYzs7QUFBZDs7RUFBQSxnQkFBYyxFQUFkLE1BQWM7RUFBZCw4QkFBYyxFQUFkLE1BQWM7RUFBZCxnQkFBYyxFQUFkLE1BQWM7RUFBZCxjQUFjO0tBQWQsV0FBYyxFQUFkLE1BQWM7RUFBZCwrSEFBYyxFQUFkLE1BQWM7RUFBZCw2QkFBYyxFQUFkLE1BQWM7RUFBZCwrQkFBYyxFQUFkLE1BQWM7RUFBZCx3Q0FBYyxFQUFkLE1BQWM7QUFBQTs7QUFBZDs7O0NBQWM7O0FBQWQ7RUFBQSxTQUFjLEVBQWQsTUFBYztFQUFkLG9CQUFjLEVBQWQsTUFBYztBQUFBOztBQUFkOzs7O0NBQWM7O0FBQWQ7RUFBQSxTQUFjLEVBQWQsTUFBYztFQUFkLGNBQWMsRUFBZCxNQUFjO0VBQWQscUJBQWMsRUFBZCxNQUFjO0FBQUE7O0FBQWQ7O0NBQWM7O0FBQWQ7RUFBQSx5Q0FBYztVQUFkLGlDQUFjO0FBQUE7O0FBQWQ7O0NBQWM7O0FBQWQ7Ozs7OztFQUFBLGtCQUFjO0VBQWQsb0JBQWM7QUFBQTs7QUFBZDs7Q0FBYzs7QUFBZDtFQUFBLGNBQWM7RUFBZCx3QkFBYztBQUFBOztBQUFkOztDQUFjOztBQUFkOztFQUFBLG1CQUFjO0FBQUE7O0FBQWQ7Ozs7O0NBQWM7O0FBQWQ7Ozs7RUFBQSwrR0FBYyxFQUFkLE1BQWM7RUFBZCw2QkFBYyxFQUFkLE1BQWM7RUFBZCwrQkFBYyxFQUFkLE1BQWM7RUFBZCxjQUFjLEVBQWQsTUFBYztBQUFBOztBQUFkOztDQUFjOztBQUFkO0VBQUEsY0FBYztBQUFBOztBQUFkOztDQUFjOztBQUFkOztFQUFBLGNBQWM7RUFBZCxjQUFjO0VBQWQsa0JBQWM7RUFBZCx3QkFBYztBQUFBOztBQUFkO0VBQUEsZUFBYztBQUFBOztBQUFkO0VBQUEsV0FBYztBQUFBOztBQUFkOzs7O0NBQWM7O0FBQWQ7RUFBQSxjQUFjLEVBQWQsTUFBYztFQUFkLHFCQUFjLEVBQWQsTUFBYztFQUFkLHlCQUFjLEVBQWQsTUFBYztBQUFBOztBQUFkOzs7O0NBQWM7O0FBQWQ7Ozs7O0VBQUEsb0JBQWMsRUFBZCxNQUFjO0VBQWQsOEJBQWMsRUFBZCxNQUFjO0VBQWQsZ0NBQWMsRUFBZCxNQUFjO0VBQWQsZUFBYyxFQUFkLE1BQWM7RUFBZCxvQkFBYyxFQUFkLE1BQWM7RUFBZCxvQkFBYyxFQUFkLE1BQWM7RUFBZCx1QkFBYyxFQUFkLE1BQWM7RUFBZCxjQUFjLEVBQWQsTUFBYztFQUFkLFNBQWMsRUFBZCxNQUFjO0VBQWQsVUFBYyxFQUFkLE1BQWM7QUFBQTs7QUFBZDs7Q0FBYzs7QUFBZDs7RUFBQSxvQkFBYztBQUFBOztBQUFkOzs7Q0FBYzs7QUFBZDs7OztFQUFBLDBCQUFjLEVBQWQsTUFBYztFQUFkLDZCQUFjLEVBQWQsTUFBYztFQUFkLHNCQUFjLEVBQWQsTUFBYztBQUFBOztBQUFkOztDQUFjOztBQUFkO0VBQUEsYUFBYztBQUFBOztBQUFkOztDQUFjOztBQUFkO0VBQUEsZ0JBQWM7QUFBQTs7QUFBZDs7Q0FBYzs7QUFBZDtFQUFBLHdCQUFjO0FBQUE7O0FBQWQ7O0NBQWM7O0FBQWQ7O0VBQUEsWUFBYztBQUFBOztBQUFkOzs7Q0FBYzs7QUFBZDtFQUFBLDZCQUFjLEVBQWQsTUFBYztFQUFkLG9CQUFjLEVBQWQsTUFBYztBQUFBOztBQUFkOztDQUFjOztBQUFkO0VBQUEsd0JBQWM7QUFBQTs7QUFBZDs7O0NBQWM7O0FBQWQ7RUFBQSwwQkFBYyxFQUFkLE1BQWM7RUFBZCxhQUFjLEVBQWQsTUFBYztBQUFBOztBQUFkOztDQUFjOztBQUFkO0VBQUEsa0JBQWM7QUFBQTs7QUFBZDs7Q0FBYzs7QUFBZDs7Ozs7Ozs7Ozs7OztFQUFBLFNBQWM7QUFBQTs7QUFBZDtFQUFBLFNBQWM7RUFBZCxVQUFjO0FBQUE7O0FBQWQ7RUFBQSxVQUFjO0FBQUE7O0FBQWQ7OztFQUFBLGdCQUFjO0VBQWQsU0FBYztFQUFkLFVBQWM7QUFBQTs7QUFBZDs7Q0FBYztBQUFkO0VBQUEsVUFBYztBQUFBOztBQUFkOztDQUFjOztBQUFkO0VBQUEsZ0JBQWM7QUFBQTs7QUFBZDs7O0NBQWM7O0FBQWQ7RUFBQSxVQUFjLEVBQWQsTUFBYztFQUFkLGNBQWMsRUFBZCxNQUFjO0FBQUE7O0FBQWQ7O0VBQUEsVUFBYyxFQUFkLE1BQWM7RUFBZCxjQUFjLEVBQWQsTUFBYztBQUFBOztBQUFkOztDQUFjOztBQUFkOztFQUFBLGVBQWM7QUFBQTs7QUFBZDs7Q0FBYztBQUFkO0VBQUEsZUFBYztBQUFBOztBQUFkOzs7O0NBQWM7O0FBQWQ7Ozs7Ozs7O0VBQUEsY0FBYyxFQUFkLE1BQWM7RUFBZCxzQkFBYyxFQUFkLE1BQWM7QUFBQTs7QUFBZDs7Q0FBYzs7QUFBZDs7RUFBQSxlQUFjO0VBQWQsWUFBYztBQUFBOztBQUFkLHdFQUFjO0FBQWQ7RUFBQSxhQUFjO0FBQUE7RUFBZDtJQUFBLDBCQUFjO0lBQWQsc0JBQWM7SUFBZCxvQkFBYztJQUFkLDJCQUFjO0lBQWQsdUJBQWM7SUFBZCw4QkFBYztJQUFkLHNCQUFjO0lBQWQsaUNBQWM7SUFBZCwyQkFBYztJQUFkLGdDQUFjO0lBQWQsdUJBQWM7SUFBZCxnQ0FBYztJQUFkLHdCQUFjO0lBQWQsNkJBQWM7SUFBZCw0QkFBYztJQUFkLGtDQUFjO0lBQWQsd0JBQWM7SUFBZCx1QkFBYztJQUFkLG1CQUFjO0lBQWQsZ0JBQWM7RUFBQTtFQUFkO0VBQUE7QUFBYztFQUFkO0VBQUEsd0NBQWM7RUFBZCw2QkFBYztJQUFkO0FBQWM7QUFFZDtFQUFBLGtCQUFtQjtFQUFuQixVQUFtQjtFQUFuQixXQUFtQjtFQUFuQixVQUFtQjtFQUFuQixZQUFtQjtFQUFuQixnQkFBbUI7RUFBbkIsc0JBQW1CO0VBQW5CLG1CQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBLFNBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUEscUJBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsaUJBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsbUJBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsa0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBLFdBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsdUJBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUEsdUJBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBLHNCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLHNCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLHNCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLHNCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5COztFQUFBO0lBQUE7RUFBbUI7QUFBQTtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUEseUJBQW1CO0tBQW5CLHNCQUFtQjtVQUFuQjtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUEsdUJBQW1CO0VBQW5CLGdFQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLHVCQUFtQjtFQUFuQiw4REFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQSx1QkFBbUI7RUFBbkIsNERBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsdUJBQW1CO0VBQW5CLDhEQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLHVCQUFtQjtFQUFuQiwrREFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBLGdCQUFtQjtFQUFuQix1QkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBLGlEQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLGtEQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUEsc0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQSxzQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQSxzQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQSxzQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQSxzQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQSxzQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBLGtCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQSxrQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUEsa0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBLGtCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLGtCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLGtCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLGtCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLGtCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLGtCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLGtCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLGtCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBLHNCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLG9CQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLHNCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLHFCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLGtCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLGtCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLDhCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLG9CQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLHFCQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLG1CQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLG9CQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLG1CQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQSxpQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQSxlQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUEsZUFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQSxtQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQSxtQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQSxrQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQSxrQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQSxtQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUEsb0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsb0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsb0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsb0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQSxvQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBLG9CQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUEsb0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsb0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsb0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsb0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsb0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsb0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsb0JBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQSwwRUFBbUI7RUFBbkIsOEZBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsK0VBQW1CO0VBQW5CLG1HQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLDZFQUFtQjtFQUFuQixpR0FBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQSwwQ0FBbUI7RUFBbkIsdURBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsOEJBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQSwyR0FBbUI7RUFBbkIseUdBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQSx3QkFBbUI7RUFBbkIsd0RBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUEsK0ZBQW1CO0VBQW5CLHdEQUFtQjtFQUFuQjtBQUFtQjtBQUFuQjtFQUFBLDRCQUFtQjtFQUFuQix3REFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQSw4QkFBbUI7RUFBbkIsd0RBQW1CO0VBQW5CO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7O0VBQUE7SUFBQSxtQ0FBbUI7SUFBbkI7RUFBbUI7QUFBQTtBQUFuQjs7RUFBQTtJQUFBLGtDQUFtQjtJQUFuQjtFQUFtQjtBQUFBO0FBQW5CO0VBQUEscUJBQW1CO0VBQW5CLHlCQUFtQjtFQUFuQiwyQkFBbUI7RUFBbkIseUJBQW1CO0VBQW5CLDBCQUFtQjtFQUFuQiwrQkFBbUI7RUFBbkI7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjtBQUFuQjtFQUFBO0FBQW1CO0FBQW5CO0VBQUE7QUFBbUI7QUFBbkI7RUFBQTtBQUFtQjs7QUFIbkI7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQSxtQkF1Q0E7RUF2Q0E7QUF1Q0E7O0FBdkNBO0VBQUE7QUF1Q0E7O0FBdkNBO0VBQUE7QUF1Q0E7O0FBdkNBO0VBQUE7QUF1Q0E7O0FBdkNBO0VBQUE7QUF1Q0E7O0FBdkNBO0VBQUE7QUF1Q0E7O0FBdkNBO0VBQUEsa0JBdUNBO0VBdkNBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBLGtCQXVDQTtFQXZDQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQSxvQkF1Q0E7RUF2Q0E7QUF1Q0E7O0FBdkNBO0VBQUE7QUF1Q0E7O0FBdkNBO0VBQUE7QUF1Q0E7O0FBdkNBO0VBQUE7QUF1Q0E7O0FBdkNBO0VBQUE7QUF1Q0E7O0FBdkNBO0VBQUEsOEJBdUNBO0VBdkNBO0FBdUNBOztBQXZDQTtFQUFBLDJHQXVDQTtFQXZDQSx5R0F1Q0E7RUF2Q0E7QUF1Q0E7O0FBdkNBO0VBQUEsMkdBdUNBO0VBdkNBLHlHQXVDQTtFQXZDQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQSw4QkF1Q0E7RUF2Q0E7QUF1Q0E7O0FBdkNBO0VBQUEsMkdBdUNBO0VBdkNBLHlHQXVDQTtFQXZDQTtBQXVDQTs7QUF2Q0E7RUFBQSwyR0F1Q0E7RUF2Q0EseUdBdUNBO0VBdkNBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBLHlCQXVDQTtFQXZDQTtBQXVDQTs7QUF2Q0E7RUFBQSwwQkF1Q0E7RUF2Q0E7QUF1Q0E7O0FBdkNBO0VBQUEseUJBdUNBO0VBdkNBO0FBdUNBOztBQXZDQTtFQUFBLDBCQXVDQTtFQXZDQTtBQXVDQTs7QUF2Q0E7RUFBQSxzQkF1Q0E7RUF2Q0E7QUF1Q0E7O0FBdkNBO0VBQUEscUJBdUNBO0VBdkNBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBLHFCQXVDQTtFQXZDQSx5QkF1Q0E7RUF2Q0EsMkJBdUNBO0VBdkNBLHlCQXVDQTtFQXZDQSwwQkF1Q0E7RUF2Q0EsK0JBdUNBO0VBdkNBO0FBdUNBOztBQXZDQTtFQUFBLG9CQXVDQTtFQXZDQSx5QkF1Q0E7RUF2Q0EsMEJBdUNBO0VBdkNBLHdCQXVDQTtFQXZDQSx5QkF1Q0E7RUF2Q0EsOEJBdUNBO0VBdkNBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBO0FBdUNBOztBQXZDQTtFQUFBLDJHQXVDQTtFQXZDQSx5R0F1Q0E7RUF2Q0E7QUF1Q0E7O0FBdkNBO0VBQUE7QUF1Q0E7O0FBdkNBO0VBQUEsc0JBdUNBO0VBdkNBO0FBdUNBOztBQXZDQTtFQUFBLGtCQXVDQTtFQXZDQTtBQXVDQTs7QUF2Q0E7RUFBQSxvQkF1Q0E7RUF2Q0E7QUF1Q0E7O0FBdkNBOztFQUFBO0lBQUE7RUF1Q0E7O0VBdkNBO0lBQUE7RUF1Q0E7O0VBdkNBO0lBQUE7RUF1Q0E7O0VBdkNBO0lBQUEsdUJBdUNBO0lBdkNBLHNEQXVDQTtJQXZDQTtFQXVDQTs7RUF2Q0E7SUFBQTtFQXVDQTs7RUF2Q0E7SUFBQTtFQXVDQTtBQUFBOztBQXZDQTs7RUFBQTtJQUFBO0VBdUNBOztFQXZDQTtJQUFBLG1CQXVDQTtJQXZDQTtFQXVDQTtBQUFBOztBQXZDQTtFQUFBLGlEQXVDQTtFQXZDQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQSxrREF1Q0E7RUF2Q0E7QUF1Q0E7O0FBdkNBO0VBQUEscUJBdUNBO0VBdkNBO0FBdUNBOztBQXZDQTtFQUFBLGdCQXVDQTtFQXZDQSxvQkF1Q0E7RUF2Q0EsNEJBdUNBO0VBdkNBO0FBdUNBOztBQXZDQTtFQUFBLGtCQXVDQTtFQXZDQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQSxlQXVDQTtFQXZDQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQSxvQkF1Q0E7RUF2Q0E7QUF1Q0E7O0FBdkNBO0VBQUEscUJBdUNBO0VBdkNBO0FBdUNBOztBQXZDQTtFQUFBLGtCQXVDQTtFQXZDQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQSxvQkF1Q0E7RUF2Q0E7QUF1Q0E7O0FBdkNBO0VBQUE7QUF1Q0E7O0FBdkNBO0VBQUE7QUF1Q0E7O0FBdkNBO0VBQUE7QUF1Q0E7O0FBdkNBO0VBQUEsb0JBdUNBO0VBdkNBO0FBdUNBOztBQXZDQTtFQUFBLG9CQXVDQTtFQXZDQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQSxXQXVDQTtFQXZDQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQTs7QUF2Q0E7RUFBQTtBQXVDQSIsIm5hbWVzIjpbXSwic291cmNlcyI6WyIvaG9tZS9hcHAvY2xpZW50L3NyYy9pbmRleC5jc3MiXSwic291cmNlc0NvbnRlbnQiOlsiXG5AdGFpbHdpbmQgYmFzZTtcbkB0YWlsd2luZCBjb21wb25lbnRzO1xuQHRhaWx3aW5kIHV0aWxpdGllcztcblxuQGxheWVyIGJhc2Uge1xuICA6cm9vdCB7XG4gICAgLS1iYWNrZ3JvdW5kOiAyNDAgMTAlIDMuOSU7XG4gICAgLS1mb3JlZ3JvdW5kOiAwIDAlIDk4JTtcbiAgICAtLWNhcmQ6IDI0MCAxMCUgMy45JTtcbiAgICAtLWNhcmQtZm9yZWdyb3VuZDogMCAwJSA5OCU7XG4gICAgLS1wb3BvdmVyOiAyNDAgMTAlIDMuOSU7XG4gICAgLS1wb3BvdmVyLWZvcmVncm91bmQ6IDAgMCUgOTglO1xuICAgIC0tcHJpbWFyeTogMjE3IDkxJSA2MCU7XG4gICAgLS1wcmltYXJ5LWZvcmVncm91bmQ6IDIxMCA0MCUgOTglO1xuICAgIC0tc2Vjb25kYXJ5OiAyNDAgMy43JSAxNS45JTtcbiAgICAtLXNlY29uZGFyeS1mb3JlZ3JvdW5kOiAwIDAlIDk4JTtcbiAgICAtLW11dGVkOiAyNDAgMy43JSAxNS45JTtcbiAgICAtLW11dGVkLWZvcmVncm91bmQ6IDI0MCA1JSA2NC45JTtcbiAgICAtLWFjY2VudDogMjQwIDMuNyUgMTUuOSU7XG4gICAgLS1hY2NlbnQtZm9yZWdyb3VuZDogMCAwJSA5OCU7XG4gICAgLS1kZXN0cnVjdGl2ZTogMCA2Mi44JSAzMC42JTtcbiAgICAtLWRlc3RydWN0aXZlLWZvcmVncm91bmQ6IDAgMCUgOTglO1xuICAgIC0tYm9yZGVyOiAyNDAgMy43JSAxNS45JTtcbiAgICAtLWlucHV0OiAyNDAgMy43JSAxNS45JTtcbiAgICAtLXJpbmc6IDIxNyA5MSUgNjAlO1xuICAgIC0tcmFkaXVzOiAwLjVyZW07XG4gIH1cbn1cblxuQGxheWVyIGJhc2Uge1xuICAqIHtcbiAgICBAYXBwbHkgYm9yZGVyLWJvcmRlcjtcbiAgfVxuICBib2R5IHtcbiAgICBAYXBwbHkgYmctYmFja2dyb3VuZCB0ZXh0LWZvcmVncm91bmQ7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogIzBjMGEwOTtcbiAgfVxufVxuIl0sInZlcnNpb24iOjN9 */</style>
- </head> 
- <body> 
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AdHive</title>
+  <style>
+    .flex {
+      display: flex;
+    }
+    .items-center {
+      align-items: center;
+    }
+    .justify-center {
+      justify-content: center;
+    }
+    .justify-between {
+      justify-content: space-between;
+    }
+    .min-h-screen {
+      min-height: 100vh;
+    }
+    .p-4 {
+      padding: 1rem;
+    }
+    .p-6 {
+      padding: 1.5rem;
+    }
+    .pt-0 {
+      padding-top: 0;
+    }
+    .pb-4 {
+      padding-bottom: 1rem;
+    }
+    .mb-4 {
+      margin-bottom: 1rem;
+    }
+    .bg-zinc-950 {
+      background-color: #09090b;
+    }
+    .bg-zinc-900 {
+      background-color: #18181b;
+    }
+    .bg-zinc-800 {
+      background-color: #27272a;
+    }
+    .bg-blue-600 {
+      background-color: #2563eb;
+    }
+    .hover\:bg-blue-700:hover {
+      background-color: #1d4ed8;
+    }
+    .text-white {
+      color: #fff;
+    }
+    .text-blue-400 {
+      color: #60a5fa;
+    }
+    .text-zinc-400 {
+      color: #a1a1aa;
+    }
+    .font-semibold {
+      font-weight: 600;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .text-sm {
+      font-size: 0.875rem;
+    }
+    .text-xs {
+      font-size: 0.75rem;
+    }
+    .leading-none {
+      line-height: 1;
+    }
+    .tracking-tight {
+      letter-spacing: -0.025em;
+    }
+    .rounded-xl {
+      border-radius: 0.75rem;
+    }
+    .rounded-lg {
+      border-radius: 0.5rem;
+    }
+    .rounded-md {
+      border-radius: 0.375rem;
+    }
+    .border {
+      border-width: 1px;
+    }
+    .border-zinc-800 {
+      border-color: #27272a;
+    }
+    .border-input {
+      border-color: hsl(240 3.7% 15.9%);
+    }
+    .shadow {
+      box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    }
+    .shadow-sm {
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    }
+    .w-full {
+      width: 100%;
+    }
+    .max-w-sm {
+      max-width: 24rem;
+    }
+    .h-8 {
+      height: 2rem;
+    }
+    .h-9 {
+      height: 2.25rem;
+    }
+    .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+      margin-top: 1rem;
+    }
+    .inline-flex {
+      display: inline-flex;
+    }
+    .whitespace-nowrap {
+      white-space: nowrap;
+    }
+    .font-medium {
+      font-weight: 500;
+    }
+    .transition-colors {
+      transition-property: color, background-color;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 150ms;
+    }
+    .focus-visible\:outline-none:focus-visible {
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+    }
+    .focus-visible\:ring-1:focus-visible {
+      --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+      --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+      box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+    }
+    .focus-visible\:ring-ring:focus-visible {
+      --tw-ring-color: hsl(217 91% 60%);
+    }
+    .disabled\:pointer-events-none:disabled {
+      pointer-events: none;
+    }
+    .disabled\:opacity-50:disabled {
+      opacity: 0.5;
+    }
+    .px-3 {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+    .px-4 {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .py-2 {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+    .gap-2 {
+      gap: 0.5rem;
+    }
+    .contents {
+      display: contents;
+    }
+  </style>
+</head>
+<body>
   <div id="root" class="contents">
-   <div class="flex items-center justify-center min-h-screen p-4 bg-zinc-950">
-    <div class="rounded-xl border shadow w-full max-w-sm bg-zinc-900 border-zinc-800 text-white">
-     <div class="flex flex-col space-y-1.5 p-6">
-      <div class="font-semibold leading-none tracking-tight text-center text-blue-400">
-       Join Our Channels
+    <div class="flex items-center justify-center min-h-screen p-4 bg-zinc-950">
+      <div class="rounded-xl border shadow w-full max-w-sm bg-zinc-900 border-zinc-800 text-white">
+        <div class="flex flex-col space-y-1.5 p-6">
+          <div class="font-semibold leading-none tracking-tight text-center text-blue-400">
+            Join Our Channels
+          </div>
+        </div>
+        <div class="p-6 pt-0">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between p-3 bg-zinc-800 rounded-lg">
+              <span>Channel 1</span>
+              <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3 text-xs">Join</button>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-zinc-800 rounded-lg">
+              <span>Channel 2</span>
+              <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3 text-xs">Join</button>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center p-6 pt-0">
+          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-primary-foreground shadow h-9 px-4 py-2 w-full bg-blue-600 hover:bg-blue-700">Joined</button>
+        </div>
       </div>
-     </div>
-     <div class="p-6 pt-0">
-      <div class="space-y-4">
-       <div class="flex items-center justify-between p-3 bg-zinc-800 rounded-lg">
-        <span>Channel 1</span>
-        <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3 text-xs">Join</button>
-       </div>
-       <div class="flex items-center justify-between p-3 bg-zinc-800 rounded-lg">
-        <span>Channel 2</span>
-        <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3 text-xs">Join</button>
-       </div>
-      </div>
-     </div>
-     <div class="flex items-center p-6 pt-0">
-      <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground shadow h-9 px-4 py-2 w-full bg-blue-600 hover:bg-blue-700">Joined</button>
-     </div>
     </div>
-   </div>
   </div>
-<script>
-// Telegram integration
-document.addEventListener('DOMContentLoaded', function() {
-  const joinButtons = document.querySelectorAll('button');
-  const joinedButton = document.querySelector('.bg-blue-600');
-  let isLoggedIn = false;
-  let userData = null;
-  
-  // Check if user is already logged in
-  const savedUserData = localStorage.getItem('telegramUser');
-  if (savedUserData) {
-    userData = JSON.parse(savedUserData);
-    isLoggedIn = true;
-    updateUI();
-  }
-  
-  // Add event listeners to join buttons
-  joinButtons.forEach(button => {
-    if (button.textContent === 'Join') {
-      button.addEventListener('click', handleJoinClick);
-    }
-  });
-  
-  // Handle joined button click
-  if (joinedButton) {
-    joinedButton.addEventListener('click', handleJoinedClick);
-  }
-  
-  function handleJoinClick(e) {
-    if (!isLoggedIn) {
-      e.preventDefault();
-      initiateTelegramLogin();
-    } else {
-      // User is logged in, check if they've joined the channel
-      const channelName = e.target.parentElement.querySelector('span').textContent;
-      checkChannelMembership(channelName);
-    }
-  }
-  
-  function handleJoinedClick() {
-    if (!isLoggedIn) {
-      initiateTelegramLogin();
-    } else {
-      alert('You have already joined our channels!');
-    }
-  }
-  
-  async function initiateTelegramLogin() {
-    try {
-      const response = await fetch('/api/telegram/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
+  <script>
+    // Telegram integration
+    document.addEventListener('DOMContentLoaded', function() {
+      const joinButtons = document.querySelectorAll('button');
+      const joinedButton = document.querySelector('.bg-blue-600');
+      let isLoggedIn = false;
+      let userData = null;
+      
+      // Check if user is already logged in
+      const savedUserData = localStorage.getItem('telegramUser');
+      if (savedUserData) {
+        userData = JSON.parse(savedUserData);
+        isLoggedIn = true;
+        updateUI();
+      }
+      
+      // Add event listeners to join buttons
+      joinButtons.forEach(button => {
+        if (button.textContent === 'Join') {
+          button.addEventListener('click', handleJoinClick);
         }
       });
       
-      if (response.ok) {
-        const data = await response.json();
-        
-        // Open Telegram with the login link
-        window.open(data.loginUrl, '_blank');
-        
-        // Poll for login status
-        checkLoginStatus(data.token);
-      } else {
-        alert('Failed to initiate login. Please try again.');
+      // Handle joined button click
+      if (joinedButton) {
+        joinedButton.addEventListener('click', handleJoinedClick);
       }
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('An error occurred during login.');
-    }
-  }
-  
-  async function checkLoginStatus(token) {
-    const checkStatus = async () => {
-      try {
-        const response = await fetch(`/api/telegram/status/${token}`);
-        
-        if (response.ok) {
-          const statusData = await response.json();
+      
+      function handleJoinClick(e) {
+        if (!isLoggedIn) {
+          e.preventDefault();
+          initiateTelegramLogin();
+        } else {
+          // User is logged in, check if they've joined the channel
+          const channelName = e.target.parentElement.querySelector('span').textContent;
+          checkChannelMembership(channelName);
+        }
+      }
+      
+      function handleJoinedClick() {
+        if (!isLoggedIn) {
+          initiateTelegramLogin();
+        } else {
+          alert('You have already joined our channels!');
+        }
+      }
+      
+      async function initiateTelegramLogin() {
+        try {
+          const response = await fetch('/api/telegram/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
           
-          if (statusData.status === 'completed') {
-            // Login successful
-            isLoggedIn = true;
-            userData = statusData.user;
+          if (response.ok) {
+            const data = await response.json();
             
-            // Save user data to localStorage
-            localStorage.setItem('telegramUser', JSON.stringify(userData));
+            // Open Telegram with the login link
+            window.open(data.loginUrl, '_blank');
             
-            updateUI();
-            alert('Login successful!');
-          } else if (statusData.status === 'pending') {
-            // Still pending, check again in 2 seconds
-            setTimeout(checkStatus, 2000);
+            // Poll for login status
+            checkLoginStatus(data.token);
           } else {
-            alert('Login failed. Please try again.');
+            alert('Failed to initiate login. Please try again.');
           }
-        } else {
-          alert('Login failed or expired. Please try again.');
+        } catch (error) {
+          console.error('Login error:', error);
+          alert('An error occurred during login.');
         }
-      } catch (error) {
-        console.error('Status check error:', error);
-        alert('An error occurred while checking login status.');
-      }
-    };
-    
-    // Start checking status
-    setTimeout(checkStatus, 2000);
-  }
-  
-  async function checkChannelMembership(channelName) {
-    if (!userData) return;
-    
-    try {
-      // Map channel names to actual Telegram channel IDs
-      const channelMap = {
-        'Channel 1': '@allinonepayout', // Replace with actual channel username
-        'Channel 2': '@ALL1N_0NE'  // Replace with actual channel username
-      };
-      
-      const channelId = channelMap[channelName];
-      
-      if (!channelId) {
-        alert(`Channel configuration error for ${channelName}`);
-        return;
       }
       
-      const response = await fetch('/api/telegram/check-membership', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          userId: userData.id,
-          channels: [channelId]
-        })
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
+      async function checkLoginStatus(token) {
+        const checkStatus = async () => {
+          try {
+            const response = await fetch(`/api/telegram/status/${token}`);
+            
+            if (response.ok) {
+              const statusData = await response.json();
+              
+              if (statusData.status === 'completed') {
+                // Login successful
+                isLoggedIn = true;
+                userData = statusData.user;
+                
+                // Save user data to localStorage
+                localStorage.setItem('telegramUser', JSON.stringify(userData));
+                
+                updateUI();
+                alert('Login successful!');
+              } else if (statusData.status === 'pending') {
+                // Still pending, check again in 2 seconds
+                setTimeout(checkStatus, 2000);
+              } else {
+                alert('Login failed. Please try again.');
+              }
+            } else {
+              alert('Login failed or expired. Please try again.');
+            }
+          } catch (error) {
+            console.error('Status check error:', error);
+            alert('An error occurred while checking login status.');
+          }
+        };
         
-        if (data.membership[channelId]) {
-          alert(`You've already joined ${channelName}!`);
-        } else {
-          // Open the channel for user to join
-          window.open(`https://t.me/${channelId.replace('@', '')}`, '_blank');
-          alert(`Please join ${channelName} to continue.`);
-        }
-      } else {
-        alert('Failed to check channel membership.');
+        // Start checking status
+        setTimeout(checkStatus, 2000);
       }
-    } catch (error) {
-      console.error('Membership check error:', error);
-      alert('An error occurred while checking channel membership.');
-    }
-  }
-  
-  function updateUI() {
-    if (isLoggedIn && userData) {
-      // Update UI to show user is logged in
-      const loginInfo = document.createElement('div');
-      loginInfo.className = 'text-sm text-zinc-400 mb-4 text-center';
-      const displayName = `${userData.firstName} ${userData.lastName || ''}`.trim();
-      loginInfo.textContent = `Logged in as: ${displayName} (@${userData.username || 'no username'})`;
       
-      const cardHeader = document.querySelector('.p-6');
-      // Remove existing login info if any
-      const existingInfo = cardHeader.querySelector('.text-sm.text-zinc-400');
-      if (existingInfo) {
-        cardHeader.removeChild(existingInfo);
+      async function checkChannelMembership(channelName) {
+        if (!userData) return;
+        
+        try {
+          // Map channel names to actual Telegram channel IDs
+          const channelMap = {
+            'Channel 1': '@allinonepayout', // Replace with actual channel username
+            'Channel 2': '@ALL1N_0NE'  // Replace with actual channel username
+          };
+          
+          const channelId = channelMap[channelName];
+          
+          if (!channelId) {
+            alert(`Channel configuration error for ${channelName}`);
+            return;
+          }
+          
+          const response = await fetch('/api/telegram/check-membership', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              userId: userData.id,
+              channels: [channelId]
+            })
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            
+            if (data.membership[channelId]) {
+              alert(`You've already joined ${channelName}!`);
+            } else {
+              // Open the channel for user to join
+              window.open(`https://t.me/${channelId.replace('@', '')}`, '_blank');
+              alert(`Please join ${channelName} to continue.`);
+            }
+          } else {
+            alert('Failed to check channel membership.');
+          }
+        } catch (error) {
+          console.error('Membership check error:', error);
+          alert('An error occurred while checking channel membership.');
+        }
       }
-      cardHeader.appendChild(loginInfo);
-    }
-  }
-});
-</script>
- </body>
+      
+      function updateUI() {
+        if (isLoggedIn && userData) {
+          // Update UI to show user is logged in
+          const loginInfo = document.createElement('div');
+          loginInfo.className = 'text-sm text-zinc-400 mb-4 text-center';
+          const displayName = `${userData.firstName} ${userData.lastName || ''}`.trim();
+          loginInfo.textContent = `Logged in as: ${displayName} (@${userData.username || 'no username'})`;
+          
+          const cardHeader = document.querySelector('.p-6');
+          // Remove existing login info if any
+          const existingInfo = cardHeader.querySelector('.text-sm.text-zinc-400');
+          if (existingInfo) {
+            cardHeader.removeChild(existingInfo);
+          }
+          cardHeader.appendChild(loginInfo);
+        }
+      }
+    });
+  </script>
+</body>
 </html>
