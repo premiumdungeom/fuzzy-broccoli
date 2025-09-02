@@ -2133,6 +2133,38 @@ window.__vite_plugin_react_preamble_installed__ = true
     </div>
    </div>
   </div>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div id="root" class="contents">
+   <div class="flex items-center justify-center min-h-screen p-4 bg-zinc-950">
+    <div class="rounded-xl border shadow w-full max-w-sm bg-zinc-900 border-zinc-800 text-white">
+     <div class="flex flex-col space-y-1.5 p-6">
+      <div class="font-semibold leading-none tracking-tight text-center text-blue-400">
+       Join Our Channels
+      </div>
+      <div id="user-info" class="text-sm text-zinc-400 mb-4 text-center hidden">
+        Welcome! Please join our channels to continue.
+      </div>
+     </div>
+     <div class="p-6 pt-0">
+      <div class="space-y-4">
+       <div class="flex items-center justify-between p-3 bg-zinc-800 rounded-lg">
+        <span>Channel 1</span>
+        <button class="channel-join-btn inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3 text-xs" data-channel="Channel 1">Join</button>
+       </div>
+       <div class="flex items-center justify-between p-3 bg-zinc-800 rounded-lg">
+        <span>Channel 2</span>
+        <button class="channel-join-btn inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3 text-xs" data-channel="Channel 2">Join</button>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center p-6 pt-0">
+      <button id="verify-button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp:_svg]:shrink-0 text-primary-foreground shadow h-9 px-4 py-2 w-full bg-blue-600 hover:bg-blue-700">Verify Membership</button>
+     </div>
+    </div>
+   </div>
+  </div>
 <script>
 // Telegram Mini App integration
 document.addEventListener('DOMContentLoaded', function() {
@@ -2147,6 +2179,9 @@ document.addEventListener('DOMContentLoaded', function() {
   if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
     user = tg.initDataUnsafe.user;
     updateUserInfo();
+    
+    // Store user data for the home page
+    localStorage.setItem('telegramUser', JSON.stringify(user));
   } else {
     // Not in Telegram Mini App context
     alert('This app must be opened within Telegram');
@@ -2212,12 +2247,17 @@ document.addEventListener('DOMContentLoaded', function() {
           // All channels joined successfully
           tg.showPopup({
             title: 'Success!',
-            message: 'You have successfully joined all channels. Thank you!',
+            message: 'You have successfully joined all channels. Redirecting to app...',
             buttons: [{ type: 'ok' }]
           });
           
           // Notify bot that user has completed the process
           tg.sendData(JSON.stringify({ action: 'channels_joined', userId: user.id }));
+          
+          // Redirect to home page after a short delay
+          setTimeout(() => {
+            window.location.href = 'home.html';
+          }, 1500);
         } else {
           // Some channels not joined
           const notJoinedChannels = Object.entries(data.membership)
@@ -2266,12 +2306,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const allJoined = Object.values(data.membership).every(status => status);
         
         if (allJoined) {
-          // User has already joined all channels
-          tg.showPopup({
-            title: 'Welcome Back!',
-            message: 'You have already joined all our channels. Thank you!',
-            buttons: [{ type: 'ok' }]
-          });
+          // User has already joined all channels - redirect immediately
+          window.location.href = 'home.html';
         }
       }
     } catch (error) {
@@ -2283,5 +2319,5 @@ document.addEventListener('DOMContentLoaded', function() {
   initialCheck();
 });
 </script>
- </body>
+</body>
 </html>
