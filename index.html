@@ -2251,9 +2251,6 @@ document.addEventListener('DOMContentLoaded', function() {
             buttons: [{ type: 'ok' }]
           });
           
-          // Notify bot that user has completed the process
-          tg.sendData(JSON.stringify({ action: 'channels_joined', userId: user.id }));
-          
           // Redirect to home page after a short delay
           setTimeout(() => {
             window.location.href = 'home.html';
