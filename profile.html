@@ -1974,14 +1974,108 @@ video {
  </head> 
  <body> 
   <div id="root" class="contents">
-   <div class="flex flex-col items-center justify-center min-h-screen bg-background">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-circle h-12 w-12 animate-spin text-primary">
-     <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-    </svg>
-    <p class="mt-4 text-lg text-foreground">Loading home page...</p>
+   <div class="flex flex-col min-h-screen bg-background">
+    <header class="bg-primary text-primary-foreground p-4">
+     <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold">EchoEARN</h1>
+      <div class="flex items-center gap-3 text-right">
+       <div>
+        <p class="font-semibold">Full Name</p>
+        <p class="text-sm opacity-80">@username</p>
+       </div>
+       <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"><span class="flex h-full w-full items-center justify-center rounded-full bg-muted">U</span></span>
+      </div>
+     </div>
+    </header>
+    <main class="flex-grow container mx-auto px-4 py-4">
+     <div class="space-y-6 pb-16">
+      <div class="rounded-xl border bg-card text-card-foreground shadow text-center">
+       <div class="flex flex-col space-y-1.5 p-6">
+        <div class="font-semibold leading-none tracking-tight">
+         Your Balance
+        </div>
+       </div>
+       <div class="p-6 pt-0">
+        <p class="text-4xl font-bold">602</p>
+       </div>
+      </div>
+      <div class="rounded-xl border bg-card text-card-foreground shadow">
+       <div class="flex flex-col space-y-1.5 p-6">
+        <div class="font-semibold leading-none tracking-tight">
+         Community
+        </div>
+       </div>
+       <div class="p-6 pt-0 space-y-2">
+        <button class="inline-flex items-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground px-4 py-2 w-full justify-between h-12 text-base">Invite Friends
+         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right h-5 w-5">
+          <path d="m9 18 6-6-6-6"></path>
+         </svg></button>
+        <button class="inline-flex items-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground px-4 py-2 w-full justify-between h-12 text-base">My Team
+         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right h-5 w-5">
+          <path d="m9 18 6-6-6-6"></path>
+         </svg></button>
+       </div>
+      </div>
+      <div class="rounded-xl border bg-card text-card-foreground shadow">
+       <div class="flex flex-col space-y-1.5 p-6">
+        <div class="font-semibold leading-none tracking-tight">
+         About Us
+        </div>
+       </div>
+       <div class="p-6 pt-0 space-y-2">
+        <button class="inline-flex items-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground px-4 py-2 w-full justify-between h-12 text-base">Support
+         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right h-5 w-5">
+          <path d="m9 18 6-6-6-6"></path>
+         </svg></button>
+        <button class="inline-flex items-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground px-4 py-2 w-full justify-between h-12 text-base">FAQs
+         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right h-5 w-5">
+          <path d="m9 18 6-6-6-6"></path>
+         </svg></button>
+        <button class="inline-flex items-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground px-4 py-2 w-full justify-between h-12 text-base">Privacy &amp; Policy
+         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right h-5 w-5">
+          <path d="m9 18 6-6-6-6"></path>
+         </svg></button>
+       </div>
+      </div>
+     </div>
+    </main>
+    <footer class="sticky bottom-0 bg-card border-t shadow-t-lg">
+     <nav class="container mx-auto flex justify-around items-center h-16">
+      <a class="flex flex-col items-center justify-center text-center w-1/5" href="/" data-discover="true">
+       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house h-6 w-6 mb-1 text-muted-foreground">
+        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
+        <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+       </svg><span class="text-xs text-muted-foreground">Home</span></a>
+      <a class="flex flex-col items-center justify-center text-center w-1/5" href="/tasks" data-discover="true">
+       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-checks h-6 w-6 mb-1 text-muted-foreground">
+        <path d="m3 17 2 2 4-4"></path>
+        <path d="m3 7 2 2 4-4"></path>
+        <path d="M13 6h8"></path>
+        <path d="M13 12h8"></path>
+        <path d="M13 18h8"></path>
+       </svg><span class="text-xs text-muted-foreground">Tasks</span></a>
+      <a class="flex flex-col items-center justify-center text-center w-1/5" href="/earn" data-discover="true">
+       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gift h-6 w-6 mb-1 text-muted-foreground">
+        <rect x="3" y="8" width="18" height="4" rx="1"></rect>
+        <path d="M12 8v13"></path>
+        <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"></path>
+        <path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"></path>
+       </svg><span class="text-xs text-muted-foreground">Earn</span></a>
+      <a class="flex flex-col items-center justify-center text-center w-1/5" href="/ads" data-discover="true">
+       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-megaphone h-6 w-6 mb-1 text-muted-foreground">
+        <path d="m3 11 18-5v12L3 14v-3z"></path>
+        <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path>
+       </svg><span class="text-xs text-muted-foreground">Ads</span></a>
+      <a class="flex flex-col items-center justify-center text-center w-1/5" href="/profile" data-discover="true">
+       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user h-6 w-6 mb-1 text-primary">
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+       </svg><span class="text-xs text-primary font-semibold">Profile</span></a>
+     </nav>
+    </footer>
    </div>
   </div> 
-  <a class="talos-badge" href="https://instance.so?made-by-instance=https%3A%2F%2Fpreview--loudly-insidious-twig.instance.app%2Fprofile" target="_blank" rel="noopener noreferrer"><span>
+  <a class="talos-badge talos-badge-visible" href="https://instance.so?made-by-instance=https%3A%2F%2Fpreview--loudly-insidious-twig.instance.app%2Fprofile" target="_blank" rel="noopener noreferrer"><span>
     <svg width="146" height="12" viewbox="0 0 146 12" fill="none" xmlns="http://www.w3.org/2000/svg"> 
      <path d="M4.424 1.2C6.51 1.2 7.672 2.208 7.672 3.79C7.672 4.91 7.056 5.596 6.132 5.918C7.168 6.114 8.078 6.786 8.078 8.2C8.078 9.936 6.846 11 4.522 11H0.952V1.2H4.424ZM2.17 9.894H4.522C6.034 9.894 6.832 9.264 6.832 8.256C6.832 7.15 5.978 6.548 4.522 6.548H2.17V9.894ZM2.17 5.456H4.48C5.74 5.456 6.454 4.868 6.454 3.874C6.454 2.894 5.754 2.306 4.48 2.306H2.17V5.456ZM9.3403 7.836V3.86H10.4883V7.766C10.4883 9.25 11.1603 10.034 12.3503 10.034C13.6523 10.034 14.4363 9.04 14.4363 7.43V3.86H15.5843V11H14.5903L14.4363 10.048C14.0163 10.58 13.3303 11.084 12.1543 11.084C10.5863 11.084 9.3403 10.202 9.3403 7.836ZM17.1492 3.86H18.2972V11H17.1492V3.86ZM16.9952 1.914C16.9952 1.48 17.3172 1.172 17.7372 1.172C18.1572 1.172 18.4792 1.48 18.4792 1.914C18.4792 2.348 18.1572 2.656 17.7372 2.656C17.3172 2.656 16.9952 2.348 16.9952 1.914ZM19.8699 1.2H21.0179V11H19.8699V1.2ZM23.1226 9.138V4.91H21.8346V3.86H23.1226V1.858H24.2706V3.86H26.1186V4.91H24.2706V9.124C24.2706 9.726 24.4806 9.95 25.0966 9.95H26.2306V11H24.9846C23.6126 11 23.1226 10.398 23.1226 9.138ZM30.2175 3.86H31.4215L33.1995 9.67L35.0755 3.86H36.1395L37.9175 9.67L39.7795 3.86H40.9415L38.5615 11H37.3015L35.5795 5.694L33.7875 11H32.5275L30.2175 3.86ZM41.8406 3.86H42.9886V11H41.8406V3.86ZM41.6866 1.914C41.6866 1.48 42.0086 1.172 42.4286 1.172C42.8486 1.172 43.1706 1.48 43.1706 1.914C43.1706 2.348 42.8486 2.656 42.4286 2.656C42.0086 2.656 41.6866 2.348 41.6866 1.914ZM45.0933 9.138V4.91H43.8053V3.86H45.0933V1.858H46.2413V3.86H48.0893V4.91H46.2413V9.124C46.2413 9.726 46.4513 9.95 47.0673 9.95H48.2013V11H46.9553C45.5833 11 45.0933 10.398 45.0933 9.138ZM49.1961 1.2H50.3441V5.036C50.7641 4.364 51.4921 3.776 52.6961 3.776C54.2921 3.776 55.5941 4.658 55.5941 7.024V11H54.4461V7.094C54.4461 5.61 53.7321 4.826 52.5001 4.826C51.1701 4.826 50.3441 5.82 50.3441 7.43V11H49.1961V1.2Z" fill="#292928"></path> 
      <g clip-path="url(#clip0_337_2058)"> 
