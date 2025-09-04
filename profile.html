@@ -2065,7 +2065,7 @@ video {
         <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
         <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
        </svg><span class="text-xs text-muted-foreground">Home</span></a>
-      <a class="flex flex-col items-center justify-center text-center w-1/5" href="tasks html" data-discover="true">
+      <a class="flex flex-col items-center justify-center text-center w-1/5" href="tasks.html" data-discover="true">
        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-checks h-6 w-6 mb-1 text-muted-foreground">
         <path d="m3 17 2 2 4-4"></path>
         <path d="m3 7 2 2 4-4"></path>
@@ -2093,6 +2093,72 @@ video {
      </nav>
     </footer>
    </div>
-  </div> 
+  </div>
+  <script>
+// Load user profile data
+document.addEventListener('DOMContentLoaded', function() {
+  const userData = localStorage.getItem('userProfileData');
+  
+  if (userData) {
+    const user = JSON.parse(userData);
+    
+    // Update profile information
+    const profileNameElement = document.querySelector('header .font-semibold');
+    const profileUsernameElement = document.querySelector('header .text-sm');
+    const profileAvatarElement = document.querySelector('header .rounded-full span');
+    
+    if (profileNameElement) profileNameElement.textContent = user.fullName;
+    if (profileUsernameElement) profileUsernameElement.textContent = user.username;
+    
+    // Set avatar (use initials if no photo)
+    if (user.photoUrl) {
+      profileAvatarElement.innerHTML = `<img src="${user.photoUrl}" alt="${user.fullName}" class="flex h-full w-full items-center justify-center rounded-full bg-muted">`;
+    } else {
+      const initial = user.firstName ? user.firstName[0].toUpperCase() : 'U';
+      profileAvatarElement.innerHTML = `<span class="flex h-full w-full items-center justify-center rounded-full bg-muted">${initial}</span>`;
+    }
+  } else {
+    // If no user data found, try to get from Telegram
+    let tg = window.Telegram.WebApp;
+    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+      const user = tg.initDataUnsafe.user;
+      const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
+      const username = user.username ? `@${user.username}` : 'User';
+      
+      // Update profile information
+      const profileNameElement = document.querySelector('header .font-semibold');
+      const profileUsernameElement = document.querySelector('header .text-sm');
+      const profileAvatarElement = document.querySelector('header .rounded-full span');
+      
+      if (profileNameElement) profileNameElement.textContent = fullName;
+      if (profileUsernameElement) profileUsernameElement.textContent = username;
+      
+      // Set avatar
+      if (user.photo_url) {
+        profileAvatarElement.innerHTML = `<img src="${user.photo_url}" alt="${fullName}" class="flex h-full w-full items-center justify-center rounded-full bg-muted">`;
+      } else {
+        const initial = user.first_name ? user.first_name[0].toUpperCase() : 'U';
+        profileAvatarElement.innerHTML = `<span class="flex h-full w-full items-center justify-center rounded-full bg-muted">${initial}</span>`;
+      }
+      
+      // Store for future use
+      localStorage.setItem('userProfileData', JSON.stringify({
+        fullName: fullName,
+        username: username,
+        photoUrl: user.photo_url || '',
+        firstName: user.first_name || '',
+        lastName: user.last_name || ''
+      }));
+    }
+  }
+  
+  // Initialize Telegram Web App if available
+  if (typeof Telegram !== 'undefined') {
+    let tg = window.Telegram.WebApp;
+    tg.expand();
+    tg.enableClosingConfirmation();
+  }
+});
+</script> 
  </body>
 </html>

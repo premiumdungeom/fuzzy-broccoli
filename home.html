@@ -2150,49 +2150,58 @@ video {
   </div>
   
   <script>
-  // Load Telegram user data on home page
-  document.addEventListener('DOMContentLoaded', function() {
-    let tg = window.Telegram.WebApp;
-    let user = null;
+// Load Telegram user data on home page
+document.addEventListener('DOMContentLoaded', function() {
+  let tg = window.Telegram.WebApp;
+  let user = null;
+  
+  // Try to get user data from Telegram Web App
+  if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+    user = tg.initDataUnsafe.user;
+  } else {
+    // Fallback: try to get from localStorage (if redirected from index.html)
+    const storedUser = localStorage.getItem('telegramUser');
+    if (storedUser) {
+      user = JSON.parse(storedUser);
+    }
+  }
+  
+  if (user) {
+    // Update user profile in the header
+    const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
+    const username = user.username ? `@${user.username}` : 'User';
     
-    // Try to get user data from Telegram Web App
-    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-      user = tg.initDataUnsafe.user;
+    document.getElementById('user-fullname').textContent = fullName;
+    document.getElementById('user-username').textContent = username;
+    
+    // Set user avatar if available
+    if (user.photo_url) {
+      document.getElementById('user-avatar').src = user.photo_url;
+      document.getElementById('user-avatar').alt = fullName;
     } else {
-      // Fallback: try to get from localStorage (if redirected from index.html)
-      const storedUser = localStorage.getItem('telegramUser');
-      if (storedUser) {
-        user = JSON.parse(storedUser);
-      }
+      // Fallback to initials if no avatar
+      const avatarElement = document.getElementById('user-avatar');
+      avatarElement.src = '';
+      avatarElement.textContent = user.first_name ? user.first_name[0].toUpperCase() : 'U';
     }
     
-    if (user) {
-      // Update user profile in the header
-      const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
-      const username = user.username ? `@${user.username}` : 'User';
-      
-      document.getElementById('user-fullname').textContent = fullName;
-      document.getElementById('user-username').textContent = username;
-      
-      // Set user avatar if available
-      if (user.photo_url) {
-        document.getElementById('user-avatar').src = user.photo_url;
-        document.getElementById('user-avatar').alt = fullName;
-      } else {
-        // Fallback to initials if no avatar
-        const avatarElement = document.getElementById('user-avatar');
-        avatarElement.src = '';
-        avatarElement.textContent = user.first_name ? user.first_name[0].toUpperCase() : 'U';
-      }
-    } else {
-      // No user data found - redirect to index.html for verification
-      window.location.href = 'index.html';
-    }
-    
-    // Initialize Telegram Web App
-    tg.expand();
-    tg.enableClosingConfirmation();
-  });
-  </script>
+    // Store user data for profile page
+    localStorage.setItem('userProfileData', JSON.stringify({
+      fullName: fullName,
+      username: username,
+      photoUrl: user.photo_url || '',
+      firstName: user.first_name || '',
+      lastName: user.last_name || ''
+    }));
+  } else {
+    // No user data found - redirect to index.html for verification
+    window.location.href = 'index.html';
+  }
+  
+  // Initialize Telegram Web App
+  tg.expand();
+  tg.enableClosingConfirmation();
+});
+</script>
 </body>
 </html>
