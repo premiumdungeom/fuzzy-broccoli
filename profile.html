@@ -1,5 +1,70 @@
 <html lang="en" class="dark">
  <head>
+ <style>
+  #loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 9.95); /* Changed from 0.9 to 0.95 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Rest of your loading styles remain the same */
+  .loading-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 120px;
+  }
+  
+  .loading-dots {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation: rotate 1.5s linear infinite;
+  }
+  
+  .dot {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    margin-top: -4px;
+    background-color: #666;
+    border-radius: 50%;
+    transform-origin: 50% 60px;
+  }
+  
+  .dot:nth-child(1) { transform: rotate(0deg); opacity: 0.1; }
+  .dot:nth-child(2) { transform: rotate(45deg); opacity: 0.2; }
+  .dot:nth-child(3) { transform: rotate(90deg); opacity: 0.3; }
+  .dot:nth-child(4) { transform: rotate(135deg); opacity: 0.4; }
+  .dot:nth-child(5) { transform: rotate(180deg); opacity: 0.6; }
+  .dot:nth-child(6) { transform: rotate(225deg); opacity: 0.7; }
+  .dot:nth-child(7) { transform: rotate(270deg); opacity: 0.8; }
+  .dot:nth-child(8) { transform: rotate(315deg); opacity: 0.9; }
+  
+  .loading-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+</style>
   <style>[data-mimo-alpha-selected] {
   position: relative;
 }
@@ -2206,50 +2271,74 @@ video {
    </div>
   </div>
    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Get user data from localStorage
-      const userData = localStorage.getItem('telegramUser');
-      
-      if (userData) {
-        try {
-          const user = JSON.parse(userData);
-          
-          // Update the user information in the header
-          const fullNameElement = document.getElementById('user-fullname');
-          const usernameElement = document.getElementById('user-username');
-          const avatarElement = document.getElementById('user-avatar');
-          
-          // Set full name (first name + last name if available)
-          const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
-          fullNameElement.textContent = fullName;
-          
-          // Set username (with @ prefix)
-          if (user.username) {
-            usernameElement.textContent = `@${user.username}`;
-          } else {
-            // If no username, show first name
-            usernameElement.textContent = user.first_name;
-          }
-          
-          // Set avatar if available
-          if (user.photo_url) {
-            avatarElement.innerHTML = `
-              <img src="${user.photo_url}" alt="${fullName}" class="h-full w-full object-cover">
-            `;
-          } else {
-            // Use initials as fallback
-            const initials = user.first_name.charAt(0) + (user.last_name ? user.last_name.charAt(0) : '');
-            avatarElement.querySelector('span').textContent = initials;
-          }
-        } catch (error) {
-          console.error('Error parsing user data:', error);
+  // Create and show loading overlay immediately
+  const loadingOverlay = document.createElement('div');
+  loadingOverlay.id = 'loading-overlay';
+  loadingOverlay.innerHTML = `
+    <div class="loading-container">
+      <div class="loading-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div class="loading-text">EchoEARN</div>
+    </div>
+  `;
+  
+  // Add to body immediately (before DOMContentLoaded)
+  document.body.appendChild(loadingOverlay);
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    // Remove after 1 second (1000ms)
+    setTimeout(() => {
+      loadingOverlay.style.opacity = '0';
+      setTimeout(() => {
+        if (document.body.contains(loadingOverlay)) {
+          document.body.removeChild(loadingOverlay);
         }
-      } else {
-        console.log('No user data found in localStorage');
-        // If no user data, redirect to index.html to get Telegram user info
-        window.location.href = 'index.html';
+      }, 300);
+    }, 500);
+    
+    // Rest of your DOMContentLoaded code...
+    const userData = localStorage.getItem('telegramUser');
+    
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        const fullNameElement = document.getElementById('user-fullname');
+        const usernameElement = document.getElementById('user-username');
+        const avatarElement = document.getElementById('user-avatar');
+        
+        const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
+        fullNameElement.textContent = fullName;
+        
+        if (user.username) {
+          usernameElement.textContent = `@${user.username}`;
+        } else {
+          usernameElement.textContent = user.first_name;
+        }
+        
+        if (user.photo_url) {
+          avatarElement.innerHTML = `
+            <img src="${user.photo_url}" alt="${fullName}" class="h-full w-full object-cover">
+          `;
+        } else {
+          const initials = user.first_name.charAt(0) + (user.last_name ? user.last_name.charAt(0) : '');
+          avatarElement.querySelector('span').textContent = initials;
+        }
+      } catch (error) {
+        console.error('Error parsing user data:', error);
       }
-    });
-  </script> 
+    } else {
+      console.log('No user data found in localStorage');
+      window.location.href = 'index.html';
+    }
+  });
+</script>
  </body>
 </html>
