@@ -2244,12 +2244,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const allJoined = Object.values(data.membership).every(status => status);
         
         if (allJoined) {
-          // All channels joined successfully
-          tg.showPopup({
-            title: 'Success!',
-            message: 'You have successfully joined all channels. Redirecting to app...',
-            buttons: [{ type: 'ok' }]
-          });
+  // Store user data for the home page
+  localStorage.setItem('telegramUser', JSON.stringify({
+    id: user.id,
+    firstName: user.first_name,
+    lastName: user.last_name || '',
+    username: user.username,
+    photoUrl: user.photo_url
+  }));
+  
+  tg.showPopup({
+    title: 'Success!',
+    message: 'You have successfully joined all channels. Redirecting to app...',
+    buttons: [{ type: 'ok' }]
+  });
           
           // Redirect to home page after a short delay
           setTimeout(() => {

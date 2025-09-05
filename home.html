@@ -2179,6 +2179,51 @@ video {
      </nav>
     </footer>
    </div>
-  </div> 
+  </div>
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const userData = localStorage.getItem('telegramUser');
+  
+  if (userData) {
+    const user = JSON.parse(userData);
+    
+    // Update header with user info
+    const nameElement = document.querySelector('header p.font-semibold');
+    const usernameElement = document.querySelector('header p.text-sm');
+    const avatarElement = document.querySelector('header .rounded-full span');
+    
+    if (nameElement) {
+      const fullName = `${user.firstName} ${user.lastName}`.trim();
+      nameElement.textContent = fullName || 'Telegram User';
+    }
+    
+    if (usernameElement) {
+      usernameElement.textContent = `@${user.username}` || '@username';
+    }
+    
+    if (avatarElement) {
+      // Show initials
+      if (user.firstName) {
+        const initials = user.firstName.charAt(0).toUpperCase() + 
+                         (user.lastName ? user.lastName.charAt(0).toUpperCase() : '');
+        avatarElement.textContent = initials;
+      }
+      
+      // Use photo if available
+      if (user.photoUrl) {
+        avatarElement.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = user.photoUrl;
+        img.alt = 'Profile';
+        img.className = 'h-full w-full rounded-full object-cover';
+        avatarElement.appendChild(img);
+      }
+    }
+  } else {
+    // Redirect to index if no user data
+    window.location.href = 'index.html';
+  }
+});
+</script> 
  </body>
 </html>
