@@ -2411,5 +2411,82 @@ video {
     }
   });
 </script>
+<script>
+// Function to handle tab switching
+function switchTab(tabName) {
+  // Hide all tab contents
+  const tabContents = document.querySelectorAll('[role="tabpanel"]');
+  tabContents.forEach(content => {
+    content.style.display = 'none';
+    content.setAttribute('data-state', 'inactive');
+  });
+  
+  // Show the selected tab content
+  const selectedContent = document.getElementById(`radix-:r1:-content-${tabName.toLowerCase()}`);
+  if (selectedContent) {
+    selectedContent.style.display = 'block';
+    selectedContent.setAttribute('data-state', 'active');
+  }
+  
+  // Update tab button states
+  const tabButtons = document.querySelectorAll('[role="tab"]');
+  tabButtons.forEach(button => {
+    button.setAttribute('aria-selected', 'false');
+    button.setAttribute('data-state', 'inactive');
+  });
+  
+  // Activate the clicked tab
+  const activeTabButton = document.getElementById(`radix-:r1:-trigger-${tabName.toLowerCase()}`);
+  if (activeTabButton) {
+    activeTabButton.setAttribute('aria-selected', 'true');
+    activeTabButton.setAttribute('data-state', 'active');
+  }
+}
+
+// Add event listeners to tabs when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Add click handlers to all tabs
+  const tabButtons = document.querySelectorAll('[role="tab"]');
+  tabButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const tabId = this.id;
+      const tabName = tabId.replace('radix-:r1:-trigger-', '');
+      switchTab(tabName);
+    });
+  });
+  
+  // Create content for other tabs
+  createTabContent('fb', 'FB', 'No Facebook tasks', 'Admin hasn\'t added any Facebook tasks yet.');
+  createTabContent('tt', 'TT', 'No TikTok tasks', 'Admin hasn\'t added any TikTok tasks yet.');
+  createTabContent('web', 'WEB', 'No Website tasks', 'Admin hasn\'t added any Website tasks yet.');
+});
+
+// Function to create content for tabs
+function createTabContent(tabId, title, mainText, description) {
+  const tabContent = document.getElementById(`radix-:r1:-content-${tabId}`);
+  
+  if (tabContent && tabContent.innerHTML.trim() === '') {
+    tabContent.innerHTML = `
+      <div class="space-y-4 pt-4">
+        <h3 class="font-semibold text-lg">${title} Tasks</h3>
+        <div class="rounded-xl border bg-card text-card-foreground shadow p-8 text-center">
+          <div class="flex flex-col items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-list text-muted-foreground mb-4">
+              <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+              <path d="M12 11h4"/>
+              <path d="M12 16h4"/>
+              <path d="M8 11h.01"/>
+              <path d="M8 16h.01"/>
+            </svg>
+            <p class="font-bold text-xl mb-2">${mainText}</p>
+            <p class="text-muted-foreground">${description}</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+</script>
  </body>
 </html>
