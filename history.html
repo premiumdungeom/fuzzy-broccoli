@@ -2459,5 +2459,75 @@ video {
     }
   });
 </script>
+<script>
+// Function to handle tab switching
+function switchTab(tabName) {
+  // Hide all tab contents
+  const tabContents = document.querySelectorAll('[role="tabpanel"]');
+  tabContents.forEach(content => {
+    content.style.display = 'none';
+    content.setAttribute('data-state', 'inactive');
+  });
+  
+  // Show the selected tab content
+  const selectedContent = document.getElementById(`radix-:r1:-content-${tabName.toLowerCase()}`);
+  if (selectedContent) {
+    selectedContent.style.display = 'block';
+    selectedContent.setAttribute('data-state', 'active');
+  }
+  
+  // Update tab button states
+  const tabButtons = document.querySelectorAll('[role="tab"]');
+  tabButtons.forEach(button => {
+    button.setAttribute('aria-selected', 'false');
+    button.setAttribute('data-state', 'inactive');
+  });
+  
+  // Activate the clicked tab
+  const activeTabButton = document.getElementById(`radix-:r1:-trigger-${tabName.toLowerCase()}`);
+  if (activeTabButton) {
+    activeTabButton.setAttribute('aria-selected', 'true');
+    activeTabButton.setAttribute('data-state', 'active');
+  }
+}
+
+// Add event listeners to tabs when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Add click handlers to all tabs
+  const tabButtons = document.querySelectorAll('[role="tab"]');
+  tabButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const tabId = this.id;
+      const tabName = tabId.replace('radix-:r1:-trigger-', '');
+      switchTab(tabName);
+    });
+  });
+  
+  // Create content for withdrawals tab
+  createWithdrawalsContent();
+});
+
+// Function to create content for withdrawals tab
+function createWithdrawalsContent() {
+  const tabContent = document.getElementById('radix-:r1:-content-withdrawals');
+  
+  if (tabContent && tabContent.innerHTML.trim() === '') {
+    tabContent.innerHTML = `
+      <div class="space-y-4 pt-4">
+        <div class="rounded-xl border bg-card text-card-foreground shadow p-8 text-center">
+          <div class="flex flex-col items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wallet text-muted-foreground mb-4">
+              <path d="M19 7V4a1 1 0 0 0-1-1h-1a1 1 0 0 0-1 1v3a2 2 0 0 1 2 2h-2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h10a2 2 0 0 0 2-2Z"/>
+              <path d="M17 11h1a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h1"/>
+            </svg>
+            <p class="font-bold text-xl mb-2">No withdrawals</p>
+            <p class="text-muted-foreground">You haven't made any withdrawals yet.</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+</script>
  </body>
 </html>
