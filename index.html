@@ -2176,18 +2176,17 @@ document.addEventListener('DOMContentLoaded', function() {
   tg.enableClosingConfirmation();
   
   // Get user data from Telegram
-  // Get user data from Telegram
-if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-  user = tg.initDataUnsafe.user;
-  updateUserInfo();
-  
-  // Store user data for the home page - make sure this is happening
-  localStorage.setItem('telegramUser', JSON.stringify(user));
-} else {
-  // Not in Telegram Mini App context
-  alert('This app must be opened within Telegram');
-  return;
-}
+  if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+    user = tg.initDataUnsafe.user;
+    updateUserInfo();
+    
+    // Store user data for the home page
+    localStorage.setItem('telegramUser', JSON.stringify(user));
+  } else {
+    // Not in Telegram Mini App context
+    alert('This app must be opened within Telegram');
+    return;
+  }
   
   // Update UI with user info
   function updateUserInfo() {
@@ -2245,20 +2244,12 @@ if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
         const allJoined = Object.values(data.membership).every(status => status);
         
         if (allJoined) {
-  // Store user data for the home page
-  localStorage.setItem('telegramUser', JSON.stringify({
-    id: user.id,
-    firstName: user.first_name,
-    lastName: user.last_name || '',
-    username: user.username,
-    photoUrl: user.photo_url
-  }));
-  
-  tg.showPopup({
-    title: 'Success!',
-    message: 'You have successfully joined all channels. Redirecting to app...',
-    buttons: [{ type: 'ok' }]
-  });
+          // All channels joined successfully
+          tg.showPopup({
+            title: 'Success!',
+            message: 'You have successfully joined all channels. Redirecting to app...',
+            buttons: [{ type: 'ok' }]
+          });
           
           // Redirect to home page after a short delay
           setTimeout(() => {

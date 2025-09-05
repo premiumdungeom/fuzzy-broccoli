@@ -64,11 +64,6 @@ window.__vite_plugin_react_preamble_installed__ = true
     .talos-badge:hover {
       background-color: #F0EDEA;
     }
-    
-    .profile-img {
-      object-fit: cover;
-      border-radius: 50%;
-    }
   </style>
   <style type="text/css" data-vite-dev-id="/home/app/client/src/index.css">*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -2111,13 +2106,13 @@ video {
     <header class="bg-primary text-primary-foreground p-4">
      <div class="container mx-auto flex justify-between items-center">
       <h1 class="text-xl font-bold">EchoEARN</h1>
-      <div class="flex items-center gap-3 text-right">
-       <div id="user-info">
+      <div class="flex items-center gap-3 text-right" id="user-profile">
+       <div>
         <p class="font-semibold" id="user-fullname">Full Name</p>
         <p class="text-sm opacity-80" id="user-username">@username</p>
        </div>
-       <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
-        <span id="user-avatar" class="flex h-full w-full items-center justify-center rounded-full bg-muted">U</span>
+       <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full" id="user-avatar">
+        <span class="flex h-full w-full items-center justify-center rounded-full bg-muted">U</span>
        </span>
       </div>
      </div>
@@ -2187,7 +2182,7 @@ video {
     </footer>
    </div>
   </div>
-  <script>
+   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Get user data from localStorage
       const userData = localStorage.getItem('telegramUser');
@@ -2196,50 +2191,42 @@ video {
         try {
           const user = JSON.parse(userData);
           
-          // Update the user info in the header
+          // Update the user information in the header
           const fullNameElement = document.getElementById('user-fullname');
           const usernameElement = document.getElementById('user-username');
           const avatarElement = document.getElementById('user-avatar');
           
-          if (fullNameElement) {
-            const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim();
-            fullNameElement.textContent = fullName || 'Telegram User';
+          // Set full name (first name + last name if available)
+          const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
+          fullNameElement.textContent = fullName;
+          
+          // Set username (with @ prefix)
+          if (user.username) {
+            usernameElement.textContent = `@${user.username}`;
+          } else {
+            // If no username, show first name
+            usernameElement.textContent = user.first_name;
           }
           
-          if (usernameElement) {
-            usernameElement.textContent = user.username ? `@${user.username}` : '@username';
-          }
-          
-          if (avatarElement) {
-            // Clear existing content
-            avatarElement.innerHTML = '';
-            
-            // Use photo if available
-            if (user.photo_url) {
-              const img = document.createElement('img');
-              img.src = user.photo_url;
-              img.alt = 'Profile';
-              img.className = 'profile-img h-full w-full';
-              avatarElement.appendChild(img);
-            } else {
-              // Display initials if no photo available
-              const firstName = user.first_name || '';
-              const lastName = user.last_name || '';
-              const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || 'U';
-              avatarElement.textContent = initials;
-            }
+          // Set avatar if available
+          if (user.photo_url) {
+            avatarElement.innerHTML = `
+              <img src="${user.photo_url}" alt="${fullName}" class="h-full w-full object-cover">
+            `;
+          } else {
+            // Use initials as fallback
+            const initials = user.first_name.charAt(0) + (user.last_name ? user.last_name.charAt(0) : '');
+            avatarElement.querySelector('span').textContent = initials;
           }
         } catch (error) {
           console.error('Error parsing user data:', error);
         }
       } else {
         console.log('No user data found in localStorage');
-        }
-  } else {
-    // Redirect to index if no user data
-    window.location.href = 'index.html';
-  }
-});
-</script> 
+        // If no user data, redirect to index.html to get Telegram user info
+        window.location.href = 'index.html';
+      }
+    });
+  </script> 
  </body>
 </html>
