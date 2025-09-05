@@ -2176,17 +2176,18 @@ document.addEventListener('DOMContentLoaded', function() {
   tg.enableClosingConfirmation();
   
   // Get user data from Telegram
-  if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-    user = tg.initDataUnsafe.user;
-    updateUserInfo();
-    
-    // Store user data for the home page
-    localStorage.setItem('telegramUser', JSON.stringify(user));
-  } else {
-    // Not in Telegram Mini App context
-    alert('This app must be opened within Telegram');
-    return;
-  }
+  // Get user data from Telegram
+if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+  user = tg.initDataUnsafe.user;
+  updateUserInfo();
+  
+  // Store user data for the home page - make sure this is happening
+  localStorage.setItem('telegramUser', JSON.stringify(user));
+} else {
+  // Not in Telegram Mini App context
+  alert('This app must be opened within Telegram');
+  return;
+}
   
   // Update UI with user info
   function updateUserInfo() {
