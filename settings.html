@@ -2016,16 +2016,24 @@ video {
     </main>
    </div>
   </div> 
-  <script>
+  <!-- In settings.html, update the saveSDK function -->
+<script>
 function saveSDK() {
   const sdkSnippet = document.getElementById('sdk-snippet').value;
   const rewardPoints = document.getElementById('reward-points').value;
   const zoneId = document.getElementById('zone-id').value;
+  const miniAppId = document.getElementById('mini-app-id').value;
   
   // Save to localStorage
   localStorage.setItem('adSDK', sdkSnippet);
   localStorage.setItem('adRewardPoints', rewardPoints);
   localStorage.setItem('adZoneId', zoneId);
+  localStorage.setItem('adMiniAppId', miniAppId);
+  
+  // Extract function name from SDK snippet
+  const functionMatch = sdkSnippet.match(/data-sdk='([^']+)'/);
+  const functionName = functionMatch ? functionMatch[1] : `show_${zoneId}`;
+  localStorage.setItem('adFunctionName', functionName);
   
   alert('SDK settings saved successfully!');
 }
