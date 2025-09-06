@@ -2257,21 +2257,10 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="p-6 pt-0 space-y-4 text-center">
   <p class="text-sm text-muted-foreground">Click "Start Earning" and then tap "Continue" to open the ad page. Keep it open for at least 15 seconds before closing to receive your reward.</p>
   <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 px-4 py-2 w-full h-12 text-lg" onclick="showAd()">Start Earning</button>
+  <!-- Loading indicator that appears below the button -->
+<div id="loading-indicator" class="hidden text-center mt-4">
+  <p class="text-sm text-muted-foreground">Loading...</p>
 </div>
-
-<!-- Add this hidden container for the ad -->
-<div id="ad-container" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center">
-  <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-    <h3 class="text-xl font-bold mb-4">Watch Ad to Earn</h3>
-    <p class="mb-4">Please watch the ad completely to receive your reward.</p>
-    <div id="ad-content" class="mb-4 min-h-40 flex items-center justify-center bg-gray-100 rounded">
-      <p>Ad will appear here...</p>
-    </div>
-    <div class="flex justify-between">
-      <button class="px-4 py-2 bg-gray-300 rounded" onclick="closeAd()">Cancel</button>
-      <button class="px-4 py-2 bg-green-500 text-white rounded" onclick="completeAd()">I Watched the Ad</button>
-    </div>
-  </div>
 </div>
     </main>
     <footer class="sticky bottom-0 bg-card border-t shadow-t-lg">
@@ -2301,7 +2290,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <path d="m3 11 18-5v12L3 14v-3z"></path>
         <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path>
        </svg><span class="text-xs text-primary font-semibold">Ads</span></a>
-      <a class="flex flex-col items-center justify-center text-center w-1/5" href="profile.html" data-discover="true">
+      <a class="flex flex-col items-center justify-center text-center w-1/5" href="settings.html" data-discover="true">
        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user h-6 w-6 mb-1 text-muted-foreground">
         <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
         <circle cx="12" cy="7" r="4"></circle>
@@ -2395,8 +2384,8 @@ function showAd() {
     return;
   }
   
-  // Show the ad container
-  document.getElementById('ad-container').classList.remove('hidden');
+  // Show loading indicator below the button
+  document.getElementById('loading-indicator').classList.remove('hidden');
   
   // Initialize the ad
   try {
@@ -2469,7 +2458,8 @@ function completeAd() {
 }
 
 function closeAd() {
-  document.getElementById('ad-container').classList.add('hidden');
+  // Hide the loading indicator
+  document.getElementById('loading-indicator').classList.add('hidden');
   adInProgress = false;
   if (adWatchTimer) {
     clearTimeout(adWatchTimer);
