@@ -2018,21 +2018,23 @@ video {
   </div> 
   <!-- In settings.html, update the saveSDK function -->
 <script>
-  function showConfiguration() {
-    // Hide the main content
-    document.querySelector('main').style.display = 'none';
-    
-    // Show configuration content
-    document.getElementById('configuration-content').style.display = 'block';
-  }
+function showConfiguration() {
+  // Hide the main content and header
+  document.querySelector('main').style.display = 'none';
+  document.querySelector('.bg-gradient-to-b').style.display = 'none';
+  
+  // Show configuration content
+  document.getElementById('configuration-content').style.display = 'block';
+}
 
-  function showMain() {
-    // Show the main content
-    document.querySelector('main').style.display = 'block';
-    
-    // Hide configuration content
-    document.getElementById('configuration-content').style.display = 'none';
-  }
+function showMain() {
+  // Show the main content and header
+  document.querySelector('main').style.display = 'block';
+  document.querySelector('.bg-gradient-to-b').style.display = 'block';
+  
+  // Hide configuration content
+  document.getElementById('configuration-content').style.display = 'none';
+}
 
   function saveSDK() {
     const sdkSnippet = document.getElementById('sdk-snippet').value;
