@@ -21,6 +21,17 @@
   outline-offset: -5px !important;
 }
 </style>
+<!-- Add this style to fix the gap issue -->
+<style>
+  #configuration-content {
+    margin-top: 0;
+    padding-top: 0;
+  }
+  
+  #configuration-content .bg-gradient-to-b {
+    padding-bottom: 2rem;
+  }
+</style>
   <script type="module">
 import RefreshRuntime from "/@react-refresh"
 RefreshRuntime.injectIntoGlobalHook(window)
