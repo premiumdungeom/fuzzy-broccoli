@@ -2354,10 +2354,12 @@ function loadAdSDK() {
       // Add to document head
       document.head.appendChild(newScript);
       console.log('Ad SDK loaded successfully');
+      return true;
     }
-  } else {
-    console.log('No ad SDK configured');
   }
+  
+  console.log('No ad SDK configured');
+  return false;
 }
 
 // Function to handle the "Start Earning" button
@@ -2366,35 +2368,147 @@ function setupEarningButton() {
   
   if (startEarningBtn) {
     startEarningBtn.addEventListener('click', function() {
-      // Load the SDK when user clicks "Start Earning"
-      loadAdSDK();
+      // Show loading state
+      this.innerHTML = 'Loading Ads...';
+      this.disabled = true;
       
-      // Open the ad page (you'll need to implement this based on your SDK)
-      window.open('https://your-ad-provider.com', '_blank');
+      // Load the SDK
+      const sdkLoaded = loadAdSDK();
       
-      // Start a timer for 15 seconds
-      setTimeout(function() {
-        // Reward the user after 15 seconds
-        const rewardPoints = parseInt(localStorage.getItem('adRewardPoints') || '30');
-        alert(`Congratulations! You've earned ${rewardPoints} points.`);
+      if (sdkLoaded) {
+        // The SDK should handle showing ads automatically
+        // We'll set up a timer to check if user viewed the ad
         
-        // Update user's points (you'll need to implement this)
-        updateUserPoints(rewardPoints);
-      }, 15000);
+        // Create an overlay to ensure user keeps the ad visible
+        const adOverlay = document.createElement('div');
+        adOverlay.style.position = 'fixed';
+        adOverlay.style.top = '0';
+        adOverlay.style.left = '0';
+        adOverlay.style.width = '100%';
+        adOverlay.style.height = '100%';
+        adOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+        adOverlay.style.color = 'white';
+        adOverlay.style.display = 'flex';
+        adOverlay.style.flexDirection = 'column';
+        adOverlay.style.justifyContent = 'center';
+        adOverlay.style.alignItems = 'center';
+        adOverlay.style.zIndex = '10000';
+        adOverlay.innerHTML = `
+          <h3>Ad is Loading</h3>
+          <p>Please keep this page open for at least 15 seconds</p>
+          <div id="countdown">15</div>
+          <button id="close-ad" style="margin-top: 20px; padding: 10px 20px; background: #f00; color: white; border: none; border-radius: 5px;">Close Ad</button>
+        `;
+        
+        document.body.appendChild(adOverlay);
+        
+        // Set up countdown timer
+        let secondsLeft = 15;
+        const countdownElement = document.getElementById('countdown');
+        const countdownInterval = setInterval(() => {
+          secondsLeft--;
+          countdownElement.textContent = secondsLeft;
+          
+          if (secondsLeft <= 0) {
+            clearInterval(countdownInterval);
+            rewardUser();
+            adOverlay.remove();
+            resetEarningButton();
+          }
+        }, 1000);
+        
+        // Close button handler
+        document.getElementById('close-ad').addEventListener('click', function() {
+          clearInterval(countdownInterval);
+          adOverlay.remove();
+          resetEarningButton();
+          alert('Ad closed early. No rewards earned.');
+        });
+      } else {
+        alert('Ad SDK not configured. Please contact administrator.');
+        resetEarningButton();
+      }
     });
   }
 }
 
-// Function to update user points (pseudocode - implement based on your backend)
+function resetEarningButton() {
+  const startEarningBtn = document.getElementById('start-earning-btn');
+  if (startEarningBtn) {
+    startEarningBtn.innerHTML = 'Start Earning';
+    startEarningBtn.disabled = false;
+  }
+}
+
+function rewardUser() {
+  const rewardPoints = parseInt(localStorage.getItem('adRewardPoints') || '30');
+  alert(`Congratulations! You've earned ${rewardPoints} points for viewing the ad.`);
+  
+  // Update user's points (you'll need to implement this)
+  updateUserPoints(rewardPoints);
+  
+  // Update the task counters
+  updateTaskCounters();
+}
+
 function updateUserPoints(points) {
   // This would typically make an API call to your backend
   console.log(`Adding ${points} points to user account`);
   // Implement your actual points update logic here
+  
+  // For demo purposes, we'll update localStorage
+  const currentPoints = parseInt(localStorage.getItem('userPoints') || '0');
+  localStorage.setItem('userPoints', currentPoints + points);
+}
+
+function updateTaskCounters() {
+  // Update daily tasks
+  const dailyTasks = parseInt(localStorage.getItem('dailyTasks') || '0');
+  localStorage.setItem('dailyTasks', dailyTasks + 1);
+  
+  // Update hourly tasks
+  const hourlyTasks = parseInt(localStorage.getItem('hourlyTasks') || '0');
+  localStorage.setItem('hourlyTasks', hourlyTasks + 1);
+  
+  // Update lifetime tasks
+  const lifetimeTasks = parseInt(localStorage.getItem('lifetimeTasks') || '0');
+  localStorage.setItem('lifetimeTasks', lifetimeTasks + 1);
+  
+  // Update total earnings
+  const rewardPoints = parseInt(localStorage.getItem('adRewardPoints') || '30');
+  const totalEarnings = parseInt(localStorage.getItem('totalEarnings') || '0');
+  localStorage.setItem('totalEarnings', totalEarnings + rewardPoints);
+  
+  // Refresh the displayed values
+  refreshTaskDisplay();
+}
+
+function refreshTaskDisplay() {
+  // Update the UI with the latest values
+  document.querySelector('p:contains("Daily Tasks Completed") + p').innerHTML = 
+    `${localStorage.getItem('dailyTasks') || '0'} <span class="text-sm text-muted-foreground">/ 60</span>`;
+  
+  document.querySelector('p:contains("Hourly Tasks Completed") + p').innerHTML = 
+    `${localStorage.getItem('hourlyTasks') || '0'} <span class="text-sm text-muted-foreground">/ 20</span>`;
+  
+  document.querySelector('p:contains("Lifetime Completed Tasks") + p').textContent = 
+    localStorage.getItem('lifetimeTasks') || '0';
+  
+  document.querySelector('p:contains("Total Earnings") + p').textContent = 
+    localStorage.getItem('totalEarnings') || '0';
 }
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+  // Initialize task counters if they don't exist
+  if (!localStorage.getItem('dailyTasks')) localStorage.setItem('dailyTasks', '0');
+  if (!localStorage.getItem('hourlyTasks')) localStorage.setItem('hourlyTasks', '0');
+  if (!localStorage.getItem('lifetimeTasks')) localStorage.setItem('lifetimeTasks', '0');
+  if (!localStorage.getItem('totalEarnings')) localStorage.setItem('totalEarnings', '0');
+  
+  // Set up the button and display
   setupEarningButton();
+  refreshTaskDisplay();
 });
 </script>
  </body>
