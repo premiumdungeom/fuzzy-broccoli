@@ -1975,46 +1975,6 @@ video {
        </div>
       </div>
      </div>
-     <div id="configuration-content" class="hidden">
-  <div class="bg-gradient-to-b from-green-900 to-black p-8 text-white">
-    <button onclick="showMain()" class="mb-4 inline-flex items-center gap-2 text-sm text-blue-300 hover:text-blue-500">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
-        <path d="m12 19-7-7 7-7"></path>
-        <path d="M19 12H5"></path>
-      </svg>
-      Back to Dashboard
-    </button>
-    <p class="font-bold">AdHive</p>
-    <h1 class="text-3xl mt-2">Configuration</h1>
-    <p class="text-gray-400 text-sm mt-1">Manage your bot configuration settings</p>
-  </div>
-  
-  <!-- Add the Referral Rewards section here -->
-  <div class="bg-black p-8">
-    <h2 class="text-white text-xl font-semibold">Referral Rewards</h2>
-    <p class="text-gray-400 text-sm mt-1">Configure referral reward settings for your users</p>
-    
-    <div class="mt-6 space-y-6 max-w-2xl">
-      <div>
-        <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="referral-reward">
-          Referral Reward Amount (points for each referral):
-        </label>
-        <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" id="referral-reward" value="50">
-        <p class="text-gray-400 text-sm mt-2">This is the amount of points awarded to users for each successful referral.</p>
-      </div>
-    </div>
-    
-    <div class="mt-8 flex justify-start">
-      <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-blue-500 text-white border border-black hover:bg-blue-600 text-lg px-6 py-4" onclick="saveReferralReward()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-save mr-2 h-5 w-5">
-          <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
-          <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path>
-          <path d="M7 3v4a1 1 0 0 0 1 1h7"></path>
-        </svg>Save Referral Reward
-      </button>
-    </div>
-  </div>
-</div>
      <div class="bg-black p-8">
       <h2 class="text-white text-xl font-semibold">Monetag Ads</h2>
       <p class="text-gray-400 text-sm mt-1">Monetag is now integrated via header SDK. No extra settings are required here.</p>
@@ -2058,41 +2018,93 @@ video {
   </div> 
   <!-- In settings.html, update the saveSDK function -->
 <script>
-function showConfiguration() {
-  // Hide the main content
-  document.querySelector('main').style.display = 'none';
-  
-  // Show configuration content
-  document.getElementById('configuration-content').style.display = 'block';
-}
+  function showConfiguration() {
+    // Hide the main content
+    document.querySelector('main').style.display = 'none';
+    
+    // Show configuration content
+    document.getElementById('configuration-content').style.display = 'block';
+  }
 
-function showMain() {
-  // Show the main content
-  document.querySelector('main').style.display = 'block';
-  
-  // Hide configuration content
-  document.getElementById('configuration-content').style.display = 'none';
-}
+  function showMain() {
+    // Show the main content
+    document.querySelector('main').style.display = 'block';
+    
+    // Hide configuration content
+    document.getElementById('configuration-content').style.display = 'none';
+  }
 
-function saveSDK() {
-  const sdkSnippet = document.getElementById('sdk-snippet').value;
-  const rewardPoints = document.getElementById('reward-points').value;
-  const zoneId = document.getElementById('zone-id').value;
-  const miniAppId = document.getElementById('mini-app-id').value;
+  function saveSDK() {
+    const sdkSnippet = document.getElementById('sdk-snippet').value;
+    const rewardPoints = document.getElementById('reward-points').value;
+    const zoneId = document.getElementById('zone-id').value;
+    const miniAppId = document.getElementById('mini-app-id').value;
+    
+    // Save to localStorage
+    localStorage.setItem('adSDK', sdkSnippet);
+    localStorage.setItem('adRewardPoints', rewardPoints);
+    localStorage.setItem('adZoneId', zoneId);
+    localStorage.setItem('adMiniAppId', miniAppId);
+    
+    // Extract function name from SDK snippet
+    const functionMatch = sdkSnippet.match(/data-sdk='([^']+)'/);
+    const functionName = functionMatch ? functionMatch[1] : `show_${zoneId}`;
+    localStorage.setItem('adFunctionName', functionName);
+    
+    alert('SDK settings saved successfully!');
+  }
   
-  // Save to localStorage
-  localStorage.setItem('adSDK', sdkSnippet);
-  localStorage.setItem('adRewardPoints', rewardPoints);
-  localStorage.setItem('adZoneId', zoneId);
-  localStorage.setItem('adMiniAppId', miniAppId);
+  function saveReferralReward() {
+    const referralReward = document.getElementById('referral-reward').value;
+    
+    // Save to localStorage
+    localStorage.setItem('referralReward', referralReward);
+    
+    alert('Referral reward saved successfully!');
+  }
+  </script>
   
-  // Extract function name from SDK snippet
-  const functionMatch = sdkSnippet.match(/data-sdk='([^']+)'/);
-  const functionName = functionMatch ? functionMatch[1] : `show_${zoneId}`;
-  localStorage.setItem('adFunctionName', functionName);
+  <!-- Add the configuration content section here -->
+  <div id="configuration-content" class="hidden">
+    <div class="bg-gradient-to-b from-green-900 to-black p-8 text-white">
+      <button onclick="showMain()" class="mb-4 inline-flex items-center gap-2 text-sm text-blue-300 hover:text-blue-500">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
+          <path d="m12 19-7-7 7-7"></path>
+          <path d="M19 12H5"></path>
+        </svg>
+        Back to Dashboard
+      </button>
+      <p class="font-bold">AdHive</p>
+      <h1 class="text-3xl mt-2">Configuration</h1>
+      <p class="text-gray-400 text-sm mt-1">Manage your bot configuration settings</p>
+    </div>
+    
+    <!-- Referral Rewards section -->
+    <div class="bg-black p-8">
+      <h2 class="text-white text-xl font-semibold">Referral Rewards</h2>
+      <p class="text-gray-400 text-sm mt-1">Configure referral reward settings for your users</p>
+      
+      <div class="mt-6 space-y-6 max-w-2xl">
+        <div>
+          <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="referral-reward">
+            Referral Reward Amount (points for each referral):
+          </label>
+          <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" id="referral-reward" value="50">
+          <p class="text-gray-400 text-sm mt-2">This is the amount of points awarded to users for each successful referral.</p>
+        </div>
+      </div>
+      
+      <div class="mt-8 flex justify-start">
+        <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-blue-500 text-white border border-black hover:bg-blue-600 text-lg px-6 py-4" onclick="saveReferralReward()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-save mr-2 h-5 w-5">
+            <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+            <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path>
+            <path d="M7 3v4a1 1 0 0 0 1 1h7"></path>
+          </svg>Save Referral Reward
+        </button>
+      </div>
+    </div>
+  </div>
   
-  alert('SDK settings saved successfully!');
-}
-</script>
  </body>
 </html>
