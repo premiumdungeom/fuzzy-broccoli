@@ -1869,13 +1869,13 @@ video {
         </svg>
         <span class="text-white text-sm">Dashboard</span>
        </div>
-       <div class="flex flex-col items-center justify-center gap-2 rounded-lg p-4 text-center bg-gray-800">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings text-blue-300">
-         <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
-         <circle cx="12" cy="12" r="3"></circle>
-        </svg>
-        <span class="text-white text-sm">Configuration</span>
-       </div>
+       <div class="flex flex-col items-center justify-center gap-2 rounded-lg p-4 text-center bg-gray-800 cursor-pointer" onclick="showConfiguration()">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings text-blue-300">
+    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+    <circle cx="12" cy="12" r="3"></circle>
+  </svg>
+  <span class="text-white text-sm">Configuration</span>
+</div>
        <div class="flex flex-col items-center justify-center gap-2 rounded-lg p-4 text-center bg-gray-800">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-list text-yellow-200">
          <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
@@ -1975,6 +1975,46 @@ video {
        </div>
       </div>
      </div>
+     <div id="configuration-content" class="hidden">
+  <div class="bg-gradient-to-b from-green-900 to-black p-8 text-white">
+    <button onclick="showMain()" class="mb-4 inline-flex items-center gap-2 text-sm text-blue-300 hover:text-blue-500">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
+        <path d="m12 19-7-7 7-7"></path>
+        <path d="M19 12H5"></path>
+      </svg>
+      Back to Dashboard
+    </button>
+    <p class="font-bold">AdHive</p>
+    <h1 class="text-3xl mt-2">Configuration</h1>
+    <p class="text-gray-400 text-sm mt-1">Manage your bot configuration settings</p>
+  </div>
+  
+  <!-- Add the Referral Rewards section here -->
+  <div class="bg-black p-8">
+    <h2 class="text-white text-xl font-semibold">Referral Rewards</h2>
+    <p class="text-gray-400 text-sm mt-1">Configure referral reward settings for your users</p>
+    
+    <div class="mt-6 space-y-6 max-w-2xl">
+      <div>
+        <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="referral-reward">
+          Referral Reward Amount (points for each referral):
+        </label>
+        <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" id="referral-reward" value="50">
+        <p class="text-gray-400 text-sm mt-2">This is the amount of points awarded to users for each successful referral.</p>
+      </div>
+    </div>
+    
+    <div class="mt-8 flex justify-start">
+      <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-blue-500 text-white border border-black hover:bg-blue-600 text-lg px-6 py-4" onclick="saveReferralReward()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-save mr-2 h-5 w-5">
+          <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+          <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path>
+          <path d="M7 3v4a1 1 0 0 0 1 1h7"></path>
+        </svg>Save Referral Reward
+      </button>
+    </div>
+  </div>
+</div>
      <div class="bg-black p-8">
       <h2 class="text-white text-xl font-semibold">Monetag Ads</h2>
       <p class="text-gray-400 text-sm mt-1">Monetag is now integrated via header SDK. No extra settings are required here.</p>
@@ -1984,88 +2024,75 @@ video {
       </div>
      </div>
      <div class="bg-black p-8 text-white">
-    <div class="space-y-6 max-w-2xl">
-     <div>
-      <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="reward-points">Fixed Reward Points (per completed ad):</label>
-      <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" id="reward-points" value="30">
-     </div>
-     <div>
-      <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="zone-id">Zone ID / SDK ID (numbers):</label>
-      <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" id="zone-id" value="9792891">
-     </div>
-     <div>
-      <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="mini-app-id">Mini App ID (optional):</label>
-      <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" id="mini-app-id" value="3019884">
-     </div>
-     <div>
-      <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="sdk-snippet">SDK Script Snippet (paste full &lt;script&gt; tag):</label>
-      <textarea class="flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-2 bg-gray-800 border-gray-700 text-green-400 font-mono" id="sdk-snippet" rows="3">&lt;script src='//libtl.com/sdk.js' data-zone='9792891' data-sdk='show_9792891'&gt;&lt;/script&gt;</textarea>
-      <p class="text-gray-400 text-sm mt-2">This code will be injected into the app header automatically.</p>
-     </div>
-    </div>
-    <div class="mt-8 flex justify-start">
-     <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 text-lg px-6 py-4" onclick="saveSDK()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-save mr-2 h-5 w-5">
-        <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
-        <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path>
-        <path d="M7 3v4a1 1 0 0 0 1 1h7"></path>
-      </svg>Save SDK Settings
-     </button>
-    </div>
-    
-    <!-- New Referral Reward Section -->
-    <div class="mt-12 pt-8 border-t border-gray-700">
-     <h3 class="text-lg font-semibold mb-4">Referral Rewards</h3>
-     <div class="space-y-6 max-w-2xl">
-      <div>
-       <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="ref-reward">Referral Reward Amount (points for each referral):</label>
-       <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" id="ref-reward" value="50">
-       <p class="text-gray-400 text-sm mt-2">This is the amount of points awarded to users for each successful referral.</p>
+      <div class="space-y-6 max-w-2xl">
+       <div>
+        <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="reward-points">Fixed Reward Points (per completed ad):</label>
+        <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" id="reward-points" value="30">
+       </div>
+       <div>
+        <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="zone-id">Zone ID / SDK ID (numbers):</label>
+        <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" id="zone-id" value="9792891">
+       </div>
+       <div>
+        <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="mini-app-id">Mini App ID (optional):</label>
+        <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" id="mini-app-id" value="3019884">
+       </div>
+       <div>
+        <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="sdk-snippet">SDK Script Snippet (paste full &lt;script&gt; tag):</label>
+        <textarea class="flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-2 bg-gray-800 border-gray-700 text-green-400 font-mono" id="sdk-snippet" rows="3">&lt;script src='//libtl.com/sdk.js' data-zone='9792891' data-sdk='show_9792891'&gt;&lt;/script&gt;</textarea>
+        <p class="text-gray-400 text-sm mt-2">This code will be injected into the app header automatically.</p>
+       </div>
+      </div>
+      <div class="mt-8 flex justify-start">
+       <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 text-lg px-6 py-4" onclick="saveSDK()">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-save mr-2 h-5 w-5">
+    <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+    <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path>
+    <path d="M7 3v4a1 1 0 0 0 1 1h7"></path>
+  </svg>Save SDK Settings
+</button>
       </div>
      </div>
-     <div class="mt-6 flex justify-start">
-      <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-blue-500 text-white border border-black hover:bg-blue-600 text-lg px-6 py-4" onclick="saveRefReward()">
-       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-save mr-2 h-5 w-5">
-         <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
-         <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path>
-         <path d="M7 3v4a1 1 0 0 0 1 1h7"></path>
-       </svg>Save Referral Reward
-      </button>
-     </div>
-    </div>
     </main>
    </div>
   </div> 
   <!-- In settings.html, update the saveSDK function -->
 <script>
-  function saveSDK() {
-    const sdkSnippet = document.getElementById('sdk-snippet').value;
-    const rewardPoints = document.getElementById('reward-points').value;
-    const zoneId = document.getElementById('zone-id').value;
-    const miniAppId = document.getElementById('mini-app-id').value;
-    
-    // Save to localStorage
-    localStorage.setItem('adSDK', sdkSnippet);
-    localStorage.setItem('adRewardPoints', rewardPoints);
-    localStorage.setItem('adZoneId', zoneId);
-    localStorage.setItem('adMiniAppId', miniAppId);
-    
-    // Extract function name from SDK snippet
-    const functionMatch = sdkSnippet.match(/data-sdk='([^']+)'/);
-    const functionName = functionMatch ? functionMatch[1] : `show_${zoneId}`;
-    localStorage.setItem('adFunctionName', functionName);
-    
-    alert('SDK settings saved successfully!');
-  }
+function showConfiguration() {
+  // Hide the main content
+  document.querySelector('main').style.display = 'none';
   
-  function saveRefReward() {
-    const refReward = document.getElementById('ref-reward').value;
-    
-    // Save referral reward to localStorage
-    localStorage.setItem('refReward', refReward);
-    
-    alert('Referral reward saved successfully!');
-  }
-  </script>
+  // Show configuration content
+  document.getElementById('configuration-content').style.display = 'block';
+}
+
+function showMain() {
+  // Show the main content
+  document.querySelector('main').style.display = 'block';
+  
+  // Hide configuration content
+  document.getElementById('configuration-content').style.display = 'none';
+}
+
+function saveSDK() {
+  const sdkSnippet = document.getElementById('sdk-snippet').value;
+  const rewardPoints = document.getElementById('reward-points').value;
+  const zoneId = document.getElementById('zone-id').value;
+  const miniAppId = document.getElementById('mini-app-id').value;
+  
+  // Save to localStorage
+  localStorage.setItem('adSDK', sdkSnippet);
+  localStorage.setItem('adRewardPoints', rewardPoints);
+  localStorage.setItem('adZoneId', zoneId);
+  localStorage.setItem('adMiniAppId', miniAppId);
+  
+  // Extract function name from SDK snippet
+  const functionMatch = sdkSnippet.match(/data-sdk='([^']+)'/);
+  const functionName = functionMatch ? functionMatch[1] : `show_${zoneId}`;
+  localStorage.setItem('adFunctionName', functionName);
+  
+  alert('SDK settings saved successfully!');
+}
+</script>
  </body>
 </html>
