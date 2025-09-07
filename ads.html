@@ -2299,6 +2299,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </footer>
    </div>
   </div>
+  <script src="common.js"></script>
    <script>
   // Create and show loading overlay immediately
   const loadingOverlay = document.createElement('div');
@@ -2443,12 +2444,13 @@ function completeAd() {
     adWatchTimer = null;
   }
   
-  // Reward the user
+  // Reward the user with points
   const rewardPoints = parseInt(localStorage.getItem('adRewardPoints') || '30');
-  alert(`Congratulations! You earned ${rewardPoints} points for watching the ad.`);
   
-  // Update user's points (you'll need to implement this based on your backend)
-  updateUserPoints(rewardPoints);
+  // Add the reward to the user's balance
+  const newBalance = addToBalance(rewardPoints);
+  
+  alert(`Congratulations! You earned ${rewardPoints} points for watching the ad. Your new balance is ${newBalance}.`);
   
   // Update task counters
   updateTaskCounters();
