@@ -2152,38 +2152,38 @@ video {
       
       <!-- Ads SDK Configuration -->
       <div class="mb-8">
-        <h2 class="text-xl font-semibold mb-4">Monetag Ads</h2>
-        <div class="space-y-4 max-w-2xl">
-          <p class="text-green-400">Monetag is now integrated via header SDK. No extra settings are required here.</p>
-          <div class="bg-gray-900 p-4 rounded-md">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-sm">Today Clicks</span>
-              <span class="text-green-400 font-bold">0</span>
+            <h2 class="text-xl font-semibold mb-4">Monetag Ads</h2>
+            <div class="space-y-4 max-w-2xl">
+                <p class="text-green-400">Monetag is now integrated via header SDK. No extra settings are required here.</p>
+                <div class="bg-gray-900 p-4 rounded-md">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm">Today Clicks</span>
+                        <span class="text-green-400 font-bold">0</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm font-medium leading-none">Fixed Reward Points (per completed ad):</label>
+                        <input type="number" id="reward-points-per-ad" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="">
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm font-medium leading-none">Zone ID/ SDK ID (numbers):</label>
+                        <input type="text" id="zone-id" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="">
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm font-medium leading-none">Mini App ID(optional):</label>
+                        <input type="text" id="mini-app-id" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="">
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm font-medium leading-none">SDK Script Snippet(paste full &lt;script&gt; tag):</label>
+                        <textarea id="sdk-script" class="flex min-h-[60px] w-full rounded-md border px-3 py-2 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" rows="3"></textarea>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-2">This code will be injected into the app header automatically.</p>
+                </div>
+                <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 px-4 py-2" onclick="saveSdkConfig()">
+                    Save SDK Settings
+                </button>
             </div>
-            <div class="mb-3">
-              <label class="text-sm font-medium leading-none">Fixed Reward Points (per completed ad):</label>
-              <input type="number" id="reward-points-per-ad" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="30">
-            </div>
-            <div class="mb-3">
-              <label class="text-sm font-medium leading-none">Zone ID/ SDK ID (numbers):</label>
-              <input type="text" id="zone-id" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="9792891">
-            </div>
-            <div class="mb-3">
-              <label class="text-sm font-medium leading-none">Mini App ID(optional):</label>
-              <input type="text" id="mini-app-id" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="3019884">
-            </div>
-            <div class="mb-3">
-              <label class="text-sm font-medium leading-none">SDK Script Snippet(paste full &lt;script&gt; tag):</label>
-              <textarea id="sdk-script" class="flex min-h-[60px] w-full rounded-md border px-3 py-2 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" rows="3">&lt;script src='//libtl.com/sdk.js' data-zone='9792891' data-sdk='show_9792891'&gt;&lt;/script&gt;</textarea>
-            </div>
-            <p class="text-sm text-gray-400 mt-2">This code will be injected into the app header automatically.</p>
-          </div>
-          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 px-4 py-2" onclick="saveSdkConfig()">
-            Save SDK Settings
-          </button>
         </div>
-      </div>
-     </div>
+    </div>
      
      <!-- Default Dashboard Content (shown initially) -->
      <div id="dashboard-content" class="bg-black p-8 text-white">
@@ -2214,33 +2214,62 @@ video {
   <script>
     // Function to show configuration section
     function showConfiguration() {
-      document.getElementById('dashboard-content').classList.add('hidden');
-      document.getElementById('configuration-content').classList.remove('hidden');
-      
-      // Update menu highlighting
-      const menuItems = document.querySelectorAll('.grid > div');
-      menuItems.forEach(item => {
-        item.classList.remove('bg-green-500');
-        item.classList.add('bg-gray-800');
-      });
-      event.currentTarget.classList.remove('bg-gray-800');
-      event.currentTarget.classList.add('bg-green-500');
-    }
-    
-    // Function to show dashboard
-    function showDashboard() {
-      document.getElementById('configuration-content').classList.add('hidden');
-      document.getElementById('dashboard-content').classList.remove('hidden');
-      
-      // Update menu highlighting
-      const menuItems = document.querySelectorAll('.grid > div');
-      menuItems.forEach(item => {
-        item.classList.remove('bg-green-500');
-        item.classList.add('bg-gray-800');
-      });
-      event.currentTarget.classList.remove('bg-gray-800');
-      event.currentTarget.classList.add('bg-green-500');
-    }
+            document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('configuration-content').classList.remove('hidden');
+            
+            // Update menu highlighting
+            const menuItems = document.querySelectorAll('.grid > div');
+            menuItems.forEach(item => {
+                item.classList.remove('bg-green-500');
+                item.classList.add('bg-gray-800');
+            });
+            event.currentTarget.classList.remove('bg-gray-800');
+            event.currentTarget.classList.add('bg-green-500');
+        }
+        
+        // Function to show dashboard
+        function showDashboard() {
+            document.getElementById('configuration-content').classList.add('hidden');
+            document.getElementById('dashboard-content').classList.remove('hidden');
+            
+            // Update menu highlighting
+            const menuItems = document.querySelectorAll('.grid > div');
+            menuItems.forEach(item => {
+                item.classList.remove('bg-green-500');
+                item.classList.add('bg-gray-800');
+            });
+            event.currentTarget.classList.remove('bg-gray-800');
+            event.currentTarget.classList.add('bg-green-500');
+        }
+        
+        // Save SDK configuration
+        function saveSdkConfig() {
+            const config = {
+                rewardPointsPerAd: document.getElementById('reward-points-per-ad').value,
+                zoneId: document.getElementById('zone-id').value,
+                miniAppId: document.getElementById('mini-app-id').value,
+                sdkScript: document.getElementById('sdk-script').value
+            };
+            
+            // Extract function name from SDK script
+            let functionName = 'show_9792891'; // Default
+            const match = config.sdkScript.match(/data-sdk='([^']+)'/);
+            if (match && match[1]) {
+                functionName = match[1];
+            } else if (config.zoneId) {
+                functionName = `show_${config.zoneId}`;
+            }
+            
+            // Save in the format ads.html expects
+            localStorage.setItem('adSDK', config.sdkScript);
+            localStorage.setItem('adFunctionName', functionName);
+            localStorage.setItem('adRewardPoints', config.rewardPointsPerAd);
+            
+            // Also keep the original format for the admin panel
+            localStorage.setItem('sdkConfig', JSON.stringify(config));
+            
+            alert('SDK configuration saved successfully!');
+        }
     
     // Save functions for each configuration section
     function saveClaimsConfig() {
@@ -2316,17 +2345,6 @@ video {
       alert('App configuration saved successfully!');
     }
     
-    function saveSdkConfig() {
-      const config = {
-        rewardPointsPerAd: document.getElementById('reward-points-per-ad').value,
-        zoneId: document.getElementById('zone-id').value,
-        miniAppId: document.getElementById('mini-app-id').value,
-        sdkScript: document.getElementById('sdk-script').value
-      };
-      localStorage.setItem('sdkConfig', JSON.stringify(config));
-      alert('SDK configuration saved successfully!');
-    }
-    
     // Load saved configurations when page loads
     function loadConfigurations() {
       // Load claims config
@@ -2384,11 +2402,11 @@ video {
       
       // Load SDK config
       const sdkConfig = JSON.parse(localStorage.getItem('sdkConfig') || '{}');
-      if (sdkConfig.rewardPointsPerAd) document.getElementById('reward-points-per-ad').value = sdkConfig.rewardPointsPerAd;
-      if (sdkConfig.zoneId) document.getElementById('zone-id').value = sdkConfig.zoneId;
-      if (sdkConfig.miniAppId) document.getElementById('mini-app-id').value = sdkConfig.miniAppId;
-      if (sdkConfig.sdkScript) document.getElementById('sdk-script').value = sdkConfig.sdkScript;
-    }
+            if (sdkConfig.rewardPointsPerAd) document.getElementById('reward-points-per-ad').value = sdkConfig.rewardPointsPerAd;
+            if (sdkConfig.zoneId) document.getElementById('zone-id').value = sdkConfig.zoneId;
+            if (sdkConfig.miniAppId) document.getElementById('mini-app-id').value = sdkConfig.miniAppId;
+            if (sdkConfig.sdkScript) document.getElementById('sdk-script').value = sdkConfig.sdkScript;
+        }
     
     // Other menu functions
     function showTasks() {
