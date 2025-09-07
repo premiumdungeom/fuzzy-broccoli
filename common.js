@@ -23,6 +23,12 @@ function updateBalanceDisplay() {
   if (profileBalanceElement) {
     profileBalanceElement.textContent = balance;
   }
+  
+  // Update balance on the current page (using the ID)
+  const currentBalanceElement = document.getElementById('balance-display');
+  if (currentBalanceElement) {
+    currentBalanceElement.textContent = balance;
+  }
 }
 
 function addToBalance(amount) {
