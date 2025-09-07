@@ -1955,7 +1955,7 @@ video {
        </div>
        <div class="flex flex-col items-center justify-center gap-2 rounded-lg p-4 text-center bg-gray-800 cursor-pointer" onclick="showOnboarding()">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500">
-         <path d="M21.801 10A10 10 极速赛车开奖直播 1 1 17 3.335"></path>
+         <path d="M21.801 10A10 10 0 1 1 17 3.335"></path>
          <path d="m9 11 3 3L22 4"></path>
         </svg>
         <span class="text-white text-sm">Onboarding</span>
@@ -1968,8 +1968,8 @@ video {
         <span class="text-white text-sm">Referral Audit</span>
        </div>
        <div class="flex flex-col items-center justify-center gap-2 rounded-lg p-4 text-center bg-gray-800 cursor-pointer" onclick="showUserLedger()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="极速赛车开奖直播 0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book text-orange-400">
-         <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 极速赛车开奖直播 0 1 1 1v18a1 1 0 0 1-1 1H极速赛车开奖直播6.5a1 1 0 0 1 0-5H20"></path>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book text-orange-400">
+         <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"></path>
         </svg>
         <span class="text-white text-sm">User Ledger</span>
        </div>
@@ -1984,25 +1984,25 @@ video {
         <div class="space-y-4 max-w-2xl">
           <div>
             <label class="text-sm font-medium leading-none">Daily Claims Limit:</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="5">
+            <input type="number" id="daily-claims-limit" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="5">
           </div>
           <div>
-            <label class="极速赛车开奖直播text-sm font-medium leading-none">Minimum Claim Amount:</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:极速赛车开奖直播ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="10">
+            <label class="text-sm font-medium leading-none">Minimum Claim Amount:</label>
+            <input type="number" id="min-claim-amount" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="10">
           </div>
           <div>
             <label class="text-sm font-medium leading-none">Maximum Claim Amount:</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="100">
+            <input type="number" id="max-claim-amount" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="100">
           </div>
           <div>
             <label class="text-sm font-medium leading-none">Bonus Claims per Friends:</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px极速赛车开奖直播-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="1">
+            <input type="number" id="bonus-claims-per-friend" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="1">
           </div>
           <div>
             <label class="text-sm font-medium leading-none">Friends Required for Bonus:</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-极速赛车开奖直播700 text-green-400" value="5">
+            <input type="number" id="friends-required-for-bonus" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="5">
           </div>
-          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&极速赛车开奖直播_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 px-4 py-2">
+          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 px-4 py-2" onclick="saveClaimsConfig()">
             Save Claims Config
           </button>
         </div>
@@ -2014,33 +2014,33 @@ video {
         <div class="space-y-4 max-w-2xl">
           <div>
             <label class="text-sm font-medium leading-none">Minimum Withdrawal:</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border极速赛车开奖直播-0 file:bg-transparent file:text-sm极速赛车开奖直播 file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="100">
+            <input type="number" id="min-withdrawal" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="100">
           </div>
           <div>
             <label class="text-sm font-medium leading-none">Maximum Withdrawal:</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="10000">
+            <input type="number" id="max-withdrawal" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="10000">
           </div>
           <div>
             <label class="text-sm font-medium leading-none">Withdrawal Fee (%):</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="5">
+            <input type="number" id="withdrawal-fee" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="5">
           </div>
           <div>
             <label class="text-sm font-medium leading-none">Bank Edit Fee (Points):</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:极速赛车开奖直播outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="10">
+            <input type="number" id="bank-edit-fee" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="10">
           </div>
-          <极速赛车开奖直播div>
+          <div>
             <label class="text-sm font-medium leading-none">Min Successful Referrals To Withdraw:</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file极速赛车开奖直播:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="3">
+            <input type="number" id="min-referrals-to-withdraw" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="3">
           </div>
           <div>
             <label class="text-sm font-medium leading-none">Currency Symbol:</label>
-            <input type="text" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-极速赛车开奖直播50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="$">
+            <input type="text" id="currency-symbol" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="$">
           </div>
           <div>
             <label class="text-sm font-medium leading-none">Point Currency Rate (1 point = ?):</label>
-            <input type="number" step="0.01" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="0.01">
+            <input type="number" step="0.01" id="point-currency-rate" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="0.01">
           </div>
-          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 px-4 py-2">
+          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 px-4 py-2" onclick="saveWithdrawalConfig()">
             Save Withdraw Config
           </button>
         </div>
@@ -2048,25 +2048,25 @@ video {
       
       <!-- Points Configuration -->
       <div class="mb-8">
-        <h2 class="text-xl font-semib极速赛车开奖直播old mb-4">Points Configuration</h2>
+        <h2 class="text-xl font-semibold mb-4">Points Configuration</h2>
         <div class="space-y-4 max-w-2xl">
           <div>
             <label class="text-sm font-medium leading-none">Channel Join Points:</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="50">
+            <input type="number" id="channel-join-points" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="50">
           </div>
           <div>
             <label class="text-sm font-medium leading-none">Group Join Points:</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-极速赛车开奖直播2 bg-gray-800 border-gray-700 text-green-400" value="30">
+            <input type="number" id="group-join-points" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="30">
           </div>
           <div>
             <label class="text-sm font-medium leading-none">Friend Invite Points:</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="20">
+            <input type="number" id="friend-invite-points" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="20">
           </div>
           <div>
             <label class="text-sm font-medium leading-none">Daily Task Limit:</label>
-            <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="10">
+            <input type="number" id="daily-task-limit" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="10">
           </div>
-          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-极速赛车开奖直播4 [&_svg]:shrink-极速赛车开奖直播0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 px-4 py-2">
+          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 px-4 py-2" onclick="savePointsConfig()">
             Save Points Config
           </button>
         </div>
@@ -2078,7 +2078,7 @@ video {
         <div class="space-y-4 max-w-2xl">
           <div>
             <label class="text-sm font-medium leading-none">Support Username:</label>
-            <input type="text" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file极速赛车开奖直播:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg极速赛车开奖直播-gray-800 border-gray-700 text-green-400" value="@SupportAdmin">
+            <input type="text" id="support-username" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="@SupportAdmin">
           </div>
           
           <h3 class="text-lg font-medium mt-6">Support Admins (Usernames & Descriptions)</h3>
@@ -2086,51 +2086,51 @@ video {
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="text-sm font-medium leading-none">Admin 1 Username:</label>
-              <input type="text" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="@Admin1">
+              <input type="text" id="admin1-username" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="@Admin1">
             </div>
             <div>
               <label class="text-sm font-medium leading-none">Admin 1 Description:</label>
-              <input type="text" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" placeholder="e.g. Withdrawal">
+              <input type="text" id="admin1-description" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" placeholder="e.g. Withdrawal">
             </div>
             
             <div>
-              <label class="text-sm font-medium leading-none">Admin 2 Username:</极速赛车开奖直播label>
-              <input type="text" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="@Admin2">
+              <label class="text-sm font-medium leading-none">Admin 2 Username:</label>
+              <input type="text" id="admin2-username" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="@Admin2">
             </div>
             <div>
               <label class="text-sm font-medium leading-none">Admin 2 Description:</label>
-              <input type="text" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file极速赛车开奖直播:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-极速赛车开奖直播foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" placeholder="e.g. Tasks">
+              <input type="text" id="admin2-description" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" placeholder="e.g. Tasks">
             </div>
             
             <div>
               <label class="text-sm font-medium leading-none">Admin 3 Username:</label>
-              <input type="text" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="@Admin3">
+              <input type="text" id="admin3-username" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="@Admin3">
             </div>
             <div>
               <label class="text-sm font-medium leading-none">Admin 3 Description:</label>
-              <input type="text" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" placeholder="e.g. General Support">
+              <input type="text" id="admin3-description" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" placeholder="e.g. General Support">
             </div>
             
             <div>
               <label class="text-sm font-medium leading-none">Admin 4 Username:</label>
-              <input type="text" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="@Admin4">
+              <input type="text" id="admin4-username" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="@Admin4">
             </div>
             <div>
               <label class="text-sm font-medium leading-none">Admin 4 Description:</label>
-              <input type="text" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" placeholder极速赛车开奖直播="e.g. General Support">
+              <input type="text" id="admin4-description" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" placeholder="e.g. General Support">
             </div>
             
             <div>
               <label class="text-sm font-medium leading-none">Admin 5 Username:</label>
-              <input type="text" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="@Admin5">
-            </极速赛车开奖直播div>
+              <input type="text" id="admin5-username" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="@Admin5">
+            </div>
             <div>
               <label class="text-sm font-medium leading-none">Admin 5 Description:</label>
-              <input type="text" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" placeholder="e.g. General Support">
+              <input type="text" id="admin5-description" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" placeholder="e.g. General Support">
             </div>
           </div>
           
-          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h极速赛车开奖直播-9 bg-green-500 text-black border border-black hover极速赛车开奖直播:bg-green-600 px-4 py-2">
+          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 px-4 py-2" onclick="saveSupportConfig()">
             Save Support Config
           </button>
         </div>
@@ -2142,9 +2142,9 @@ video {
         <div class="space-y-4 max-w-2xl">
           <div>
             <label class="text-sm font-medium leading-none">App Name:</label>
-            <input type极速赛车开奖直播="text" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="AdHive">
+            <input type="text" id="app-name" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="AdHive">
           </div>
-          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 px-4 py-2">
+          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 px-4 py-2" onclick="saveAppConfig()">
             Save App Config
           </button>
         </div>
@@ -2162,23 +2162,23 @@ video {
             </div>
             <div class="mb-3">
               <label class="text-sm font-medium leading-none">Fixed Reward Points (per completed ad):</label>
-              <input type="number" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="30">
+              <input type="number" id="reward-points-per-ad" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="30">
             </div>
             <div class="mb-3">
               <label class="text-sm font-medium leading-none">Zone ID/ SDK ID (numbers):</label>
-              <input type="text" class="flex h极速赛车开奖直播-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt极速赛车开奖直播-2 bg-gray-800 border-gray-700 text-green-400" value="9792891">
+              <input type="text" id="zone-id" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="9792891">
             </div>
             <div class="mb-3">
               <label class="text-sm font-medium leading-none">Mini App ID(optional):</label>
-              <input type="text" class="flex h-9 w-full rounded-md border px-3 py-极速赛车开奖直播1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="3019884">
+              <input type="text" id="mini-app-id" class="flex h-9 w-full rounded-md border px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" value="3019884">
             </div>
             <div class="mb-3">
               <label class="text-sm font-medium leading-none">SDK Script Snippet(paste full &lt;script&gt; tag):</label>
-              <textarea class="flex min-h-[60px] w-full rounded-md border px-3 py-2 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" rows="3">&lt;script src='//libtl.com/sdk.js' data-zone='9792891' data-sdk='show_9792891'&gt;&lt;/script&gt;</textarea>
+              <textarea id="sdk-script" class="flex min-h-[60px] w-full rounded-md border px-3 py-2 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-2 bg-gray-800 border-gray-700 text-green-400" rows="3">&lt;script src='//libtl.com/sdk.js' data-zone='9792891' data-sdk='show_9792891'&gt;&lt;/script&gt;</textarea>
             </div>
             <p class="text-sm text-gray-400 mt-2">This code will be injected into the app header automatically.</p>
           </div>
-          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&极速赛车开奖直播_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 px-4 py-2">
+          <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 bg-green-500 text-black border border-black hover:bg-green-600 px-4 py-2" onclick="saveSdkConfig()">
             Save SDK Settings
           </button>
         </div>
@@ -2201,72 +2201,11 @@ video {
           <p class="text-gray-400">Total Withdrawals</p>
           <p class="text-2xl font-bold text-green-400">$12,345</p>
         </div>
-        <div class="bg-gray-800 p-4 rounded极速赛车开奖直播-lg">
+        <div class="bg-gray-800 p-4 rounded-lg">
           <p class="text-gray-400">Pending Withdrawals</p>
           <p class="text-2xl font-bold text-green-400">$1,234</p>
         </div>
       </div>
-     </div>
-     
-     <!-- Other content sections (initially hidden) -->
-     <div id="tasks-content" class="hidden bg-black p-8 text-white">
-        <h2 class="text-xl font-semibold mb-4">Tasks Management</h2>
-        <p>Tasks content would be displayed here.</p>
-     </div>
-     
-     <div id="users-content" class="hidden bg-black p-8 text-white">
-        <h2 class="text-xl font-semibold mb-4">Users Management</h2>
-        <p>Users content would be displayed here.</p>
-     </div>
-     
-     <div id="withdrawals-content" class="hidden bg-black p-8 text-white">
-        <h2 class="text-xl font-semibold mb-4">Withdrawals Management</h2>
-        <p>Withdrawals content would be displayed here.</p>
-     </div>
-     
-     <div id="channels-content" class="hidden bg-black p-8 text-white">
-        <h2 class="text-xl font-semibold mb-4">Channels Management</h2>
-        <p>Channels content would be displayed here.</p>
-     </div>
-     
-     <div id="groups-content" class="hidden bg-black p-8 text-white">
-        <h2 class="text-xl font-semibold mb-4">Groups Management</h2>
-        <p>Groups content would be displayed here.</p>
-     </div>
-     
-     <div id="social-tasks-content" class="hidden bg-black p-8 text-white">
-        <h2 class="text-xl font-semibold mb-4">Social Tasks Management</h2>
-        <p>Social tasks content would be displayed here.</p>
-     </div>
-     
-     <div id="ads-content" class="hidden bg-black p-8 text-white">
-        <h2 class="text-xl font-semibold mb-4">Ads Management</h2>
-        <p>Ads content would be displayed here.</p>
-     </div>
-     
-     <div id="moderation-content" class="hidden bg-black p-8 text-white">
-        <h2 class="text-xl font-semibold mb-4">Moderation Tools</h2>
-        <p>Moderation content would be displayed here.</p>
-     </div>
-     
-     <div id="broadcast-content" class="hidden bg-black p-8 text-white">
-        <h2 class="text-xl font-semibold mb极速赛车开奖直播-4">Broadcast Messages</h2>
-        <p>Broadcast content would be displayed here.</p>
-     </div>
-     
-     <div id="onboarding-content" class="hidden bg-black p-8 text-white">
-        <h2 class="text-xl font-semibold mb-4">Onboarding Settings</h2>
-        <p>Onboarding content would be displayed here.</极速赛车开奖直播p>
-     </div>
-     
-     <div id="referral-audit-content" class="hidden bg-black p-8 text-white">
-        <h2 class="text-xl font-semibold mb-4">Referral Audit</h2>
-        <p>Referral audit content would be displayed here.</p>
-     </div>
-     
-     <div id="user-ledger-content" class="hidden bg-black p-8 text-white">
-        <h2 class="text-xl font-semibold mb-4">User Ledger</h2>
-        <p>User ledger content would be displayed here.</p>
      </div>
     </main>
    </div>
@@ -2275,120 +2214,233 @@ video {
   <script>
     // Function to show configuration section
     function showConfiguration() {
-      hideAllSections();
+      document.getElementById('dashboard-content').classList.add('hidden');
       document.getElementById('configuration-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Function to show dashboard
-    function showDashboard() {
-      hideAllSections();
-      document.getElementById('dashboard-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Function to show tasks section
-    function showTasks() {
-      hideAllSections();
-      document.getElementById('tasks-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Function to show users section
-    function showUsers() {
-      hideAllSections();
-      document.getElementById('users-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Function to show withdrawals section
-    function showWithdrawals() {
-      hideAllSections();
-      document.getElementById('withdrawals-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Function to show channels section
-    function showChannels() {
-      hideAllSections();
-      document.getElementById('channels-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Function to show groups section
-    function showGroups() {
-      hideAllSections();
-      document.getElementById('groups-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Function to show social tasks section
-    function showSocialTasks() {
-      hideAllSections();
-      document.getElementById('social-tasks-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Function to show ads section
-    function showAds() {
-      hideAllSections();
-      document.getElementById('ads-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Function to show moderation section
-    function showModeration() {
-      hideAllSections();
-      document.getElementById('moderation-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Function to show broadcast section
-    function showBroadcast() {
-      hideAllSections();
-      document.getElementById('broadcast-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Function to show onboarding section
-    function showOnboarding() {
-      hideAllSections();
-      document.getElementById('onboarding-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Function to show referral audit section
-    function showReferralAudit() {
-      hideAllSections();
-      document.getElementById('referral-audit-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Function to show user ledger section
-    function showUserLedger() {
-      hideAllSections();
-      document.getElementById('user-ledger-content').classList.remove('hidden');
-      updateMenuHighlight(event.currentTarget);
-    }
-    
-    // Helper function to hide all content sections
-    function hideAllSections() {
-      const sections = document.querySelectorAll('main > div[id$="-content"]');
-      sections.forEach(section => {
-        section.classList.add('hidden');
-      });
-    }
-    
-    // Helper function to update menu highlighting
-    function updateMenuHighlight(clickedItem) {
+      
+      // Update menu highlighting
       const menuItems = document.querySelectorAll('.grid > div');
       menuItems.forEach(item => {
         item.classList.remove('bg-green-500');
         item.classList.add('bg-gray-800');
       });
-      clickedItem.classList.remove('bg-gray-800');
-      clickedItem.classList.add('bg-green-500');
+      event.currentTarget.classList.remove('bg-gray-800');
+      event.currentTarget.classList.add('bg-green-500');
     }
+    
+    // Function to show dashboard
+    function showDashboard() {
+      document.getElementById('configuration-content').classList.add('hidden');
+      document.getElementById('dashboard-content').classList.remove('hidden');
+      
+      // Update menu highlighting
+      const menuItems = document.querySelectorAll('.grid > div');
+      menuItems.forEach(item => {
+        item.classList.remove('bg-green-500');
+        item.classList.add('bg-gray-800');
+      });
+      event.currentTarget.classList.remove('bg-gray-800');
+      event.currentTarget.classList.add('bg-green-500');
+    }
+    
+    // Save functions for each configuration section
+    function saveClaimsConfig() {
+      const config = {
+        dailyClaimsLimit: document.getElementById('daily-claims-limit').value,
+        minClaimAmount: document.getElementById('min-claim-amount').value,
+        maxClaimAmount: document.getElementById('max-claim-amount').value,
+        bonusClaimsPerFriend: document.getElementById('bonus-claims-per-friend').value,
+        friendsRequiredForBonus: document.getElementById('friends-required-for-bonus').value
+      };
+      localStorage.setItem('claimsConfig', JSON.stringify(config));
+      alert('Claims configuration saved successfully!');
+    }
+    
+    function saveWithdrawalConfig() {
+      const config = {
+        minWithdrawal: document.getElementById('min-withdrawal').value,
+        maxWithdrawal: document.getElementById('max-withdrawal').value,
+        withdrawalFee: document.getElementById('withdrawal-fee').value,
+        bankEditFee: document.getElementById('bank-edit-fee').value,
+        minReferralsToWithdraw: document.getElementById('min-referrals-to-withdraw').value,
+        currencySymbol: document.getElementById('currency-symbol').value,
+        pointCurrencyRate: document.getElementById('point-currency-rate').value
+      };
+      localStorage.setItem('withdrawalConfig', JSON.stringify(config));
+      alert('Withdrawal configuration saved successfully!');
+    }
+    
+    function savePointsConfig() {
+      const config = {
+        channelJoinPoints: document.getElementById('channel-join-points').value,
+        groupJoinPoints: document.getElementById('group-join-points').value,
+        friendInvitePoints: document.getElementById('friend-invite-points').value,
+        dailyTaskLimit: document.getElementById('daily-task-limit').value
+      };
+      localStorage.setItem('pointsConfig', JSON.stringify(config));
+      alert('Points configuration saved successfully!');
+    }
+    
+    function saveSupportConfig() {
+      const config = {
+        supportUsername: document.getElementById('support-username').value,
+        admin1: {
+          username: document.getElementById('admin1-username').value,
+          description: document.getElementById('admin1-description').value
+        },
+        admin2: {
+          username: document.getElementById('admin2-username').value,
+          description: document.getElementById('admin2-description').value
+        },
+        admin3: {
+          username: document.getElementById('admin3-username').value,
+          description: document.getElementById('admin3-description').value
+        },
+        admin4: {
+          username: document.getElementById('admin4-username').value,
+          description: document.getElementById('admin4-description').value
+        },
+        admin5: {
+          username: document.getElementById('admin5-username').value,
+          description: document.getElementById('admin5-description').value
+        }
+      };
+      localStorage.setItem('supportConfig', JSON.stringify(config));
+      alert('Support configuration saved successfully!');
+    }
+    
+    function saveAppConfig() {
+      const config = {
+        appName: document.getElementById('app-name').value
+      };
+      localStorage.setItem('appConfig', JSON.stringify(config));
+      alert('App configuration saved successfully!');
+    }
+    
+    function saveSdkConfig() {
+      const config = {
+        rewardPointsPerAd: document.getElementById('reward-points-per-ad').value,
+        zoneId: document.getElementById('zone-id').value,
+        miniAppId: document.getElementById('mini-app-id').value,
+        sdkScript: document.getElementById('sdk-script').value
+      };
+      localStorage.setItem('sdkConfig', JSON.stringify(config));
+      alert('SDK configuration saved successfully!');
+    }
+    
+    // Load saved configurations when page loads
+    function loadConfigurations() {
+      // Load claims config
+      const claimsConfig = JSON.parse(localStorage.getItem('claimsConfig') || '{}');
+      if (claimsConfig.dailyClaimsLimit) document.getElementById('daily-claims-limit').value = claimsConfig.dailyClaimsLimit;
+      if (claimsConfig.minClaimAmount) document.getElementById('min-claim-amount').value = claimsConfig.minClaimAmount;
+      if (claimsConfig.maxClaimAmount) document.getElementById('max-claim-amount').value = claimsConfig.maxClaimAmount;
+      if (claimsConfig.bonusClaimsPerFriend) document.getElementById('bonus-claims-per-friend').value = claimsConfig.bonusClaimsPerFriend;
+      if (claimsConfig.friendsRequiredForBonus) document.getElementById('friends-required-for-bonus').value = claimsConfig.friendsRequiredForBonus;
+      
+      // Load withdrawal config
+      const withdrawalConfig = JSON.parse(localStorage.getItem('withdrawalConfig') || '{}');
+      if (withdrawalConfig.minWithdrawal) document.getElementById('min-withdrawal').value = withdrawalConfig.minWithdrawal;
+      if (withdrawalConfig.maxWithdrawal) document.getElementById('max-withdrawal').value = withdrawalConfig.maxWithdrawal;
+      if (withdrawalConfig.withdrawalFee) document.getElementById('withdrawal-fee').value = withdrawalConfig.withdrawalFee;
+      if (withdrawalConfig.bankEditFee) document.getElementById('bank-edit-fee').value = withdrawalConfig.bankEditFee;
+      if (withdrawalConfig.minReferralsToWithdraw) document.getElementById('min-referrals-to-withdraw').value = withdrawalConfig.minReferralsToWithdraw;
+      if (withdrawalConfig.currencySymbol) document.getElementById('currency-symbol').value = withdrawalConfig.currencySymbol;
+      if (withdrawalConfig.pointCurrencyRate) document.getElementById('point-currency-rate').value = withdrawalConfig.pointCurrencyRate;
+      
+      // Load points config
+      const pointsConfig = JSON.parse(localStorage.getItem('pointsConfig') || '{}');
+      if (pointsConfig.channelJoinPoints) document.getElementById('channel-join-points').value = pointsConfig.channelJoinPoints;
+      if (pointsConfig.groupJoinPoints) document.getElementById('group-join-points').value = pointsConfig.groupJoinPoints;
+      if (pointsConfig.friendInvitePoints) document.getElementById('friend-invite-points').value = pointsConfig.friendInvitePoints;
+      if (pointsConfig.dailyTaskLimit) document.getElementById('daily-task-limit').value = pointsConfig.dailyTaskLimit;
+      
+      // Load support config
+      const supportConfig = JSON.parse(localStorage.getItem('supportConfig') || '{}');
+      if (supportConfig.supportUsername) document.getElementById('support-username').value = supportConfig.supportUsername;
+      if (supportConfig.admin1) {
+        document.getElementById('admin1-username').value = supportConfig.admin1.username || '';
+        document.getElementById('admin1-description').value = supportConfig.admin1.description || '';
+      }
+      if (supportConfig.admin2) {
+        document.getElementById('admin2-username').value = supportConfig.admin2.username || '';
+        document.getElementById('admin2-description').value = supportConfig.admin2.description || '';
+      }
+      if (supportConfig.admin3) {
+        document.getElementById('admin3-username').value = supportConfig.admin3.username || '';
+        document.getElementById('admin3-description').value = supportConfig.admin3.description || '';
+      }
+      if (supportConfig.admin4) {
+        document.getElementById('admin4-username').value = supportConfig.admin4.username || '';
+        document.getElementById('admin4-description').value = supportConfig.admin4.description || '';
+      }
+      if (supportConfig.admin5) {
+        document.getElementById('admin5-username').value = supportConfig.admin5.username || '';
+        document.getElementById('admin5-description').value = supportConfig.admin5.description || '';
+      }
+      
+      // Load app config
+      const appConfig = JSON.parse(localStorage.getItem('appConfig') || '{}');
+      if (appConfig.appName) document.getElementById('app-name').value = appConfig.appName;
+      
+      // Load SDK config
+      const sdkConfig = JSON.parse(localStorage.getItem('sdkConfig') || '{}');
+      if (sdkConfig.rewardPointsPerAd) document.getElementById('reward-points-per-ad').value = sdkConfig.rewardPointsPerAd;
+      if (sdkConfig.zoneId) document.getElementById('zone-id').value = sdkConfig.zoneId;
+      if (sdkConfig.miniAppId) document.getElementById('mini-app-id').value = sdkConfig.miniAppId;
+      if (sdkConfig.sdkScript) document.getElementById('sdk-script').value = sdkConfig.sdkScript;
+    }
+    
+    // Other menu functions
+    function showTasks() {
+      alert('Tasks section would be shown here');
+    }
+    
+    function showUsers() {
+      alert('Users section would be shown here');
+    }
+    
+    function showWithdrawals() {
+      alert('Withdrawals section would be shown here');
+    }
+    
+    function showChannels() {
+      alert('Channels section would be shown here');
+    }
+    
+    function showGroups() {
+      alert('Groups section would be shown here');
+    }
+    
+    function showSocialTasks() {
+      alert('Social Tasks section would be shown here');
+    }
+    
+    function showAds() {
+      alert('Ads section would be shown here');
+    }
+    
+    function showModeration() {
+      alert('Moderation section would be shown here');
+    }
+    
+    function showBroadcast() {
+      alert('Broadcast section would be shown here');
+    }
+    
+    function showOnboarding() {
+      alert('Onboarding section would be shown here');
+    }
+    
+    function showReferralAudit() {
+      alert('Referral Audit section would be shown here');
+    }
+    
+    function showUserLedger() {
+      alert('User Ledger section would be shown here');
+    }
+    
+    // Load configurations when page loads
+    document.addEventListener('DOMContentLoaded', loadConfigurations);
   </script>
 </body>
 </html>
