@@ -2191,7 +2191,7 @@ video {
         </div>
        </div>
        <div class="p-6 pt-0">
-        <p class="text-4xl font-bold">602</p>
+        <p class="text-4xl font-bold" id="balance-display">${newBalance}</p>
        </div>
       </div>
       <div class="rounded-xl border bg-card text-card-foreground shadow">
@@ -2271,6 +2271,7 @@ video {
    </div>
   </div>
    <script>
+   <script src="common.js"></script>
   // Create and show loading overlay immediately
   const loadingOverlay = document.createElement('div');
   loadingOverlay.id = 'loading-overlay';
