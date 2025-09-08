@@ -22,8 +22,8 @@ const bot = new TelegramBot(botToken);
 
 // Channel configuration - use actual channel usernames (without @)
 const channels = {
-  'Channel 1': 'allinonepayout', // Your actual channel username
-  'Channel 2': 'ALL1N_0NE'       // Your actual channel username
+  'Channel 1': '@allinonepayout', // Your actual channel username
+  'Channel 2': '@ALL1N_0NE'       // Your actual channel username
 };
 
 // User storage file
@@ -261,60 +261,37 @@ app.get('/api/telegram/start', async (req, res) => {
 // In your index.js file, update the membership check endpoint:
 
 // API endpoint to check if user is member of channels
+// Add debug logging to see what the library is doing
 app.post('/api/telegram/check-membership', async (req, res) => {
   const { userId, channelNames } = req.body;
   
   console.log('Membership check for user:', userId, 'channels:', channelNames);
   
-  if (!userId || !channelNames) {
-    return res.status(400).json({ error: 'Missing parameters' });
-  }
-  
   try {
     const membershipStatus = {};
     const numericUserId = parseInt(userId);
     
-    if (isNaN(numericUserId)) {
-      return res.status(400).json({ error: 'Invalid user ID' });
-    }
-    
-    // Log the actual channel usernames being checked
-    console.log('Configured channels:', channels);
-    
     for (const channelName of channelNames) {
       const channelUsername = channels[channelName];
+      console.log('Raw channel username from config:', channelUsername);
       
-      if (!channelUsername) {
-        console.error(`Channel not configured: ${channelName}`);
-        membershipStatus[channelName] = false;
-        continue;
-      }
+      // Test what happens if we manually remove the @
+      const testUsername = channelUsername.replace('@', '');
+      console.log('Testing with username:', testUsername);
       
       try {
-        // Use the channel username directly (without @)
-        const cleanChannelUsername = channelUsername.replace('@', '');
-        console.log(`Checking membership for user ${numericUserId} in channel: ${cleanChannelUsername}`);
-        
-        const chatMember = await bot.getChatMember(cleanChannelUsername, numericUserId);
-        
-        // User is a member if status is not 'left' or 'kicked'
+        const chatMember = await bot.getChatMember(testUsername, numericUserId);
         membershipStatus[channelName] = !['left', 'kicked'].includes(chatMember.status);
-        
-        console.log(`User ${numericUserId} status in ${channelName} (${cleanChannelUsername}): ${chatMember.status}`);
-        
+        console.log(`✅ Success: User status in ${channelName}: ${chatMember.status}`);
       } catch (error) {
-        console.error(`Error checking membership for ${channelName} (username: ${channelUsername}):`, error.message);
-        console.error('Full error details:', error);
+        console.error(`❌ Error with ${testUsername}:`, error.message);
         membershipStatus[channelName] = false;
       }
     }
     
-    console.log('Final membership status:', membershipStatus);
     res.json({ membership: membershipStatus });
-    
   } catch (error) {
-    console.error('Overall error checking membership:', error);
-    res.status(500).json({ error: 'Internal server error', details: error.message });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
