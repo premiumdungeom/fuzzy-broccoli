@@ -22,8 +22,8 @@ const bot = new TelegramBot(botToken);
 
 // Channel configuration - use actual channel usernames (without @)
 const channels = {
-  'Channel 1': '@allinonepayout', // Your actual channel username
-  'Channel 2': '@ALL1N_0NE'       // Your actual channel username
+  'Channel 1': 'allinonepayout', // Your actual channel username
+  'Channel 2': 'ALL1N_0NE'       // Your actual channel username
 };
 
 // User storage file
