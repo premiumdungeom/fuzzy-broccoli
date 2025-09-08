@@ -4,7 +4,6 @@ const TelegramBot = require('node-telegram-bot-api');
 const path = require('path');
 const fs = require('fs');
 const app = express();
-const fetch = require('node-fetch');
 const port = process.env.PORT || 3001;
 
 // Middleware
@@ -262,6 +261,7 @@ app.get('/api/telegram/start', async (req, res) => {
 // In your index.js file, update the membership check endpoint:
 
 // 
+// API endpoint to check if user is member of channels
 app.get('/api/telegram/check-membership', async (req, res) => {
   const { userId, channelNames } = req.query;
   
