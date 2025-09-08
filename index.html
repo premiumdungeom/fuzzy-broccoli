@@ -2165,6 +2165,27 @@ window.__vite_plugin_react_preamble_installed__ = true
     </div>
    </div>
   </div>
+  <!-- Add this script to your index.html file -->
+<script>
+  // Capture the start parameter from Telegram WebApp
+  const tg = window.Telegram.WebApp;
+  if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
+    // Store the start parameter in localStorage
+    localStorage.setItem('telegramStartParam', tg.initDataUnsafe.start_param);
+    
+    // Also add it to the user data
+    const userData = localStorage.getItem('telegramUser');
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        user.start_param = tg.initDataUnsafe.start_param;
+        localStorage.setItem('telegramUser', JSON.stringify(user));
+      } catch (error) {
+        console.error('Error updating user data with start param:', error);
+      }
+    }
+  }
+</script>
 <script>
 // Telegram Mini App integration
 document.addEventListener('DOMContentLoaded', function() {
@@ -2314,6 +2335,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Run initial check
   initialCheck();
+  initializeBalance();
+  initializeReferralSystem();
+  updateUserProfile();
 });
 </script>
 </body>

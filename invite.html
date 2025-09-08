@@ -2313,23 +2313,17 @@ video {
   }
 
   // Update invite stats
-  function updateInviteStats() {
-    const userId = getUserId();
-    const invitesKey = `userInvites_${userId}`;
-    const totalInvites = parseInt(localStorage.getItem(invitesKey) || '0');
-    
-    // Get referral bonus amount from settings
-    const referralConfig = JSON.parse(localStorage.getItem('pointsConfig') || '{}');
-    const bonusPerFriend = parseInt(referralConfig.friendInvitePoints) || 20;
-    const totalEarnings = totalInvites * bonusPerFriend;
-    
-    // Update the display
-    const inviteElements = document.querySelectorAll('.text-2xl.font-bold');
-    if (inviteElements.length >= 2) {
-      inviteElements[0].textContent = totalInvites;
-      inviteElements[1].textContent = `${totalEarnings} Points`;
-    }
+  // Replace the updateInviteStats function in invite.html
+function updateInviteStats() {
+  const profile = updateUserProfile();
+  
+  // Update the display
+  const inviteElements = document.querySelectorAll('.text-2xl.font-bold');
+  if (inviteElements.length >= 2) {
+    inviteElements[0].textContent = profile.invites;
+    inviteElements[1].textContent = `${profile.earnings} Points`;
   }
+}
 
   // Add to body immediately (before DOMContentLoaded)
   document.body.appendChild(loadingOverlay);
@@ -2385,6 +2379,8 @@ video {
   
   // Also call initializeReferralSystem to check if this user was referred
   initializeReferralSystem();
+  initializeBalance();
+  updateUserProfile();
 });
 </script>
 <script src="common.js"></script>
