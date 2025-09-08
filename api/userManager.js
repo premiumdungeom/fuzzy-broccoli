@@ -1,13 +1,28 @@
 // userManager.js
+const fs = require('fs');
+const path = require('path');
+
 class UserManager {
   constructor() {
+    this.usersFilePath = path.join(__dirname, 'data', 'users.json');
+    this.ensureDataDirectory();
     this.users = this.loadUsers();
+  }
+  
+  ensureDataDirectory() {
+    const dataDir = path.join(__dirname, 'data');
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
   }
   
   loadUsers() {
     try {
-      const usersJson = localStorage.getItem('telegram_users');
-      return usersJson ? JSON.parse(usersJson) : {};
+      if (fs.existsSync(this.usersFilePath)) {
+        const usersJson = fs.readFileSync(this.usersFilePath, 'utf8');
+        return JSON.parse(usersJson);
+      }
+      return {};
     } catch (error) {
       console.error('Error loading users:', error);
       return {};
@@ -16,7 +31,7 @@ class UserManager {
   
   saveUsers() {
     try {
-      localStorage.setItem('telegram_users', JSON.stringify(this.users));
+      fs.writeFileSync(this.usersFilePath, JSON.stringify(this.users, null, 2));
     } catch (error) {
       console.error('Error saving users:', error);
     }
