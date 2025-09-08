@@ -2,31 +2,116 @@ const express = require('express');
 const cors = require('cors');
 const TelegramBot = require('node-telegram-bot-api');
 const path = require('path');
+const fs = require('fs');
 const app = express();
-const UserManager = require('./userManager');
 const port = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '..'))); // Serve static files
 
 // Replace with your bot token
 const botToken = '8488159096:AAHnzzdhE2wrIKCS5OtR2o3K_1Cw3PL38kg';
 const adminId = '5650788149';
 
-// Initialize Telegram Bot
-const bot = new TelegramBot(botToken, { polling: true });
+// Initialize Telegram Bot without polling
+const bot = new TelegramBot(botToken);
+// Note: Removed { polling: true } to prevent automatic polling
 
 // Channel configuration - use actual channel usernames (without @)
 const channels = {
-  'Channel 1': 'allinonepayout', // Your actual channel username
-  'Channel 2': 'ALL1N_0NE'       // Your actual channel username
+  'Channel 1': '@allinonepayout', // Your actual channel username
+  'Channel 2': '@ALL1N_0NE'       // Your actual channel username
 };
 
-// Serve the main page
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+// User storage file
+const USER_DATA_FILE = './users.json';
+
+// Helper functions for user data management
+function loadUsers() {
+  try {
+    if (fs.existsSync(USER_DATA_FILE)) {
+      const data = fs.readFileSync(USER_DATA_FILE, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Error loading user data:', error);
+  }
+  return {};
+}
+
+function saveUsers(users) {
+  try {
+    fs.writeFileSync(USER_DATA_FILE, JSON.stringify(users, null, 2));
+  } catch (error) {
+    console.error('Error saving user data:', error);
+  }
+}
+
+function addUser(userData) {
+  const users = loadUsers();
+  if (!users[userData.id]) {
+    users[userData.id] = {
+      ...userData,
+      balance: 0,
+      invites: 0,
+      join_date: new Date().toISOString()
+    };
+    saveUsers(users);
+    return true;
+  }
+  return false;
+}
+
+function getUser(userId) {
+  const users = loadUsers();
+  return users[userId] || null;
+}
+
+function updateUserBalance(userId, amount) {
+  const users = loadUsers();
+  if (users[userId]) {
+    users[userId].balance = (users[userId].balance || 0) + amount;
+    saveUsers(users);
+    return users[userId].balance;
+  }
+  return null;
+}
+
+function incrementUserInvites(userId) {
+  const users = loadUsers();
+  if (users[userId]) {
+    users[userId].invites = (users[userId].invites || 0) + 1;
+    saveUsers(users);
+    return users[userId].invites;
+  }
+  return null;
+}
+
+// Set webhook route - call this once to set up the webhook
+app.get('/set-webhook', async (req, res) => {
+  try {
+    const webhookUrl = `https://webbb-mvut.onrender.com/bot${botToken}`;
+    const result = await bot.setWebHook(webhookUrl);
+    console.log('Webhook set successfully:', result);
+    res.json({ success: true, message: 'Webhook set successfully', result });
+  } catch (error) {
+    console.error('Error setting webhook:', error);
+    res.status(500).json({ error: 'Failed to set webhook', details: error.message });
+  }
+});
+
+// Webhook endpoint - Telegram will send updates here
+app.post(`/bot${botToken}`, (req, res) => {
+  try {
+    bot.processUpdate(req.body);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error('Error processing update:', error);
+    res.sendStatus(200); // Still send 200 to prevent Telegram from retrying
+  }
 });
 
 // Handle /start command with referral parameter
@@ -40,8 +125,7 @@ bot.onText(/\/start (.+)/, (msg, match) => {
     id: userId,
     username: msg.from.username,
     first_name: msg.from.first_name,
-    last_name: msg.from.last_name,
-    join_date: new Date().toISOString()
+    last_name: msg.from.last_name
   };
   
   // Check if this is a referral
@@ -50,27 +134,84 @@ bot.onText(/\/start (.+)/, (msg, match) => {
     userData.referred_by = referrerId;
     
     // Add user to manager
-    UserManager.addUser(userData);
+    addUser(userData);
     
     // Send welcome message
     bot.sendMessage(chatId, `Welcome! You were referred by user ${referrerId}.`);
     
     // Process the referral via our API
-    fetch(`https://webbb-mvut.onrender.com/api/telegram/start?userId=${userId}&startParam=${startParam}`)
-      .then(response => response.json())
+    processReferral(userId, startParam)
       .then(data => console.log('Referral processed:', data))
       .catch(error => console.error('Error processing referral:', error));
   } else {
     // Add user without referral
-    UserManager.addUser(userData);
+    addUser(userData);
     bot.sendMessage(chatId, 'Welcome to our bot! Use /help to see available commands.');
   }
+});
+
+// Handle simple /start command without parameters
+bot.onText(/\/start$/, (msg) => {
+  const chatId = msg.chat.id;
+  const userId = msg.from.id;
+  
+  // Store user data
+  const userData = {
+    id: userId,
+    username: msg.from.username,
+    first_name: msg.from.first_name,
+    last_name: msg.from.last_name
+  };
+  
+  addUser(userData);
+  bot.sendMessage(chatId, 'Welcome to our bot! Use /help to see available commands.');
+});
+
+// Function to process referral
+async function processReferral(userId, startParam) {
+  try {
+    // Check if this is a referral (start parameter begins with "ref")
+    if (startParam && startParam.startsWith('ref')) {
+      const referrerId = startParam.replace('ref', '');
+      
+      // Check if we've already processed this referral
+      const referralKey = `referralProcessed_${userId}`;
+      
+      // Get referral bonus amount from settings
+      const referralConfig = { friendInvitePoints: 20 }; // Default value
+      const bonusAmount = parseInt(referralConfig.friendInvitePoints) || 20;
+      
+      // Use UserManager to handle the referral
+      const referrer = getUser(referrerId);
+      if (referrer) {
+        updateUserBalance(referrerId, bonusAmount);
+        incrementUserInvites(referrerId);
+        
+        console.log(`Referral bonus of ${bonusAmount} points awarded to user ${referrerId} for referring user ${userId}`);
+        
+        // Notify admin about the referral
+        bot.sendMessage(adminId, `🎉 New referral! User ${userId} was referred by ${referrerId}. ${bonusAmount} points awarded.`);
+      } else {
+        console.log(`Referrer ${referrerId} not found in database`);
+      }
+    }
+    
+    return { success: true, message: 'Referral processed' };
+  } catch (error) {
+    console.error('Error processing referral:', error);
+    throw error;
+  }
+}
+
+// Serve the main page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
 // API endpoint to get referral statistics
 app.get('/api/admin/referrals', (req, res) => {
   try {
-    const users = UserManager.loadUsers();
+    const users = loadUsers();
     const referralStats = {};
     
     // Calculate referral statistics
@@ -99,7 +240,7 @@ app.get('/api/admin/referrals', (req, res) => {
   }
 });
 
-// Update the /api/telegram/start endpoint to use UserManager
+// API endpoint to process referral
 app.get('/api/telegram/start', async (req, res) => {
   const { userId, startParam } = req.query;
   
@@ -108,37 +249,8 @@ app.get('/api/telegram/start', async (req, res) => {
   }
   
   try {
-    // Check if this is a referral (start parameter begins with "ref")
-    if (startParam && startParam.startsWith('ref')) {
-      const referrerId = startParam.replace('ref', '');
-      
-      // Check if we've already processed this referral
-      const referralKey = `referralProcessed_${userId}`;
-      if (!localStorage.getItem(referralKey)) {
-        // Mark as processed
-        localStorage.setItem(referralKey, 'true');
-        
-        // Get referral bonus amount from settings
-        const referralConfig = JSON.parse(localStorage.getItem('pointsConfig') || '{}');
-        const bonusAmount = parseInt(referralConfig.friendInvitePoints) || 20;
-        
-        // Use UserManager to handle the referral
-        const referrer = UserManager.getUser(referrerId);
-        if (referrer) {
-          UserManager.updateUserBalance(referrerId, bonusAmount);
-          UserManager.incrementUserInvites(referrerId);
-          
-          console.log(`Referral bonus of ${bonusAmount} points awarded to user ${referrerId} for referring user ${userId}`);
-          
-          // Notify admin about the referral
-          bot.sendMessage(adminId, `🎉 New referral! User ${userId} was referred by ${referrerId}. ${bonusAmount} points awarded.`);
-        } else {
-          console.log(`Referrer ${referrerId} not found in database`);
-        }
-      }
-    }
-    
-    res.json({ success: true, message: 'Start command processed' });
+    const result = await processReferral(userId, startParam);
+    res.json(result);
   } catch (error) {
     console.error('Error processing start command:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -146,8 +258,13 @@ app.get('/api/telegram/start', async (req, res) => {
 });
 
 // API endpoint to check if user is member of channels
+// In your index.js file, update the membership check endpoint:
+
+// API endpoint to check if user is member of channels
 app.post('/api/telegram/check-membership', async (req, res) => {
   const { userId, channelNames } = req.body;
+  
+  console.log('Membership check for user:', userId, 'channels:', channelNames);
   
   if (!userId || !channelNames) {
     return res.status(400).json({ error: 'Missing parameters' });
@@ -155,6 +272,14 @@ app.post('/api/telegram/check-membership', async (req, res) => {
   
   try {
     const membershipStatus = {};
+    const numericUserId = parseInt(userId);
+    
+    if (isNaN(numericUserId)) {
+      return res.status(400).json({ error: 'Invalid user ID' });
+    }
+    
+    // Log the actual channel usernames being checked
+    console.log('Configured channels:', channels);
     
     for (const channelName of channelNames) {
       const channelUsername = channels[channelName];
@@ -166,33 +291,30 @@ app.post('/api/telegram/check-membership', async (req, res) => {
       }
       
       try {
-        // Format channel as @username for the API
-        const channelId = `@${channelUsername}`;
+        // Use the channel username directly (without @)
+        const cleanChannelUsername = channelUsername.replace('@', '');
+        console.log(`Checking membership for user ${numericUserId} in channel: ${cleanChannelUsername}`);
         
-        // Check if user is a member of the channel
-        const chatMember = await bot.getChatMember(channelId, parseInt(userId));
+        const chatMember = await bot.getChatMember(cleanChannelUsername, numericUserId);
         
         // User is a member if status is not 'left' or 'kicked'
         membershipStatus[channelName] = !['left', 'kicked'].includes(chatMember.status);
         
-        console.log(`User ${userId} status in ${channelName}: ${chatMember.status}`);
+        console.log(`User ${numericUserId} status in ${channelName} (${cleanChannelUsername}): ${chatMember.status}`);
         
       } catch (error) {
-        console.error(`Error checking membership for channel ${channelName}:`, error.message);
-        
-        // If we get a "chat not found" error, the bot might not be admin in the channel
-        if (error.response && error.response.statusCode === 400) {
-          console.error(`Bot may not be admin in channel ${channelName} or channel doesn't exist`);
-        }
-        
+        console.error(`Error checking membership for ${channelName} (username: ${channelUsername}):`, error.message);
+        console.error('Full error details:', error);
         membershipStatus[channelName] = false;
       }
     }
     
+    console.log('Final membership status:', membershipStatus);
     res.json({ membership: membershipStatus });
+    
   } catch (error) {
-    console.error('Error checking channel membership:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Overall error checking membership:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 });
 
@@ -225,8 +347,21 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-app.listen(port, () => {
+// Add this after app.listen()
+app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
-  console.log(`Open https://webbb-mvut.onrender.com to view the app`);
-  console.log('Configured channels:', channels);
+  
+  // Initialize users.json if it doesn't exist
+  if (!fs.existsSync(USER_DATA_FILE)) {
+    saveUsers({});
+  }
+  
+  // Automatically set webhook on server start
+  try {
+    const webhookUrl = `https://webbb-mvut.onrender.com/bot${botToken}`;
+    await bot.setWebHook(webhookUrl);
+    console.log('Webhook set successfully');
+  } catch (error) {
+    console.error('Error setting webhook:', error);
+  }
 });
