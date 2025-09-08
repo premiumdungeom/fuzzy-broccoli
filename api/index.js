@@ -4,6 +4,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const path = require('path');
 const fs = require('fs');
 const app = express();
+const fetch = require('node-fetch');
 const port = process.env.PORT || 3001;
 
 // Middleware
@@ -262,6 +263,8 @@ app.get('/api/telegram/start', async (req, res) => {
 
 // API endpoint to check if user is member of channels
 // Add debug logging to see what the library is doing
+// API endpoint to check if user is member of channels
+// API endpoint to check if user is member of channels
 app.post('/api/telegram/check-membership', async (req, res) => {
   const { userId, channelNames } = req.body;
   
@@ -271,26 +274,36 @@ app.post('/api/telegram/check-membership', async (req, res) => {
     const membershipStatus = {};
     const numericUserId = parseInt(userId);
     
+    // Channel mapping with @ symbols
+    const channelUsernames = {
+      'Channel 1': '@allinonepayout',
+      'Channel 2': '@ALL1N_0NE'
+    };
+    
     for (const channelName of channelNames) {
-      const channelUsername = channels[channelName];
-      console.log('Raw channel username from config:', channelUsername);
-      
-      // Test what happens if we manually remove the @
-      const testUsername = channelUsername.replace('@', '');
-      console.log('Testing with username:', testUsername);
+      const channelUsername = channelUsernames[channelName];
       
       try {
-        const chatMember = await bot.getChatMember(testUsername, numericUserId);
-        membershipStatus[channelName] = !['left', 'kicked'].includes(chatMember.status);
-        console.log(`✅ Success: User status in ${channelName}: ${chatMember.status}`);
+        // Use direct API call instead of bot.getChatMember
+        const response = await fetch(`https://api.telegram.org/bot${botToken}/getChatMember?chat_id=${channelUsername}&user_id=${numericUserId}`);
+        const data = await response.json();
+        
+        if (data.ok) {
+          membershipStatus[channelName] = !['left', 'kicked'].includes(data.result.status);
+          console.log(`✅ Success: User status in ${channelName}: ${data.result.status}`);
+        } else {
+          console.error(`❌ API error for ${channelName}:`, data.description);
+          membershipStatus[channelName] = false;
+        }
       } catch (error) {
-        console.error(`❌ Error with ${testUsername}:`, error.message);
+        console.error(`❌ Error with ${channelName}:`, error.message);
         membershipStatus[channelName] = false;
       }
     }
     
     res.json({ membership: membershipStatus });
   } catch (error) {
+    console.error('Overall error checking membership:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
