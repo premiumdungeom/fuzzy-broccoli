@@ -261,24 +261,24 @@ app.get('/api/telegram/start', async (req, res) => {
 // API endpoint to check if user is member of channels
 // In your index.js file, update the membership check endpoint:
 
-// API endpoint to check if user is member of channels
-// Add debug logging to see what the library is doing
-// API endpoint to check if user is member of channels
-// API endpoint to check if user is member of channels
-// API endpoint to check if user is member of channels
-// API endpoint to check if user is member of channels
-app.post('/api/telegram/check-membership', async (req, res) => {
-  const { userId, channelNames } = req.body;
-
-  console.log('Membership check for user:', userId, 'channels:', channelNames);
-
+// 
+app.get('/api/telegram/check-membership', async (req, res) => {
+  const { userId, channelNames } = req.query;
+  
+  if (!userId || !channelNames) {
+    return res.status(400).json({ error: 'Missing userId or channelNames parameters' });
+  }
+  
   try {
+    const channelsArray = Array.isArray(channelNames) 
+      ? channelNames 
+      : channelNames.split(',');
+    
     const membershipStatus = {};
     const numericUserId = parseInt(userId);
 
-    for (const channelUsername of channelNames) {
+    for (const channelUsername of channelsArray) {
       try {
-        // Call Telegram API directly
         const response = await fetch(
           `https://api.telegram.org/bot${botToken}/getChatMember?chat_id=${channelUsername}&user_id=${numericUserId}`
         );
@@ -287,7 +287,6 @@ app.post('/api/telegram/check-membership', async (req, res) => {
         if (data.ok) {
           const status = data.result.status;
           membershipStatus[channelUsername] = !['left', 'kicked'].includes(status);
-
           console.log(`✅ User ${numericUserId} status in ${channelUsername}: ${status}`);
         } else {
           console.error(`❌ API error for ${channelUsername}:`, data.description);
@@ -299,7 +298,11 @@ app.post('/api/telegram/check-membership', async (req, res) => {
       }
     }
 
-    res.json({ membership: membershipStatus });
+    res.json({ 
+      success: true, 
+      userId: numericUserId,
+      membership: membershipStatus 
+    });
   } catch (error) {
     console.error('Overall error checking membership:', error);
     res.status(500).json({ error: 'Internal server error' });
