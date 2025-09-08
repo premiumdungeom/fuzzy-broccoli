@@ -204,12 +204,19 @@ app.get('/api/telegram/start', async (req, res) => {
 app.post('/api/telegram/check-membership', async (req, res) => {
   const { userId, channelNames } = req.body;
   
+  console.log('Membership check for user:', userId, 'channels:', channelNames);
+  
   if (!userId || !channelNames) {
     return res.status(400).json({ error: 'Missing parameters' });
   }
   
   try {
     const membershipStatus = {};
+    const numericUserId = parseInt(userId);
+    
+    if (isNaN(numericUserId)) {
+      return res.status(400).json({ error: 'Invalid user ID' });
+    }
     
     for (const channelName of channelNames) {
       const channelUsername = channels[channelName];
@@ -221,33 +228,32 @@ app.post('/api/telegram/check-membership', async (req, res) => {
       }
       
       try {
-        // Format channel as @username for the API
-        const channelId = `@${channelUsername}`;
-        
-        // Check if user is a member of the channel
-        const chatMember = await bot.getChatMember(channelId, parseInt(userId));
+        // Use the channel username directly (without @)
+        const chatMember = await bot.getChatMember(channelUsername, numericUserId);
         
         // User is a member if status is not 'left' or 'kicked'
         membershipStatus[channelName] = !['left', 'kicked'].includes(chatMember.status);
         
-        console.log(`User ${userId} status in ${channelName}: ${chatMember.status}`);
+        console.log(`User ${numericUserId} status in ${channelName} (${channelUsername}): ${chatMember.status}`);
         
       } catch (error) {
-        console.error(`Error checking membership for channel ${channelName}:`, error.message);
+        console.error(`Error checking membership for ${channelName}:`, error.message);
         
-        // If we get a "chat not found" error, the bot might not be admin in the channel
-        if (error.response && error.response.statusCode === 400) {
-          console.error(`Bot may not be admin in channel ${channelName} or channel doesn't exist`);
+        // More detailed error logging
+        if (error.response) {
+          console.error('Telegram API response:', error.response.body);
         }
         
         membershipStatus[channelName] = false;
       }
     }
     
+    console.log('Final membership status:', membershipStatus);
     res.json({ membership: membershipStatus });
+    
   } catch (error) {
-    console.error('Error checking channel membership:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Overall error checking membership:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 });
 
