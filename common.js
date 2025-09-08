@@ -78,9 +78,13 @@ function getBotUsername() {
   if (userData) {
     try {
       const user = JSON.parse(userData);
-      // Extract bot username from start_param or use a default
-      if (user.start_param && user.start_param.startsWith('ref')) {
-        return 'EchoEARN_robot'; // Your bot's username
+      // Check if we have the bot username in start_param or use default
+      if (user.start_param && user.start_param.includes('_')) {
+        // Extract bot username from start_param if available
+        const parts = user.start_param.split('_');
+        if (parts.length > 1) {
+          return parts[0]; // Assuming format like "botname_ref123"
+        }
       }
     } catch (error) {
       console.error('Error parsing user data:', error);

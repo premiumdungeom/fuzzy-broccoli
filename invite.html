@@ -2289,36 +2289,47 @@ video {
   `;
   
   function updateReferralLink() {
-  const referralLink = generateReferralLink();
-  document.getElementById('referral-link').textContent = referralLink;
-}
+    const referralLink = generateReferralLink();
+    document.getElementById('referral-link').textContent = referralLink;
+  }
 
-// Copy referral link to clipboard
-function copyReferralLink() {
-  const referralLink = generateReferralLink();
-  navigator.clipboard.writeText(referralLink).then(() => {
-    // Show success message (you can implement a toast notification)
-    alert('Referral link copied to clipboard!');
-  }).catch(err => {
-    console.error('Failed to copy: ', err);
-  });
-}
+  // Copy referral link to clipboard
+  function copyReferralLink() {
+    const referralLink = generateReferralLink();
+    navigator.clipboard.writeText(referralLink).then(() => {
+      // Show success message
+      alert('Referral link copied to clipboard!');
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+      // Fallback for browsers that don't support clipboard API
+      const tempInput = document.createElement('input');
+      tempInput.value = referralLink;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      alert('Referral link copied to clipboard!');
+    });
+  }
 
-// Update invite stats
-function updateInviteStats() {
-  const userId = getUserId();
-  const invitesKey = `userInvites_${userId}`;
-  const totalInvites = parseInt(localStorage.getItem(invitesKey) || '0');
-  
-  // Get referral bonus amount from settings
-  const referralConfig = JSON.parse(localStorage.getItem('pointsConfig') || '{}');
-  const bonusPerFriend = parseInt(referralConfig.friendInvitePoints) || 20;
-  const totalEarnings = totalInvites * bonusPerFriend;
-  
-  // Update the display
-  document.querySelectorAll('.text-2xl.font-bold')[0].textContent = totalInvites;
-  document.querySelectorAll('.text-2xl.font-bold')[1].textContent = `${totalEarnings} Point`;
-}
+  // Update invite stats
+  function updateInviteStats() {
+    const userId = getUserId();
+    const invitesKey = `userInvites_${userId}`;
+    const totalInvites = parseInt(localStorage.getItem(invitesKey) || '0');
+    
+    // Get referral bonus amount from settings
+    const referralConfig = JSON.parse(localStorage.getItem('pointsConfig') || '{}');
+    const bonusPerFriend = parseInt(referralConfig.friendInvitePoints) || 20;
+    const totalEarnings = totalInvites * bonusPerFriend;
+    
+    // Update the display
+    const inviteElements = document.querySelectorAll('.text-2xl.font-bold');
+    if (inviteElements.length >= 2) {
+      inviteElements[0].textContent = totalInvites;
+      inviteElements[1].textContent = `${totalEarnings} Points`;
+    }
+  }
 
   // Add to body immediately (before DOMContentLoaded)
   document.body.appendChild(loadingOverlay);
@@ -2376,5 +2387,6 @@ function updateInviteStats() {
   initializeReferralSystem();
 });
 </script>
+<script src="common.js"></script>
  </body>
 </html>
