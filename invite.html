@@ -2191,22 +2191,23 @@ video {
        </div>
       </div>
       <div class="rounded-xl border bg-card text-card-foreground shadow">
-       <div class="flex flex-col space-y-1.5 p-6">
-        <div class="font-semibold tracking-tight text-lg">
-         Your Referral Link
-        </div>
-       </div>
-       <div class="p-6 pt-0 flex items-center gap-2">
-        <div class="flex-grow p-2 border rounded-lg bg-muted text-sm break-all">
-         https://t.me/EchoEARN_robot?start=ref5650788149
-        </div>
-        <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 w-9">
-         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy h-4 w-4">
-          <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-          <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-         </svg></button>
-       </div>
-      </div>
+  <div class="flex flex-col space-y-1.5 p-6">
+    <div class="font-semibold tracking-tight text-lg">
+      Your Referral Link
+    </div>
+  </div>
+  <div class="p-6 pt-0 flex items-center gap-2">
+    <div class="flex-grow p-2 border rounded-lg bg-muted text-sm break-all" id="referral-link">
+      Loading...
+    </div>
+    <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 w-9" onclick="copyReferralLink()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy h-4 w-4">
+        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+      </svg>
+    </button>
+  </div>
+</div>
       <div class="grid grid-cols-2 gap-4 text-center">
        <div class="rounded-xl border bg-card text-card-foreground shadow">
         <div class="flex flex-col space-y-1.5 p-6">
@@ -2287,6 +2288,38 @@ video {
     </div>
   `;
   
+  function updateReferralLink() {
+  const referralLink = generateReferralLink();
+  document.getElementById('referral-link').textContent = referralLink;
+}
+
+// Copy referral link to clipboard
+function copyReferralLink() {
+  const referralLink = generateReferralLink();
+  navigator.clipboard.writeText(referralLink).then(() => {
+    // Show success message (you can implement a toast notification)
+    alert('Referral link copied to clipboard!');
+  }).catch(err => {
+    console.error('Failed to copy: ', err);
+  });
+}
+
+// Update invite stats
+function updateInviteStats() {
+  const userId = getUserId();
+  const invitesKey = `userInvites_${userId}`;
+  const totalInvites = parseInt(localStorage.getItem(invitesKey) || '0');
+  
+  // Get referral bonus amount from settings
+  const referralConfig = JSON.parse(localStorage.getItem('pointsConfig') || '{}');
+  const bonusPerFriend = parseInt(referralConfig.friendInvitePoints) || 20;
+  const totalEarnings = totalInvites * bonusPerFriend;
+  
+  // Update the display
+  document.querySelectorAll('.text-2xl.font-bold')[0].textContent = totalInvites;
+  document.querySelectorAll('.text-2xl.font-bold')[1].textContent = `${totalEarnings} Point`;
+}
+
   // Add to body immediately (before DOMContentLoaded)
   document.body.appendChild(loadingOverlay);
   
@@ -2335,7 +2368,13 @@ video {
       console.log('No user data found in localStorage');
       window.location.href = 'index.html';
     }
-  });
+    
+    updateReferralLink();
+  updateInviteStats();
+  
+  // Also call initializeReferralSystem to check if this user was referred
+  initializeReferralSystem();
+});
 </script>
  </body>
 </html>
