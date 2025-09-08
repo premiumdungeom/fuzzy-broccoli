@@ -40,9 +40,15 @@ app.get('/set-webhook', async (req, res) => {
 });
 
 // Webhook endpoint - Telegram will send updates here
+// Webhook endpoint - Telegram will send updates here
 app.post(`/bot${botToken}`, (req, res) => {
-  bot.processUpdate(req.body);
-  res.sendStatus(200);
+  try {
+    bot.processUpdate(req.body);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error('Error processing update:', error);
+    res.sendStatus(200); // Still send 200 to prevent Telegram from retrying
+  }
 });
 
 // Handle /start command with referral parameter
@@ -274,9 +280,16 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-app.listen(port, () => {
+// Add this after app.listen()
+app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
-  console.log(`Open https://webbb-mvut.onrender.com to view the app`);
-  console.log('Configured channels:', channels);
-  console.log('To set up webhook, visit: https://webbb-mvut.onrender.com/set-webhook');
+  
+  // Automatically set webhook on server start
+  try {
+    const webhookUrl = `https://webbb-mvut.onrender.com/bot${botToken}`;
+    await bot.setWebHook(webhookUrl);
+    console.log('Webhook set successfully');
+  } catch (error) {
+    console.error('Error setting webhook:', error);
+  }
 });
