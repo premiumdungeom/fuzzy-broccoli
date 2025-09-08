@@ -20,12 +20,6 @@ const adminId = '5650788149';
 const bot = new TelegramBot(botToken);
 // Note: Removed { polling: true } to prevent automatic polling
 
-// Channel configuration - use actual channel usernames (without @)
-const channels = {
-  'Channel 1': -1002586398527, // Your actual channel username
-  'Channel 2': -1002858278191      // Your actual channel username
-};
-
 // User storage file
 const USER_DATA_FILE = './users.json';
 
