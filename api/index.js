@@ -22,8 +22,8 @@ const bot = new TelegramBot(botToken);
 
 // Channel configuration - use actual channel usernames (without @)
 const channels = {
-  'Channel 1': 'allinonepayout', // Your actual channel username
-  'Channel 2': 'ALL1N_0NE'       // Your actual channel username
+  'Channel 1': '@allinonepayout', // Your actual channel username
+  'Channel 2': '@ALL1N_0NE'       // Your actual channel username
 };
 
 // User storage file
@@ -258,6 +258,9 @@ app.get('/api/telegram/start', async (req, res) => {
 });
 
 // API endpoint to check if user is member of channels
+// In your index.js file, update the membership check endpoint:
+
+// API endpoint to check if user is member of channels
 app.post('/api/telegram/check-membership', async (req, res) => {
   const { userId, channelNames } = req.body;
   
@@ -275,6 +278,9 @@ app.post('/api/telegram/check-membership', async (req, res) => {
       return res.status(400).json({ error: 'Invalid user ID' });
     }
     
+    // Log the actual channel usernames being checked
+    console.log('Configured channels:', channels);
+    
     for (const channelName of channelNames) {
       const channelUsername = channels[channelName];
       
@@ -287,6 +293,8 @@ app.post('/api/telegram/check-membership', async (req, res) => {
       try {
         // Use the channel username directly (without @)
         const cleanChannelUsername = channelUsername.replace('@', '');
+        console.log(`Checking membership for user ${numericUserId} in channel: ${cleanChannelUsername}`);
+        
         const chatMember = await bot.getChatMember(cleanChannelUsername, numericUserId);
         
         // User is a member if status is not 'left' or 'kicked'
@@ -295,7 +303,8 @@ app.post('/api/telegram/check-membership', async (req, res) => {
         console.log(`User ${numericUserId} status in ${channelName} (${cleanChannelUsername}): ${chatMember.status}`);
         
       } catch (error) {
-        console.error(`Error checking membership for ${channelName}:`, error.message);
+        console.error(`Error checking membership for ${channelName} (username: ${channelUsername}):`, error.message);
+        console.error('Full error details:', error);
         membershipStatus[channelName] = false;
       }
     }
