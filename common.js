@@ -27,28 +27,6 @@ function initializeBalance() {
   updateBalanceDisplay();
 }
 
-// Referral tracking system
-function trackReferral(referrerId, referredId) {
-  // Save referral relationship
-  const referralKey = `referral_${referredId}`;
-  localStorage.setItem(referralKey, referrerId);
-  
-  // Update referrer's stats
-  const referrerInvitesKey = `userInvites_${referrerId}`;
-  const currentInvites = parseInt(localStorage.getItem(referrerInvitesKey) || '0');
-  localStorage.setItem(referrerInvitesKey, (currentInvites + 1).toString());
-  
-  // Award bonus to referrer
-  const referralConfig = JSON.parse(localStorage.getItem('pointsConfig') || '{}');
-  const bonusAmount = parseInt(referralConfig.friendInvitePoints) || 20;
-  
-  const referrerBalanceKey = `userBalance_${referrerId}`;
-  const currentBalance = parseInt(localStorage.getItem(referrerBalanceKey) || '0');
-  localStorage.setItem(referrerBalanceKey, (currentBalance + bonusAmount).toString());
-  
-  console.log(`Referral recorded: ${referredId} was referred by ${referrerId}`);
-}
-
 function updateBalanceDisplay() {
   const balanceKey = getUserBalanceKey();
   const balance = localStorage.getItem(balanceKey) || '0';
@@ -128,86 +106,37 @@ function generateReferralLink() {
   return `https://t.me/${botUsername}?start=${referralCode}`;
 }
 
-// User profile management
-function getUserProfile() {
-  const userId = getUserId();
-  const profileKey = `userProfile_${userId}`;
-  const profile = JSON.parse(localStorage.getItem(profileKey) || '{}');
-  
-  // Set defaults if profile doesn't exist
-  if (!profile.balance) profile.balance = 0;
-  if (!profile.invites) profile.invites = 0;
-  if (!profile.earnings) profile.earnings = 0;
-  if (!profile.joinedDate) profile.joinedDate = new Date().toISOString();
-  
-  return profile;
-}
-
-function saveUserProfile(profile) {
-  const userId = getUserId();
-  const profileKey = `userProfile_${userId}`;
-  localStorage.setItem(profileKey, JSON.stringify(profile));
-}
-
-function updateUserProfile() {
-  const profile = getUserProfile();
-  
-  // Update from current balance
-  profile.balance = getCurrentBalance();
-  
-  // Update invite count
-  const invitesKey = `userInvites_${getUserId()}`;
-  profile.invites = parseInt(localStorage.getItem(invitesKey) || '0');
-  
-  // Calculate earnings (invites * points per invite)
-  const referralConfig = JSON.parse(localStorage.getItem('pointsConfig') || '{}');
-  const bonusAmount = parseInt(referralConfig.friendInvitePoints) || 20;
-  profile.earnings = profile.invites * bonusAmount;
-  
-  saveUserProfile(profile);
-  return profile;
-}
-
 // Check if user was referred and process bonus
-// Update the checkReferralStatus function in common.js
 function checkReferralStatus() {
   const userData = localStorage.getItem('telegramUser');
-  const startParam = localStorage.getItem('telegramStartParam');
-  
-  if (userData && startParam && startParam.startsWith('ref')) {
+  if (userData) {
     try {
       const user = JSON.parse(userData);
-      const referrerId = startParam.replace('ref', '');
-      
-      // Check if we've already processed this referral
-      const referralKey = `referralProcessed_${getUserId()}`;
-      if (!localStorage.getItem(referralKey)) {
-        // Mark as processed
-        localStorage.setItem(referralKey, 'true');
+      // Check if user has a referral parameter
+      if (user.start_param && user.start_param.startsWith('ref')) {
+        const referrerId = user.start_param.replace('ref', '');
         
-        // Get referral bonus amount from settings
-        const referralConfig = JSON.parse(localStorage.getItem('pointsConfig') || '{}');
-        const bonusAmount = parseInt(referralConfig.friendInvitePoints) || 20;
-        
-        // Add bonus to referrer's balance
-        const referrerBalanceKey = `userBalance_${referrerId}`;
-        const currentBalance = parseInt(localStorage.getItem(referrerBalanceKey) || '0');
-        localStorage.setItem(referrerBalanceKey, (currentBalance + bonusAmount).toString());
-        
-        // Update referrer's referral count
-        const referrerInvitesKey = `userInvites_${referrerId}`;
-        const currentInvites = parseInt(localStorage.getItem(referrerInvitesKey) || '0');
-        localStorage.setItem(referrerInvitesKey, (currentInvites + 1).toString());
-        
-        console.log(`Referral bonus of ${bonusAmount} points awarded to user ${referrerId}`);
-        
-        // Show a welcome message for referred users
-        if (tg && tg.showPopup) {
-          tg.showPopup({
-            title: 'Welcome!',
-            message: `You were referred by a friend! You both earn ${bonusAmount} points.`,
-            buttons: [{ type: 'ok' }]
-          });
+        // Check if we've already processed this referral
+        const referralKey = `referralProcessed_${getUserId()}`;
+        if (!localStorage.getItem(referralKey)) {
+          // Mark as processed
+          localStorage.setItem(referralKey, 'true');
+          
+          // Get referral bonus amount from settings
+          const referralConfig = JSON.parse(localStorage.getItem('pointsConfig') || '{}');
+          const bonusAmount = parseInt(referralConfig.friendInvitePoints) || 20;
+          
+          // Add bonus to referrer's balance
+          const referrerBalanceKey = `userBalance_${referrerId}`;
+          const currentBalance = parseInt(localStorage.getItem(referrerBalanceKey) || '0');
+          localStorage.setItem(referrerBalanceKey, (currentBalance + bonusAmount).toString());
+          
+          // Update referrer's referral count
+          const referrerInvitesKey = `userInvites_${referrerId}`;
+          const currentInvites = parseInt(localStorage.getItem(referrerInvitesKey) || '0');
+          localStorage.setItem(referrerInvitesKey, (currentInvites + 1).toString());
+          
+          console.log(`Referral bonus of ${bonusAmount} points awarded to user ${referrerId}`);
         }
       }
     } catch (error) {
