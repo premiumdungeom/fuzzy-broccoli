@@ -265,6 +265,7 @@ app.get('/api/telegram/start', async (req, res) => {
 // Add debug logging to see what the library is doing
 // API endpoint to check if user is member of channels
 // API endpoint to check if user is member of channels
+// API endpoint to check if user is member of channels
 app.post('/api/telegram/check-membership', async (req, res) => {
   const { userId, channelNames } = req.body;
   
@@ -288,9 +289,14 @@ app.post('/api/telegram/check-membership', async (req, res) => {
         const response = await fetch(`https://api.telegram.org/bot${botToken}/getChatMember?chat_id=${channelUsername}&user_id=${numericUserId}`);
         const data = await response.json();
         
+        console.log(`API response for ${channelName}:`, JSON.stringify(data, null, 2));
+        
         if (data.ok) {
-          membershipStatus[channelName] = !['left', 'kicked'].includes(data.result.status);
-          console.log(`✅ Success: User status in ${channelName}: ${data.result.status}`);
+          // User is a member if status is NOT 'left' or 'kicked'
+          // Valid member statuses: 'creator', 'administrator', 'member', 'restricted'
+          const isValidMember = !['left', 'kicked'].includes(data.result.status);
+          membershipStatus[channelName] = isValidMember;
+          console.log(`✅ User status in ${channelName}: ${data.result.status} → isMember: ${isValidMember}`);
         } else {
           console.error(`❌ API error for ${channelName}:`, data.description);
           membershipStatus[channelName] = false;
