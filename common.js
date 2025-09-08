@@ -1,8 +1,26 @@
 // common.js
+function getUserId() {
+  const userData = localStorage.getItem('telegramUser');
+  if (userData) {
+    try {
+      const user = JSON.parse(userData);
+      return user.id || 'default'; // Use Telegram user ID if available
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+    }
+  }
+  return 'default'; // Fallback for users without Telegram data
+}
+
+function getUserBalanceKey() {
+  return `userBalance_${getUserId()}`;
+}
+
 function initializeBalance() {
+  const balanceKey = getUserBalanceKey();
   // Check if balance exists in localStorage, if not initialize it
-  if (!localStorage.getItem('userBalance')) {
-    localStorage.setItem('userBalance', '0');
+  if (!localStorage.getItem(balanceKey)) {
+    localStorage.setItem(balanceKey, '0');
   }
   
   // Update balance display on the page
@@ -10,40 +28,39 @@ function initializeBalance() {
 }
 
 function updateBalanceDisplay() {
-  const balance = localStorage.getItem('userBalance') || '0';
+  const balanceKey = getUserBalanceKey();
+  const balance = localStorage.getItem(balanceKey) || '0';
   
-  // Update balance on home page
-  const homeBalanceElement = document.querySelector('.text-4xl.font-bold.my-1');
+  // Update balance on home page (using the ID)
+  const homeBalanceElement = document.getElementById('balance-display');
   if (homeBalanceElement) {
     homeBalanceElement.textContent = balance;
   }
   
-  // Update balance on profile page
-  const profileBalanceElement = document.querySelector('.text-3xl.font-bold');
-  if (profileBalanceElement) {
-    profileBalanceElement.textContent = balance;
-  }
-  
-  // Update balance on the current page (using the ID)
-  const currentBalanceElement = document.getElementById('balance-display');
-  if (currentBalanceElement) {
-    currentBalanceElement.textContent = balance;
-  }
+  // Also update any other balance displays if they exist
+  const otherBalanceElements = document.querySelectorAll('.text-4xl.font-bold');
+  otherBalanceElements.forEach(element => {
+    if (!element.id || element.id !== 'balance-display') {
+      element.textContent = balance;
+    }
+  });
 }
 
 function addToBalance(amount) {
-  const currentBalance = parseInt(localStorage.getItem('userBalance') || '0');
+  const balanceKey = getUserBalanceKey();
+  const currentBalance = parseInt(localStorage.getItem(balanceKey) || '0');
   const newBalance = currentBalance + amount;
-  localStorage.setItem('userBalance', newBalance.toString());
+  localStorage.setItem(balanceKey, newBalance.toString());
   updateBalanceDisplay();
   return newBalance;
 }
 
 function deductFromBalance(amount) {
-  const currentBalance = parseInt(localStorage.getItem('userBalance') || '0');
+  const balanceKey = getUserBalanceKey();
+  const currentBalance = parseInt(localStorage.getItem(balanceKey) || '0');
   if (currentBalance >= amount) {
     const newBalance = currentBalance - amount;
-    localStorage.setItem('userBalance', newBalance.toString());
+    localStorage.setItem(balanceKey, newBalance.toString());
     updateBalanceDisplay();
     return newBalance;
   }
@@ -51,5 +68,6 @@ function deductFromBalance(amount) {
 }
 
 function getCurrentBalance() {
-  return parseInt(localStorage.getItem('userBalance') || '0');
+  const balanceKey = getUserBalanceKey();
+  return parseInt(localStorage.getItem(balanceKey) || '0');
 }
