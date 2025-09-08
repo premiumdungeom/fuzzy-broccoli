@@ -2198,7 +2198,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Channel mapping - use the actual channel usernames
+  // Channel mapping - use the actual channel usernames (with @)
   const channelMap = {
     'Channel 1': '@allinonepayout',
     'Channel 2': '@ALL1N_0NE'
@@ -2211,7 +2211,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const channelUsername = channelMap[channelName];
       
       if (channelUsername) {
-        // Open channel in Telegram
+        // Open channel in Telegram (remove @ for the link)
         tg.openTelegramLink(`https://t.me/${channelUsername.replace('@', '')}`);
       }
     });
@@ -2228,7 +2228,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     try {
       // Check if user has joined all channels using GET request
+      // Use the actual channel usernames (with @) not the display names
       const channelNames = Object.values(channelMap).join(',');
+      console.log('Checking membership for channels:', channelNames);
+      
       const response = await fetch(`/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelNames)}`);
       
       if (response.ok) {
@@ -2256,7 +2259,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'home.html';
           }, 1500);
         } else {
-          // Some channels not joined
+          // Some channels not joined - show which ones
           const notJoinedChannels = Object.entries(data.membership)
             .filter(([_, status]) => !status)
             .map(([channel]) => channel);
@@ -2268,7 +2271,9 @@ document.addEventListener('DOMContentLoaded', function() {
           });
         }
       } else {
-        throw new Error('Failed to check membership');
+        const errorText = await response.text();
+        console.error('API error:', response.status, errorText);
+        throw new Error(`Failed to check membership: ${response.status} ${errorText}`);
       }
     } catch (error) {
       console.error('Verification error:', error);
@@ -2288,14 +2293,19 @@ document.addEventListener('DOMContentLoaded', function() {
   async function initialCheck() {
     try {
       const channelNames = Object.values(channelMap).join(',');
+      console.log('Initial check for channels:', channelNames);
+      
       const response = await fetch(`/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelNames)}`);
       
       if (response.ok) {
         const data = await response.json();
+        console.log('Initial membership response:', data);
+        
         const allJoined = Object.values(data.membership).every(status => status);
         
         if (allJoined) {
           // User has already joined all channels - redirect immediately
+          console.log('User already joined all channels, redirecting...');
           window.location.href = 'home.html';
         }
       }
