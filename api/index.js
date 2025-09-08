@@ -266,47 +266,39 @@ app.get('/api/telegram/start', async (req, res) => {
 // API endpoint to check if user is member of channels
 // API endpoint to check if user is member of channels
 // API endpoint to check if user is member of channels
+// API endpoint to check if user is member of channels
 app.post('/api/telegram/check-membership', async (req, res) => {
   const { userId, channelNames } = req.body;
-  
+
   console.log('Membership check for user:', userId, 'channels:', channelNames);
-  
+
   try {
     const membershipStatus = {};
     const numericUserId = parseInt(userId);
-    
-    // Channel mapping with @ symbols
-    const channelUsernames = {
-      'Channel 1': '@allinonepayout',
-      'Channel 2': '@ALL1N_0NE'
-    };
-    
-    for (const channelName of channelNames) {
-      const channelUsername = channelUsernames[channelName];
-      
+
+    for (const channelUsername of channelNames) {
       try {
-        // Use direct API call instead of bot.getChatMember
-        const response = await fetch(`https://api.telegram.org/bot${botToken}/getChatMember?chat_id=${channelUsername}&user_id=${numericUserId}`);
+        // Call Telegram API directly
+        const response = await fetch(
+          `https://api.telegram.org/bot${botToken}/getChatMember?chat_id=${channelUsername}&user_id=${numericUserId}`
+        );
         const data = await response.json();
-        
-        console.log(`API response for ${channelName}:`, JSON.stringify(data, null, 2));
-        
+
         if (data.ok) {
-          // User is a member if status is NOT 'left' or 'kicked'
-          // Valid member statuses: 'creator', 'administrator', 'member', 'restricted'
-          const isValidMember = !['left', 'kicked'].includes(data.result.status);
-          membershipStatus[channelName] = isValidMember;
-          console.log(`✅ User status in ${channelName}: ${data.result.status} → isMember: ${isValidMember}`);
+          const status = data.result.status;
+          membershipStatus[channelUsername] = !['left', 'kicked'].includes(status);
+
+          console.log(`✅ User ${numericUserId} status in ${channelUsername}: ${status}`);
         } else {
-          console.error(`❌ API error for ${channelName}:`, data.description);
-          membershipStatus[channelName] = false;
+          console.error(`❌ API error for ${channelUsername}:`, data.description);
+          membershipStatus[channelUsername] = false;
         }
       } catch (error) {
-        console.error(`❌ Error with ${channelName}:`, error.message);
-        membershipStatus[channelName] = false;
+        console.error(`❌ Error with ${channelUsername}:`, error.message);
+        membershipStatus[channelUsername] = false;
       }
     }
-    
+
     res.json({ membership: membershipStatus });
   } catch (error) {
     console.error('Overall error checking membership:', error);
