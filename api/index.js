@@ -237,14 +237,50 @@ app.get('/api/telegram/start', async (req, res) => {
 });
 
 // API endpoint to check if user is member of channels
+// Add this function to handle referral processing before verification
+async function handleUserVerification(userId, startParam = null) {
+  try {
+    // Process referral if exists
+    if (startParam && startParam.startsWith('ref')) {
+      await processReferral(userId, startParam);
+    }
+    
+    // Check if user exists, if not create them
+    let user = getUser(userId);
+    if (!user) {
+      // This would typically come from Telegram data, but we'll create a minimal user
+      const userData = {
+        id: userId,
+        username: `user_${userId}`,
+        first_name: "Telegram",
+        last_name: "User"
+      };
+      addUser(userData);
+      user = getUser(userId);
+    }
+    
+    return { success: true, user };
+  } catch (error) {
+    console.error('Error in user verification:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Update the check-membership endpoint to handle referrals first
 app.get('/api/telegram/check-membership', async (req, res) => {
-  const { userId, channelNames } = req.query;
+  const { userId, channelNames, startParam } = req.query;
   
   if (!userId || !channelNames) {
     return res.status(400).json({ error: 'Missing userId or channelNames parameters' });
   }
   
   try {
+    // Process user verification first (including any referrals)
+    const verification = await handleUserVerification(userId, startParam);
+    if (!verification.success) {
+      return res.status(500).json({ error: 'User verification failed', details: verification.error });
+    }
+    
     const channelsArray = Array.isArray(channelNames) 
       ? channelNames 
       : channelNames.split(',');
