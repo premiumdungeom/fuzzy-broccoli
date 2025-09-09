@@ -10,23 +10,20 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '..'))); // Serve static files
+app.use(express.static(path.join(__dirname, '..')));
 
-// Replace with your bot token
+// Bot configuration
 const botToken = '8488159096:AAHnzzdhE2wrIKCS5OtR2o3K_1Cw3PL38kg';
 const adminId = '5650788149';
-
-// Initialize Telegram Bot without polling
 const bot = new TelegramBot(botToken);
-// Note: Removed { polling: true } to prevent automatic polling
 
-// Channel configuration - use actual channel usernames (without @)
+// Channel configuration - use actual channel IDs
 const channels = {
-  'Channel 1': -1002586398527, // Your actual channel username
-  'Channel 2': -1002858278191      // Your actual channel username
+  'Channel 1': -1002586398527,
+  'Channel 2': -1002858278191
 };
 
-// User storage file
+// User storage
 const USER_DATA_FILE = './users.json';
 
 // Helper functions for user data management
@@ -90,7 +87,7 @@ function incrementUserInvites(userId) {
   return null;
 }
 
-// Set webhook route - call this once to set up the webhook
+// Set webhook route
 app.get('/set-webhook', async (req, res) => {
   try {
     const webhookUrl = `https://webbb-mvut.onrender.com/bot${botToken}`;
@@ -103,14 +100,14 @@ app.get('/set-webhook', async (req, res) => {
   }
 });
 
-// Webhook endpoint - Telegram will send updates here
+// Webhook endpoint
 app.post(`/bot${botToken}`, (req, res) => {
   try {
     bot.processUpdate(req.body);
     res.sendStatus(200);
   } catch (error) {
     console.error('Error processing update:', error);
-    res.sendStatus(200); // Still send 200 to prevent Telegram from retrying
+    res.sendStatus(200);
   }
 });
 
@@ -120,7 +117,6 @@ bot.onText(/\/start (.+)/, (msg, match) => {
   const userId = msg.from.id;
   const startParam = match[1];
   
-  // Store user data
   const userData = {
     id: userId,
     username: msg.from.username,
@@ -128,34 +124,27 @@ bot.onText(/\/start (.+)/, (msg, match) => {
     last_name: msg.from.last_name
   };
   
-  // Check if this is a referral
   if (startParam.startsWith('ref')) {
     const referrerId = startParam.replace('ref', '');
     userData.referred_by = referrerId;
     
-    // Add user to manager
     addUser(userData);
-    
-    // Send welcome message
     bot.sendMessage(chatId, `Welcome! You were referred by user ${referrerId}.`);
     
-    // Process the referral via our API
     processReferral(userId, startParam)
       .then(data => console.log('Referral processed:', data))
       .catch(error => console.error('Error processing referral:', error));
   } else {
-    // Add user without referral
     addUser(userData);
     bot.sendMessage(chatId, 'Welcome to our bot! Use /help to see available commands.');
   }
 });
 
-// Handle simple /start command without parameters
+// Handle simple /start command
 bot.onText(/\/start$/, (msg) => {
   const chatId = msg.chat.id;
   const userId = msg.from.id;
   
-  // Store user data
   const userData = {
     id: userId,
     username: msg.from.username,
@@ -167,29 +156,20 @@ bot.onText(/\/start$/, (msg) => {
   bot.sendMessage(chatId, 'Welcome to our bot! Use /help to see available commands.');
 });
 
-// Function to process referral
+// Process referral function
 async function processReferral(userId, startParam) {
   try {
-    // Check if this is a referral (start parameter begins with "ref")
     if (startParam && startParam.startsWith('ref')) {
       const referrerId = startParam.replace('ref', '');
-      
-      // Check if we've already processed this referral
-      const referralKey = `referralProcessed_${userId}`;
-      
-      // Get referral bonus amount from settings
-      const referralConfig = { friendInvitePoints: 20 }; // Default value
+      const referralConfig = { friendInvitePoints: 20 };
       const bonusAmount = parseInt(referralConfig.friendInvitePoints) || 20;
       
-      // Use UserManager to handle the referral
       const referrer = getUser(referrerId);
       if (referrer) {
         updateUserBalance(referrerId, bonusAmount);
         incrementUserInvites(referrerId);
         
         console.log(`Referral bonus of ${bonusAmount} points awarded to user ${referrerId} for referring user ${userId}`);
-        
-        // Notify admin about the referral
         bot.sendMessage(adminId, `🎉 New referral! User ${userId} was referred by ${referrerId}. ${bonusAmount} points awarded.`);
       } else {
         console.log(`Referrer ${referrerId} not found in database`);
@@ -214,7 +194,6 @@ app.get('/api/admin/referrals', (req, res) => {
     const users = loadUsers();
     const referralStats = {};
     
-    // Calculate referral statistics
     Object.values(users).forEach(user => {
       if (user.referred_by) {
         if (!referralStats[user.referred_by]) {
@@ -258,11 +237,6 @@ app.get('/api/telegram/start', async (req, res) => {
 });
 
 // API endpoint to check if user is member of channels
-// In your index.js file, update the membership check endpoint:
-
-// 
-// API endpoint to check if user is member of channels
-// API endpoint to check if user is member of channels
 app.get('/api/telegram/check-membership', async (req, res) => {
   const { userId, channelNames } = req.query;
   
@@ -280,12 +254,12 @@ app.get('/api/telegram/check-membership', async (req, res) => {
 
     for (const channelId of channelsArray) {
       try {
-        // Use the bot instance directly instead of fetch
-        const member = await bot.getChatMember(channelId, numericUserId);
-        membershipStatus[channelId] = !['left', 'kicked'].includes(member.status);
-        console.log(`✅ User ${numericUserId} status in ${channelId}: ${member.status}`);
+        const result = await bot.getChatMember(channelId, numericUserId);
+        const status = result.status;
+        membershipStatus[channelId] = !['left', 'kicked'].includes(status);
+        console.log(`✅ User ${numericUserId} status in ${channelId}: ${status}`);
       } catch (error) {
-        console.error(`❌ Error checking ${channelId}:`, error.message);
+        console.error(`❌ Error checking membership for ${channelId}:`, error.message);
         membershipStatus[channelId] = false;
       }
     }
@@ -308,14 +282,10 @@ bot.on('message', (msg) => {
       const data = JSON.parse(msg.web_app_data.data);
       
       if (data.action === 'channels_joined' && data.userId) {
-        // User has completed the channel joining process
         const userInfo = `User ${data.userId} has joined all channels`;
         console.log(userInfo);
         
-        // Notify admin
         bot.sendMessage(adminId, userInfo);
-        
-        // Send confirmation to user
         bot.sendMessage(msg.chat.id, 'Thank you for joining our channels! 🎉');
       }
     } catch (error) {
@@ -330,16 +300,14 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-// Add this after app.listen()
+// Start server
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
   
-  // Initialize users.json if it doesn't exist
   if (!fs.existsSync(USER_DATA_FILE)) {
     saveUsers({});
   }
   
-  // Automatically set webhook on server start
   try {
     const webhookUrl = `https://webbb-mvut.onrender.com/bot${botToken}`;
     await bot.setWebHook(webhookUrl);
