@@ -2166,7 +2166,7 @@ window.__vite_plugin_react_preamble_installed__ = true
    </div>
   </div>
 <script>
-// Telegram Mini App integration - REMOVE REFERRAL PROCESSING
+// Telegram Mini App integration
 document.addEventListener('DOMContentLoaded', function() {
   let tg = window.Telegram.WebApp;
   let user = null;
@@ -2182,24 +2182,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Store user data for the home page
     localStorage.setItem('telegramUser', JSON.stringify(user));
-    
-    // Register user in backend (without referral processing)
-    registerMiniAppUser(user);
   } else {
     // Not in Telegram Mini App context
     alert('This app must be opened within Telegram');
     return;
-  }
-  
-  // Register mini app user in backend (no referral processing)
-  async function registerMiniAppUser(userData) {
-    try {
-      const response = await fetch(`/api/telegram/mini-app-start?userId=${userData.id}&userData=${encodeURIComponent(JSON.stringify(userData))}`);
-      const data = await response.json();
-      console.log('Mini app user registered:', data);
-    } catch (error) {
-      console.error('Error registering mini app user:', error);
-    }
   }
   
   // Update UI with user info
@@ -2214,15 +2200,15 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Channel mapping - use the actual channel usernames (with @)
   const channelMap = {
-    'Channel 1': '@allinonepayout',
-    'Channel 2': '@ALL1N_0NE'
-  };
+    'Channel 1': -1002586398527,
+    'Channel 2': -1002858278191
+};
   
   // Reverse mapping for display purposes
   const reverseChannelMap = {
-    '@allinonepayout': 'Channel 1',
-    '@ALL1N_0NE': 'Channel 2'
-  };
+    '-1002586398527': 'Channel 1',
+    '-1002858278191': 'Channel 2'
+};
   
   // Handle join button clicks
   document.querySelectorAll('.channel-join-btn').forEach(btn => {

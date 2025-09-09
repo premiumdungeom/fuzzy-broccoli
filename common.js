@@ -67,62 +67,6 @@ function deductFromBalance(amount) {
   return currentBalance; // Not enough balance
 }
 
-// In common.js, ensure referral system only works in main bot context
-
-function initializeReferralSystem() {
-  // Only process referrals if we're in the main bot context
-  // Check if we have a start parameter with ref
-  const urlParams = new URLSearchParams(window.location.search);
-  const startParam = urlParams.get('start');
-  
-  if (startParam && startParam.startsWith('ref')) {
-    const userData = localStorage.getItem('telegramUser');
-    if (userData) {
-      try {
-        const user = JSON.parse(userData);
-        processReferral(user.id, startParam);
-      } catch (error) {
-        console.error('Error processing referral:', error);
-      }
-    }
-  }
-}
-
-async function processReferral(userId, startParam) {
-  try {
-    if (startParam && startParam.startsWith('ref')) {
-      const referrerId = startParam.replace('ref', '');
-      
-      // Check if we've already processed this referral
-      const referralKey = `referralProcessed_${userId}`;
-      if (localStorage.getItem(referralKey)) {
-        return; // Already processed
-      }
-      
-      // Mark as processed
-      localStorage.setItem(referralKey, 'true');
-      
-      // Get referral bonus amount from settings
-      const referralConfig = JSON.parse(localStorage.getItem('pointsConfig') || '{}');
-      const bonusPerFriend = parseInt(referralConfig.friendInvitePoints) || 20;
-      
-      // Update referrer's invite count and balance
-      const invitesKey = `userInvites_${referrerId}`;
-      const currentInvites = parseInt(localStorage.getItem(invitesKey) || '0');
-      localStorage.setItem(invitesKey, currentInvites + 1);
-      
-      // Update referrer's balance
-      const balanceKey = `userBalance_${referrerId}`;
-      const currentBalance = parseInt(localStorage.getItem(balanceKey) || '0');
-      localStorage.setItem(balanceKey, currentBalance + bonusPerFriend);
-      
-      console.log(`Referral processed: User ${userId} referred by ${referrerId}`);
-    }
-  } catch (error) {
-    console.error('Error processing referral:', error);
-  }
-}
-
 function getCurrentBalance() {
   const balanceKey = getUserBalanceKey();
   return parseInt(localStorage.getItem(balanceKey) || '0');
