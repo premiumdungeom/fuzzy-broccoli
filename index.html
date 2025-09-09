@@ -2166,7 +2166,7 @@ window.__vite_plugin_react_preamble_installed__ = true
    </div>
   </div>
 <script>
-// Telegram Mini App integration
+// Telegram Mini App integration - REMOVE REFERRAL PROCESSING
 document.addEventListener('DOMContentLoaded', function() {
   let tg = window.Telegram.WebApp;
   let user = null;
@@ -2180,19 +2180,26 @@ document.addEventListener('DOMContentLoaded', function() {
     user = tg.initDataUnsafe.user;
     updateUserInfo();
     
-    // Store user data for the home page (without referral info)
-    const userDataToStore = {
-      id: user.id,
-      username: user.username,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      photo_url: user.photo_url
-    };
-    localStorage.setItem('telegramUser', JSON.stringify(userDataToStore));
+    // Store user data for the home page
+    localStorage.setItem('telegramUser', JSON.stringify(user));
+    
+    // Register user in backend (without referral processing)
+    registerMiniAppUser(user);
   } else {
     // Not in Telegram Mini App context
     alert('This app must be opened within Telegram');
     return;
+  }
+  
+  // Register mini app user in backend (no referral processing)
+  async function registerMiniAppUser(userData) {
+    try {
+      const response = await fetch(`/api/telegram/mini-app-start?userId=${userData.id}&userData=${encodeURIComponent(JSON.stringify(userData))}`);
+      const data = await response.json();
+      console.log('Mini app user registered:', data);
+    } catch (error) {
+      console.error('Error registering mini app user:', error);
+    }
   }
   
   // Update UI with user info
@@ -2333,10 +2340,6 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('Initial check error:', error);
     }
   }
-  
-  // Run initial check
-  initialCheck();
-});
   
   // Run initial check
   initialCheck();

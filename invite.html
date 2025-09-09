@@ -2288,29 +2288,39 @@ video {
     </div>
   `;
   
-  function updateReferralLink() {
-    const referralLink = generateReferralLink();
-    document.getElementById('referral-link').textContent = referralLink;
-  }
+  // In invite.html, update the referral link generation:
 
-  // Copy referral link to clipboard
-  function copyReferralLink() {
-    const referralLink = generateReferralLink();
-    navigator.clipboard.writeText(referralLink).then(() => {
-      // Show success message
-      alert('Referral link copied to clipboard!');
-    }).catch(err => {
-      console.error('Failed to copy: ', err);
-      // Fallback for browsers that don't support clipboard API
-      const tempInput = document.createElement('input');
-      tempInput.value = referralLink;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      document.execCommand('copy');
-      document.body.removeChild(tempInput);
-      alert('Referral link copied to clipboard!');
-    });
+function generateReferralLink() {
+  const userData = localStorage.getItem('telegramUser');
+  if (userData) {
+    try {
+      const user = JSON.parse(userData);
+      // Use the main bot link for referrals, not mini app
+      return `https://t.me/EchoEARN_robot?start=ref${user.id}`;
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+    }
   }
+  return 'Loading...';
+}
+
+// Update the copy function to use the main bot link
+function copyReferralLink() {
+  const referralLink = generateReferralLink();
+  navigator.clipboard.writeText(referralLink).then(() => {
+    alert('Referral link copied to clipboard! Share this with friends to earn points!');
+  }).catch(err => {
+    console.error('Failed to copy: ', err);
+    // Fallback for browsers that don't support clipboard API
+    const tempInput = document.createElement('input');
+    tempInput.value = referralLink;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+    alert('Referral link copied to clipboard! Share this with friends to earn points!');
+  });
+}
 
   // Update invite stats
   function updateInviteStats() {

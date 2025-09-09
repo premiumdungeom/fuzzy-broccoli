@@ -67,6 +67,62 @@ function deductFromBalance(amount) {
   return currentBalance; // Not enough balance
 }
 
+// In common.js, ensure referral system only works in main bot context
+
+function initializeReferralSystem() {
+  // Only process referrals if we're in the main bot context
+  // Check if we have a start parameter with ref
+  const urlParams = new URLSearchParams(window.location.search);
+  const startParam = urlParams.get('start');
+  
+  if (startParam && startParam.startsWith('ref')) {
+    const userData = localStorage.getItem('telegramUser');
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        processReferral(user.id, startParam);
+      } catch (error) {
+        console.error('Error processing referral:', error);
+      }
+    }
+  }
+}
+
+async function processReferral(userId, startParam) {
+  try {
+    if (startParam && startParam.startsWith('ref')) {
+      const referrerId = startParam.replace('ref', '');
+      
+      // Check if we've already processed this referral
+      const referralKey = `referralProcessed_${userId}`;
+      if (localStorage.getItem(referralKey)) {
+        return; // Already processed
+      }
+      
+      // Mark as processed
+      localStorage.setItem(referralKey, 'true');
+      
+      // Get referral bonus amount from settings
+      const referralConfig = JSON.parse(localStorage.getItem('pointsConfig') || '{}');
+      const bonusPerFriend = parseInt(referralConfig.friendInvitePoints) || 20;
+      
+      // Update referrer's invite count and balance
+      const invitesKey = `userInvites_${referrerId}`;
+      const currentInvites = parseInt(localStorage.getItem(invitesKey) || '0');
+      localStorage.setItem(invitesKey, currentInvites + 1);
+      
+      // Update referrer's balance
+      const balanceKey = `userBalance_${referrerId}`;
+      const currentBalance = parseInt(localStorage.getItem(balanceKey) || '0');
+      localStorage.setItem(balanceKey, currentBalance + bonusPerFriend);
+      
+      console.log(`Referral processed: User ${userId} referred by ${referrerId}`);
+    }
+  } catch (error) {
+    console.error('Error processing referral:', error);
+  }
+}
+
 function getCurrentBalance() {
   const balanceKey = getUserBalanceKey();
   return parseInt(localStorage.getItem(balanceKey) || '0');
@@ -107,6 +163,7 @@ function generateReferralLink() {
 }
 
 // Check if user was referred and process bonus
+// Check if user was referred and process bonus
 function checkReferralStatus() {
   const userData = localStorage.getItem('telegramUser');
   if (userData) {
@@ -122,21 +179,15 @@ function checkReferralStatus() {
           // Mark as processed
           localStorage.setItem(referralKey, 'true');
           
-          // Get referral bonus amount from settings
-          const referralConfig = JSON.parse(localStorage.getItem('pointsConfig') || '{}');
-          const bonusAmount = parseInt(referralConfig.friendInvitePoints) || 20;
-          
-          // Add bonus to referrer's balance
-          const referrerBalanceKey = `userBalance_${referrerId}`;
-          const currentBalance = parseInt(localStorage.getItem(referrerBalanceKey) || '0');
-          localStorage.setItem(referrerBalanceKey, (currentBalance + bonusAmount).toString());
-          
-          // Update referrer's referral count
-          const referrerInvitesKey = `userInvites_${referrerId}`;
-          const currentInvites = parseInt(localStorage.getItem(referrerInvitesKey) || '0');
-          localStorage.setItem(referrerInvitesKey, (currentInvites + 1).toString());
-          
-          console.log(`Referral bonus of ${bonusAmount} points awarded to user ${referrerId}`);
+          // Send API request to process referral
+          fetch(`/api/telegram/start?userId=${getUserId()}&startParam=${user.start_param}`)
+            .then(response => response.json())
+            .then(data => {
+              console.log('Referral processed via API:', data);
+            })
+            .catch(error => {
+              console.error('Error processing referral via API:', error);
+            });
         }
       }
     } catch (error) {
