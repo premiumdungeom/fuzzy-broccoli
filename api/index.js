@@ -144,6 +144,26 @@ app.get('/api/telegram/check-membership', async (req, res) => {
   }
 });
 
+// API endpoint to notify about joined channels (without closing the app)
+app.post('/api/telegram/notify-joined', async (req, res) => {
+  const { userId, action } = req.body;
+  
+  if (action === 'channels_joined' && userId) {
+    const userInfo = `User ${userId} has joined all channels`;
+    console.log(userInfo);
+    
+    try {
+      await bot.sendMessage(adminId, userInfo);
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      res.status(500).json({ error: 'Failed to send notification' });
+    }
+  } else {
+    res.status(400).json({ error: 'Invalid request' });
+  }
+});
+
 // Handle data from Mini App
 bot.on('message', (msg) => {
   if (msg.web_app_data) {
