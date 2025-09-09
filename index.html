@@ -2204,6 +2204,12 @@ document.addEventListener('DOMContentLoaded', function() {
     'Channel 2': '@ALL1N_0NE'
   };
   
+  // Reverse mapping for display purposes
+  const reverseChannelMap = {
+    '@allinonepayout': 'Channel 1',
+    '@ALL1N_0NE': 'Channel 2'
+  };
+  
   // Handle join button clicks
   document.querySelectorAll('.channel-join-btn').forEach(btn => {
     btn.addEventListener('click', function() {
@@ -2263,20 +2269,12 @@ document.addEventListener('DOMContentLoaded', function() {
           } else {
             // Some channels not joined - show which ones
             const notJoinedChannels = Object.entries(data.membership)
-              .filter(([_, status]) => status !== true)
-              .map(([channel]) => channel);
-            
-            // Create user-friendly channel names for the message
-            const userFriendlyNames = notJoinedChannels.map(channel => {
-              for (const [displayName, username] of Object.entries(channelMap)) {
-                if (username === channel) return displayName;
-              }
-              return channel;
-            });
+              .filter(([channelUsername, status]) => status !== true)
+              .map(([channelUsername]) => reverseChannelMap[channelUsername] || channelUsername);
             
             tg.showPopup({
               title: 'Incomplete',
-              message: `Please join these channels: ${userFriendlyNames.join(', ')}`,
+              message: `Please join these channels: ${notJoinedChannels.join(', ')}`,
               buttons: [{ type: 'ok' }]
             });
           }
