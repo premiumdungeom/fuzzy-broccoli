@@ -115,6 +115,18 @@
       margin-top: 1rem;
       text-align: center;
     }
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
@@ -188,10 +200,13 @@
         const originalText = verifyBtn.textContent;
         
         // Show loading state
-        verifyBtn.textContent = 'Checking...';
+        verifyBtn.innerHTML = '<span class="loading"></span> Checking...';
         verifyBtn.disabled = true;
         
         try {
+          // Clear any cached verification status
+          localStorage.removeItem('verified_' + user.id);
+          
           // Check if user has joined all channels
           console.log('Checking membership for channels:', channelIds);
           
@@ -206,18 +221,26 @@
               const allJoined = Object.values(data.membership).every(status => status === true);
               
               if (allJoined) {
-                // All channels joined successfully
+                // Store verification status
+                localStorage.setItem('verified_' + user.id, 'true');
+                
+                // Notify server without closing the app
+                await fetch('/api/telegram/notify-joined', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    userId: user.id,
+                    action: 'channels_joined'
+                  })
+                });
+                
                 tg.showPopup({
                   title: 'Success!',
                   message: 'You have successfully joined all channels. Redirecting to app...',
                   buttons: [{ type: 'ok' }]
                 });
-                
-                // Send data to bot that user completed the process
-                tg.sendData(JSON.stringify({
-                  action: 'channels_joined',
-                  userId: user.id
-                }));
                 
                 // Redirect to home page after a short delay
                 setTimeout(() => {
@@ -277,6 +300,12 @@
       // Initial check when page loads
       async function initialCheck() {
         try {
+          // Check if we already verified this user
+          if (localStorage.getItem('verified_' + user.id) === 'true') {
+            window.location.href = 'home.html';
+            return;
+          }
+          
           console.log('Initial check for channels:', channelIds);
           
           const apiUrl = `/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelIds.join(','))}`;
@@ -290,7 +319,8 @@
               const allJoined = Object.values(data.membership).every(status => status === true);
               
               if (allJoined) {
-                // User has already joined all channels - redirect immediately
+                // Store verification status
+                localStorage.setItem('verified_' + user.id, 'true');
                 console.log('User already joined all channels, redirecting...');
                 window.location.href = 'home.html';
               }
@@ -298,6 +328,7 @@
           }
         } catch (error) {
           console.error('Initial check error:', error);
+          // Don't redirect on error - let user manually verify
         }
       }
       
