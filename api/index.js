@@ -104,19 +104,20 @@ app.get('/api/telegram/check-membership', async (req, res) => {
   }
   
   try {
-    const channelsArray = Array.isArray(channelNames) 
-      ? channelNames 
-      : channelNames.split(',');
+    // Parse the channelNames parameter correctly
+    const channelsArray = channelNames.split(',');
     
     const membershipStatus = {};
     const numericUserId = parseInt(userId);
 
     for (const channelId of channelsArray) {
       try {
-        const result = await bot.getChatMember(channelId, numericUserId);
+        // Clean up the channel ID in case it has any extra characters
+        const cleanChannelId = channelId.trim();
+        const result = await bot.getChatMember(cleanChannelId, numericUserId);
         const status = result.status;
-        membershipStatus[channelId] = !['left', 'kicked'].includes(status);
-        console.log(`✅ User ${numericUserId} status in ${channelId}: ${status}`);
+        membershipStatus[cleanChannelId] = !['left', 'kicked'].includes(status);
+        console.log(`✅ User ${numericUserId} status in ${cleanChannelId}: ${status}`);
       } catch (error) {
         console.error(`❌ Error checking membership for ${channelId}:`, error.message);
         membershipStatus[channelId] = false;
