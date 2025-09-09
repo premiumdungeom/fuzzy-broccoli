@@ -2230,20 +2230,17 @@ document.addEventListener('DOMContentLoaded', function() {
       // Check if user has joined all channels using GET request
       // Use the actual channel usernames (with @) not the display names
       const channelNames = Object.values(channelMap).join(',');
-      console.log('Checking membership for user:', user.id, 'channels:', channelNames);
+      console.log('Checking membership for channels:', channelNames);
       
       const response = await fetch(`/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelNames)}`);
       
       if (response.ok) {
         const data = await response.json();
-        console.log('API Response:', data);
+        console.log('Membership response:', data);
         
         // Check if the response has the expected structure
-        if (data.success && data.membership) {
+        if (data && data.membership) {
           const allJoined = Object.values(data.membership).every(status => status === true);
-          
-          console.log('All channels joined:', allJoined);
-          console.log('Membership details:', data.membership);
           
           if (allJoined) {
             // All channels joined successfully
@@ -2266,14 +2263,20 @@ document.addEventListener('DOMContentLoaded', function() {
           } else {
             // Some channels not joined - show which ones
             const notJoinedChannels = Object.entries(data.membership)
-              .filter(([channel, status]) => status === false)
-              .map(([channel, status]) => channel);
+              .filter(([_, status]) => status !== true)
+              .map(([channel]) => channel);
             
-            console.log('Not joined channels:', notJoinedChannels);
+            // Create user-friendly channel names for the message
+            const userFriendlyNames = notJoinedChannels.map(channel => {
+              for (const [displayName, username] of Object.entries(channelMap)) {
+                if (username === channel) return displayName;
+              }
+              return channel;
+            });
             
             tg.showPopup({
               title: 'Incomplete',
-              message: `Please join these channels: ${notJoinedChannels.join(', ')}`,
+              message: `Please join these channels: ${userFriendlyNames.join(', ')}`,
               buttons: [{ type: 'ok' }]
             });
           }
@@ -2283,13 +2286,13 @@ document.addEventListener('DOMContentLoaded', function() {
       } else {
         const errorText = await response.text();
         console.error('API error:', response.status, errorText);
-        throw new Error(`Server returned ${response.status}: ${errorText}`);
+        throw new Error(`Failed to check membership: ${response.status} ${errorText}`);
       }
     } catch (error) {
       console.error('Verification error:', error);
       tg.showPopup({
         title: 'Error',
-        message: error.message || 'Failed to verify channel membership. Please try again.',
+        message: 'Failed to verify channel membership. Please try again.',
         buttons: [{ type: 'ok' }]
       });
     } finally {
@@ -2303,15 +2306,15 @@ document.addEventListener('DOMContentLoaded', function() {
   async function initialCheck() {
     try {
       const channelNames = Object.values(channelMap).join(',');
-      console.log('Initial check for user:', user.id, 'channels:', channelNames);
+      console.log('Initial check for channels:', channelNames);
       
       const response = await fetch(`/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelNames)}`);
       
       if (response.ok) {
         const data = await response.json();
-        console.log('Initial API Response:', data);
+        console.log('Initial membership response:', data);
         
-        if (data.success && data.membership) {
+        if (data && data.membership) {
           const allJoined = Object.values(data.membership).every(status => status === true);
           
           if (allJoined) {
