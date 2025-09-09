@@ -141,167 +141,183 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      let tg = window.Telegram.WebApp;
-      let user = null;
+document.addEventListener('DOMContentLoaded', function() {
+  let tg = window.Telegram.WebApp;
+  let user = null;
+  
+  // Initialize Telegram Web App
+  tg.expand();
+  tg.enableClosingConfirmation();
+  
+  // Get user data from Telegram
+  if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+    user = tg.initDataUnsafe.user;
+    updateUserInfo();
+    
+    // Store user data for the home page
+    localStorage.setItem('telegramUser', JSON.stringify(user));
+  } else {
+    // Not in Telegram Mini App context
+    alert('This app must be opened within Telegram');
+    return;
+  }
+  
+  // Check if there's a referral parameter in the URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const startParam = urlParams.get('start');
+  
+  // Update UI with user info
+  function updateUserInfo() {
+    const userInfoEl = document.getElementById('user-info');
+    if (user && userInfoEl) {
+      const displayName = `${user.first_name} ${user.last_name || ''}`.trim();
+      userInfoEl.textContent = `Welcome, ${displayName}! Please join our channels to continue.`;
+      userInfoEl.classList.remove('hidden');
+    }
+  }
+  
+  // Channel mapping - use the actual channel IDs from your backend
+  const channelMap = {
+    'Channel 1': '-1002586398527',
+    'Channel 2': '-1002858278191'
+  };
+  
+  // Handle join button clicks
+  document.querySelectorAll('.channel-join-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const channelName = this.getAttribute('data-channel');
+      const channelId = channelMap[channelName];
       
-      // Initialize Telegram Web App
-      tg.expand();
-      tg.enableClosingConfirmation();
-      
-      // Get user data from Telegram
-      if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        user = tg.initDataUnsafe.user;
-        updateUserInfo();
-        
-        // Store user data for the home page
-        localStorage.setItem('telegramUser', JSON.stringify(user));
-      } else {
-        // Not in Telegram Mini App context
-        alert('This app must be opened within Telegram');
-        return;
+      if (channelId) {
+        // Open channel in Telegram
+        tg.openTelegramLink(`https://t.me/c/${channelId.replace('-100', '')}`);
       }
-      
-      // Update UI with user info
-      function updateUserInfo() {
-        const userInfoEl = document.getElementById('user-info');
-        if (user && userInfoEl) {
-          const displayName = `${user.first_name} ${user.last_name || ''}`.trim();
-          userInfoEl.textContent = `Welcome, ${displayName}! Please join our channels to continue.`;
-          userInfoEl.classList.remove('hidden');
-        }
-      }
-      
-      // Channel mapping - use the actual channel IDs from your backend
-      const channelMap = {
-        'Channel 1': '-1002586398527',
-        'Channel 2': '-1002858278191'
-      };
-      
-      // Handle join button clicks
-      document.querySelectorAll('.channel-join-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const channelName = this.getAttribute('data-channel');
-          const channelId = channelMap[channelName];
-          
-          if (channelId) {
-            // Open channel in Telegram
-            tg.openTelegramLink(`https://t.me/c/${channelId.replace('-100', '')}`);
-          }
-        });
-      });
-      
-      // Handle verify button click
-      document.getElementById('verify-button').addEventListener('click', async function() {
-        const verifyBtn = this;
-        const originalText = verifyBtn.textContent;
-        
-        // Show loading state
-        verifyBtn.textContent = 'Checking...';
-        verifyBtn.disabled = true;
-        
-        try {
-          // Check if user has joined all channels using GET request
-          const channelIds = Object.values(channelMap).join(',');
-          console.log('Checking membership for channels:', channelIds);
-          
-          const response = await fetch(`/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelIds)}`);
-          
-          if (response.ok) {
-            const data = await response.json();
-            console.log('Membership response:', data);
-            
-            if (data && data.membership) {
-              const allJoined = Object.values(data.membership).every(status => status === true);
-              
-              if (allJoined) {
-                // All channels joined successfully
-                tg.showPopup({
-                  title: 'Success!',
-                  message: 'You have successfully joined all channels. Redirecting to app...',
-                  buttons: [{ type: 'ok' }]
-                });
-                
-                // Send data to bot that user completed the process
-                tg.sendData(JSON.stringify({
-                  action: 'channels_joined',
-                  userId: user.id
-                }));
-                
-                // Redirect to home page after a short delay
-                setTimeout(() => {
-                  window.location.href = 'home.html';
-                }, 1500);
-              } else {
-                // Some channels not joined - show which ones
-                const notJoinedChannels = Object.entries(data.membership)
-                  .filter(([channelId, status]) => status !== true)
-                  .map(([channelId]) => {
-                    // Find the display name for this channel ID
-                    for (const [name, id] of Object.entries(channelMap)) {
-                      if (id === channelId) return name;
-                    }
-                    return channelId;
-                  });
-                
-                tg.showPopup({
-                  title: 'Incomplete',
-                  message: `Please join these channels: ${notJoinedChannels.join(', ')}`,
-                  buttons: [{ type: 'ok' }]
-                });
-              }
-            } else {
-              throw new Error('Invalid response format from server');
-            }
-          } else {
-            const errorText = await response.text();
-            console.error('API error:', response.status, errorText);
-            throw new Error(`Failed to check membership: ${response.status} ${errorText}`);
-          }
-        } catch (error) {
-          console.error('Verification error:', error);
-          tg.showPopup({
-            title: 'Error',
-            message: 'Failed to verify channel membership. Please try again.',
-            buttons: [{ type: 'ok' }]
-          });
-        } finally {
-          // Restore button state
-          verifyBtn.textContent = originalText;
-          verifyBtn.disabled = false;
-        }
-      });
-      
-      // Initial check when page loads
-      async function initialCheck() {
-        try {
-          const channelIds = Object.values(channelMap).join(',');
-          console.log('Initial check for channels:', channelIds);
-          
-          const response = await fetch(`/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelIds)}`);
-          
-          if (response.ok) {
-            const data = await response.json();
-            console.log('Initial membership response:', data);
-            
-            if (data && data.membership) {
-              const allJoined = Object.values(data.membership).every(status => status === true);
-              
-              if (allJoined) {
-                // User has already joined all channels - redirect immediately
-                console.log('User already joined all channels, redirecting...');
-                window.location.href = 'home.html';
-              }
-            }
-          }
-        } catch (error) {
-          console.error('Initial check error:', error);
-        }
-      }
-      
-      // Run initial check
-      initialCheck();
     });
-  </script>
+  });
+  
+  // Handle verify button click
+  document.getElementById('verify-button').addEventListener('click', async function() {
+    const verifyBtn = this;
+    const originalText = verifyBtn.textContent;
+    
+    // Show loading state
+    verifyBtn.textContent = 'Checking...';
+    verifyBtn.disabled = true;
+    
+    try {
+      // Check if user has joined all channels using GET request
+      const channelIds = Object.values(channelMap).join(',');
+      console.log('Checking membership for channels:', channelIds);
+      
+      // Include startParam if it exists
+      let apiUrl = `/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelIds)}`;
+      if (startParam) {
+        apiUrl += `&startParam=${encodeURIComponent(startParam)}`;
+      }
+      
+      const response = await fetch(apiUrl);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Membership response:', data);
+        
+        if (data && data.membership) {
+          const allJoined = Object.values(data.membership).every(status => status === true);
+          
+          if (allJoined) {
+            // All channels joined successfully
+            tg.showPopup({
+              title: 'Success!',
+              message: 'You have successfully joined all channels. Redirecting to app...',
+              buttons: [{ type: 'ok' }]
+            });
+            
+            // Send data to bot that user completed the process
+            tg.sendData(JSON.stringify({
+              action: 'channels_joined',
+              userId: user.id
+            }));
+            
+            // Redirect to home page after a short delay
+            setTimeout(() => {
+              window.location.href = 'home.html';
+            }, 1500);
+          } else {
+            // Some channels not joined - show which ones
+            const notJoinedChannels = Object.entries(data.membership)
+              .filter(([channelId, status]) => status !== true)
+              .map(([channelId]) => {
+                // Find the display name for this channel ID
+                for (const [name, id] of Object.entries(channelMap)) {
+                  if (id === channelId) return name;
+                }
+                return channelId;
+              });
+            
+            tg.showPopup({
+              title: 'Incomplete',
+              message: `Please join these channels: ${notJoinedChannels.join(', ')}`,
+              buttons: [{ type: 'ok' }]
+            });
+          }
+        } else {
+          throw new Error('Invalid response format from server');
+        }
+      } else {
+        const errorText = await response.text();
+        console.error('API error:', response.status, errorText);
+        throw new Error(`Failed to check membership: ${response.status} ${errorText}`);
+      }
+    } catch (error) {
+      console.error('Verification error:', error);
+      tg.showPopup({
+        title: 'Error',
+        message: 'Failed to verify channel membership. Please try again.',
+        buttons: [{ type: 'ok' }]
+      });
+    } finally {
+      // Restore button state
+      verifyBtn.textContent = originalText;
+      verifyBtn.disabled = false;
+    }
+  });
+  
+  // Initial check when page loads
+  async function initialCheck() {
+    try {
+      const channelIds = Object.values(channelMap).join(',');
+      console.log('Initial check for channels:', channelIds);
+      
+      // Include startParam if it exists
+      let apiUrl = `/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelIds)}`;
+      if (startParam) {
+        apiUrl += `&startParam=${encodeURIComponent(startParam)}`;
+      }
+      
+      const response = await fetch(apiUrl);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Initial membership response:', data);
+        
+        if (data && data.membership) {
+          const allJoined = Object.values(data.membership).every(status => status === true);
+          
+          if (allJoined) {
+            // User has already joined all channels - redirect immediately
+            console.log('User already joined all channels, redirecting...');
+            window.location.href = 'home.html';
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Initial check error:', error);
+    }
+  }
+  
+  // Run initial check
+  initialCheck();
+});
+</script>
 </body>
 </html>
