@@ -233,10 +233,22 @@
                     if (channelId === '-1002858278191') return 'Channel 2';
                     return channelId;
                   });
-                
+
+                // Create a more informative message
+                let message = 'Please join these channels:';
+                notJoinedChannels.forEach(channelName => {
+                  if (channelName === 'Channel 1') {
+                    message += '\n• Channel 1: https://t.me/allinonepayout';
+                  } else if (channelName === 'Channel 2') {
+                    message += '\n• Channel 2: https://t.me/ALL1N_0NE';
+                  } else {
+                    message += `\n• ${channelName}`;
+                  }
+                });
+
                 tg.showPopup({
                   title: 'Incomplete',
-                  message: `Please join these channels: ${notJoinedChannels.join(', ')}`,
+                  message: message,
                   buttons: [{ type: 'ok' }]
                 });
               }
