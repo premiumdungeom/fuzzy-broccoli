@@ -262,6 +262,7 @@ app.get('/api/telegram/start', async (req, res) => {
 
 // 
 // API endpoint to check if user is member of channels
+// API endpoint to check if user is member of channels
 app.get('/api/telegram/check-membership', async (req, res) => {
   const { userId, channelNames } = req.query;
   
@@ -277,24 +278,15 @@ app.get('/api/telegram/check-membership', async (req, res) => {
     const membershipStatus = {};
     const numericUserId = parseInt(userId);
 
-    for (const channelUsername of channelsArray) {
+    for (const channelId of channelsArray) {
       try {
-        const response = await fetch(
-          `https://api.telegram.org/bot${botToken}/getChatMember?chat_id=${channelUsername}&user_id=${numericUserId}`
-        );
-        const data = await response.json();
-
-        if (data.ok) {
-          const status = data.result.status;
-          membershipStatus[channelUsername] = !['left', 'kicked'].includes(status);
-          console.log(`✅ User ${numericUserId} status in ${channelUsername}: ${status}`);
-        } else {
-          console.error(`❌ API error for ${channelUsername}:`, data.description);
-          membershipStatus[channelUsername] = false;
-        }
+        // Use the bot instance directly instead of fetch
+        const member = await bot.getChatMember(channelId, numericUserId);
+        membershipStatus[channelId] = !['left', 'kicked'].includes(member.status);
+        console.log(`✅ User ${numericUserId} status in ${channelId}: ${member.status}`);
       } catch (error) {
-        console.error(`❌ Error with ${channelUsername}:`, error.message);
-        membershipStatus[channelUsername] = false;
+        console.error(`❌ Error checking ${channelId}:`, error.message);
+        membershipStatus[channelId] = false;
       }
     }
 
