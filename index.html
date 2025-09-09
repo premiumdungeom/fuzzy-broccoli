@@ -2224,108 +2224,141 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // Handle verify button click
-  document.getElementById('verify-button').addEventListener('click', async function() {
-    const verifyBtn = this;
-    const originalText = verifyBtn.textContent;
+  // Handle verify button click
+document.getElementById('verify-button').addEventListener('click', async function() {
+  const verifyBtn = this;
+  const originalText = verifyBtn.textContent;
+  
+  // Show loading state
+  verifyBtn.textContent = 'Checking...';
+  verifyBtn.disabled = true;
+  
+  try {
+    // Check if user has joined all channels using GET request
+    const channelNames = Object.values(channelMap).join(',');
+    console.log('Checking membership for channels:', channelNames);
+    console.log('User ID:', user.id);
     
-    // Show loading state
-    verifyBtn.textContent = 'Checking...';
-    verifyBtn.disabled = true;
+    const response = await fetch(`/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelNames)}`);
     
-    try {
-      // Check if user has joined all channels using GET request
-      // Use the actual channel usernames (with @) not the display names
-      const channelNames = Object.values(channelMap).join(',');
-      console.log('Checking membership for channels:', channelNames);
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Membership response:', data);
       
-      const response = await fetch(`/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelNames)}`);
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Membership response:', data);
+      // Check if the response has the expected structure
+      if (data && data.membership) {
+        const allJoined = Object.values(data.membership).every(status => status === true);
         
-        // Check if the response has the expected structure
-        if (data && data.membership) {
-          const allJoined = Object.values(data.membership).every(status => status === true);
+        if (allJoined) {
+          // All channels joined successfully
+          tg.showPopup({
+            title: 'Success!',
+            message: 'You have successfully joined all channels. Redirecting to app...',
+            buttons: [{ type: 'ok' }]
+          });
           
-          if (allJoined) {
-            // All channels joined successfully
-            tg.showPopup({
-              title: 'Success!',
-              message: 'You have successfully joined all channels. Redirecting to app...',
-              buttons: [{ type: 'ok' }]
-            });
-            
-            // Send data to bot that user completed the process
-            tg.sendData(JSON.stringify({
-              action: 'channels_joined',
-              userId: user.id
-            }));
-            
-            // Redirect to home page after a short delay
-            setTimeout(() => {
-              window.location.href = 'home.html';
-            }, 1500);
-          } else {
-            // Some channels not joined - show which ones
-            const notJoinedChannels = Object.entries(data.membership)
-              .filter(([channelUsername, status]) => status !== true)
-              .map(([channelUsername]) => reverseChannelMap[channelUsername] || channelUsername);
-            
-            tg.showPopup({
-              title: 'Incomplete',
-              message: `Please join these channels: ${notJoinedChannels.join(', ')}`,
-              buttons: [{ type: 'ok' }]
-            });
+          // Process referral if this is a referred user
+          const urlParams = new URLSearchParams(window.location.search);
+          const startParam = urlParams.get('start');
+          
+          if (startParam && startParam.startsWith('ref')) {
+            try {
+              await fetch(`/api/telegram/start?userId=${user.id}&startParam=${startParam}`);
+              console.log('Referral processed successfully');
+            } catch (error) {
+              console.error('Error processing referral:', error);
+            }
           }
+          
+          // Send data to bot that user completed the process
+          tg.sendData(JSON.stringify({
+            action: 'channels_joined',
+            userId: user.id
+          }));
+          
+          // Redirect to home page after a short delay
+          setTimeout(() => {
+            window.location.href = 'home.html';
+          }, 1500);
         } else {
-          throw new Error('Invalid response format from server');
+          // Some channels not joined - show which ones
+          const notJoinedChannels = Object.entries(data.membership)
+            .filter(([channelUsername, status]) => status !== true)
+            .map(([channelUsername]) => reverseChannelMap[channelUsername] || channelUsername);
+          
+          tg.showPopup({
+            title: 'Incomplete',
+            message: `Please join these channels: ${notJoinedChannels.join(', ')}`,
+            buttons: [{ type: 'ok' }]
+          });
         }
       } else {
-        const errorText = await response.text();
-        console.error('API error:', response.status, errorText);
-        throw new Error(`Failed to check membership: ${response.status} ${errorText}`);
+        throw new Error('Invalid response format from server');
       }
-    } catch (error) {
-      console.error('Verification error:', error);
-      tg.showPopup({
-        title: 'Error',
-        message: 'Failed to verify channel membership. Please try again.',
-        buttons: [{ type: 'ok' }]
-      });
-    } finally {
-      // Restore button state
-      verifyBtn.textContent = originalText;
-      verifyBtn.disabled = false;
+    } else {
+      const errorText = await response.text();
+      console.error('API error:', response.status, errorText);
+      throw new Error(`Failed to check membership: ${response.status} ${errorText}`);
     }
-  });
+  } catch (error) {
+    console.error('Verification error:', error);
+    tg.showPopup({
+      title: 'Error',
+      message: 'Failed to verify channel membership. Please try again.',
+      buttons: [{ type: 'ok' }]
+    });
+  } finally {
+    // Restore button state
+    verifyBtn.textContent = originalText;
+    verifyBtn.disabled = false;
+  }
+});
   
   // Initial check when page loads
-  async function initialCheck() {
-    try {
-      const channelNames = Object.values(channelMap).join(',');
-      console.log('Initial check for channels:', channelNames);
+  // Add this to your initialCheck function
+async function initialCheck() {
+  try {
+    const channelNames = Object.values(channelMap).join(',');
+    console.log('Initial check for channels:', channelNames);
+    console.log('User ID for initial check:', user.id);
+    
+    // Check if this is a referral
+    const urlParams = new URLSearchParams(window.location.search);
+    const startParam = urlParams.get('start');
+    if (startParam) {
+      console.log('Start parameter found:', startParam);
+    }
+    
+    const response = await fetch(`/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelNames)}`);
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Initial membership response:', data);
       
-      const response = await fetch(`/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelNames)}`);
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Initial membership response:', data);
+      if (data && data.membership) {
+        const allJoined = Object.values(data.membership).every(status => status === true);
         
-        if (data && data.membership) {
-          const allJoined = Object.values(data.membership).every(status => status === true);
-          
-          if (allJoined) {
-            // User has already joined all channels - redirect immediately
-            console.log('User already joined all channels, redirecting...');
-            window.location.href = 'home.html';
+        if (allJoined) {
+          // Process referral if applicable
+          if (startParam && startParam.startsWith('ref')) {
+            try {
+              await fetch(`/api/telegram/start?userId=${user.id}&startParam=${startParam}`);
+              console.log('Referral processed during initial check');
+            } catch (error) {
+              console.error('Error processing referral during initial check:', error);
+            }
           }
+          
+          // User has already joined all channels - redirect immediately
+          console.log('User already joined all channels, redirecting...');
+          window.location.href = 'home.html';
         }
       }
-    } catch (error) {
-      console.error('Initial check error:', error);
     }
+  } catch (error) {
+    console.error('Initial check error:', error);
   }
+}
   
   // Run initial check
   initialCheck();
