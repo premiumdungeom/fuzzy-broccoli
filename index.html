@@ -2230,56 +2230,66 @@ document.addEventListener('DOMContentLoaded', function() {
       // Check if user has joined all channels using GET request
       // Use the actual channel usernames (with @) not the display names
       const channelNames = Object.values(channelMap).join(',');
-      console.log('Checking membership for channels:', channelNames);
+      console.log('Checking membership for user:', user.id, 'channels:', channelNames);
       
       const response = await fetch(`/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelNames)}`);
       
       if (response.ok) {
         const data = await response.json();
-        console.log('Membership response:', data);
+        console.log('API Response:', data);
         
-        const allJoined = Object.values(data.membership).every(status => status);
-        
-        if (allJoined) {
-          // All channels joined successfully
-          tg.showPopup({
-            title: 'Success!',
-            message: 'You have successfully joined all channels. Redirecting to app...',
-            buttons: [{ type: 'ok' }]
-          });
+        // Check if the response has the expected structure
+        if (data.success && data.membership) {
+          const allJoined = Object.values(data.membership).every(status => status === true);
           
-          // Send data to bot that user completed the process
-          tg.sendData(JSON.stringify({
-            action: 'channels_joined',
-            userId: user.id
-          }));
+          console.log('All channels joined:', allJoined);
+          console.log('Membership details:', data.membership);
           
-          // Redirect to home page after a short delay
-          setTimeout(() => {
-            window.location.href = 'home.html';
-          }, 1500);
+          if (allJoined) {
+            // All channels joined successfully
+            tg.showPopup({
+              title: 'Success!',
+              message: 'You have successfully joined all channels. Redirecting to app...',
+              buttons: [{ type: 'ok' }]
+            });
+            
+            // Send data to bot that user completed the process
+            tg.sendData(JSON.stringify({
+              action: 'channels_joined',
+              userId: user.id
+            }));
+            
+            // Redirect to home page after a short delay
+            setTimeout(() => {
+              window.location.href = 'home.html';
+            }, 1500);
+          } else {
+            // Some channels not joined - show which ones
+            const notJoinedChannels = Object.entries(data.membership)
+              .filter(([channel, status]) => status === false)
+              .map(([channel, status]) => channel);
+            
+            console.log('Not joined channels:', notJoinedChannels);
+            
+            tg.showPopup({
+              title: 'Incomplete',
+              message: `Please join these channels: ${notJoinedChannels.join(', ')}`,
+              buttons: [{ type: 'ok' }]
+            });
+          }
         } else {
-          // Some channels not joined - show which ones
-          const notJoinedChannels = Object.entries(data.membership)
-            .filter(([_, status]) => !status)
-            .map(([channel]) => channel);
-          
-          tg.showPopup({
-            title: 'Incomplete',
-            message: `Please join these channels: ${notJoinedChannels.join(', ')}`,
-            buttons: [{ type: 'ok' }]
-          });
+          throw new Error('Invalid response format from server');
         }
       } else {
         const errorText = await response.text();
         console.error('API error:', response.status, errorText);
-        throw new Error(`Failed to check membership: ${response.status} ${errorText}`);
+        throw new Error(`Server returned ${response.status}: ${errorText}`);
       }
     } catch (error) {
       console.error('Verification error:', error);
       tg.showPopup({
         title: 'Error',
-        message: 'Failed to verify channel membership. Please try again.',
+        message: error.message || 'Failed to verify channel membership. Please try again.',
         buttons: [{ type: 'ok' }]
       });
     } finally {
@@ -2293,20 +2303,22 @@ document.addEventListener('DOMContentLoaded', function() {
   async function initialCheck() {
     try {
       const channelNames = Object.values(channelMap).join(',');
-      console.log('Initial check for channels:', channelNames);
+      console.log('Initial check for user:', user.id, 'channels:', channelNames);
       
       const response = await fetch(`/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelNames)}`);
       
       if (response.ok) {
         const data = await response.json();
-        console.log('Initial membership response:', data);
+        console.log('Initial API Response:', data);
         
-        const allJoined = Object.values(data.membership).every(status => status);
-        
-        if (allJoined) {
-          // User has already joined all channels - redirect immediately
-          console.log('User already joined all channels, redirecting...');
-          window.location.href = 'home.html';
+        if (data.success && data.membership) {
+          const allJoined = Object.values(data.membership).every(status => status === true);
+          
+          if (allJoined) {
+            // User has already joined all channels - redirect immediately
+            console.log('User already joined all channels, redirecting...');
+            window.location.href = 'home.html';
+          }
         }
       }
     } catch (error) {
