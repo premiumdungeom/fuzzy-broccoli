@@ -21,10 +21,9 @@ const bot = new TelegramBot(botToken);
 // Note: Removed { polling: true } to prevent automatic polling
 
 // Channel configuration - use actual channel usernames (without @)
-// In index.js, ensure correct channel configuration
 const channels = {
-  '@allinonepayout': -1002586398527, // Your actual channel ID
-  '@ALL1N_0NE': -1002858278191      // Your actual channel ID
+  'Channel 1': -1002586398527, // Your actual channel username
+  'Channel 2': -1002858278191      // Your actual channel username
 };
 
 // User storage file
@@ -116,9 +115,6 @@ app.post(`/bot${botToken}`, (req, res) => {
 });
 
 // Handle /start command with referral parameter
-// In your index.js file, modify the /start command handling:
-
-// Handle /start command with referral parameter - ONLY in main bot
 bot.onText(/\/start (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
   const userId = msg.from.id;
@@ -132,7 +128,7 @@ bot.onText(/\/start (.+)/, (msg, match) => {
     last_name: msg.from.last_name
   };
   
-  // Check if this is a referral (only process in main bot, not mini app)
+  // Check if this is a referral
   if (startParam.startsWith('ref')) {
     const referrerId = startParam.replace('ref', '');
     userData.referred_by = referrerId;
@@ -140,7 +136,7 @@ bot.onText(/\/start (.+)/, (msg, match) => {
     // Add user to manager
     addUser(userData);
     
-    // Send welcome message with referral info
+    // Send welcome message
     bot.sendMessage(chatId, `Welcome! You were referred by user ${referrerId}.`);
     
     // Process the referral via our API
@@ -151,34 +147,6 @@ bot.onText(/\/start (.+)/, (msg, match) => {
     // Add user without referral
     addUser(userData);
     bot.sendMessage(chatId, 'Welcome to our bot! Use /help to see available commands.');
-  }
-});
-
-// Add a new endpoint specifically for mini app users (no referral processing)
-app.get('/api/telegram/mini-app-start', async (req, res) => {
-  const { userId, userData } = req.query;
-  
-  if (!userId) {
-    return res.status(400).json({ error: 'Missing user ID' });
-  }
-  
-  try {
-    // For mini app users, just add them without referral processing
-    const parsedUserData = JSON.parse(userData);
-    const newUser = {
-      id: parseInt(userId),
-      username: parsedUserData.username,
-      first_name: parsedUserData.first_name,
-      last_name: parsedUserData.last_name,
-      join_date: new Date().toISOString()
-    };
-    
-    addUser(newUser);
-    
-    res.json({ success: true, message: 'Mini app user added', user: newUser });
-  } catch (error) {
-    console.error('Error processing mini app start:', error);
-    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
@@ -198,6 +166,42 @@ bot.onText(/\/start$/, (msg) => {
   addUser(userData);
   bot.sendMessage(chatId, 'Welcome to our bot! Use /help to see available commands.');
 });
+
+// Function to process referral
+async function processReferral(userId, startParam) {
+  try {
+    // Check if this is a referral (start parameter begins with "ref")
+    if (startParam && startParam.startsWith('ref')) {
+      const referrerId = startParam.replace('ref', '');
+      
+      // Check if we've already processed this referral
+      const referralKey = `referralProcessed_${userId}`;
+      
+      // Get referral bonus amount from settings
+      const referralConfig = { friendInvitePoints: 20 }; // Default value
+      const bonusAmount = parseInt(referralConfig.friendInvitePoints) || 20;
+      
+      // Use UserManager to handle the referral
+      const referrer = getUser(referrerId);
+      if (referrer) {
+        updateUserBalance(referrerId, bonusAmount);
+        incrementUserInvites(referrerId);
+        
+        console.log(`Referral bonus of ${bonusAmount} points awarded to user ${referrerId} for referring user ${userId}`);
+        
+        // Notify admin about the referral
+        bot.sendMessage(adminId, `🎉 New referral! User ${userId} was referred by ${referrerId}. ${bonusAmount} points awarded.`);
+      } else {
+        console.log(`Referrer ${referrerId} not found in database`);
+      }
+    }
+    
+    return { success: true, message: 'Referral processed' };
+  } catch (error) {
+    console.error('Error processing referral:', error);
+    throw error;
+  }
+}
 
 // Serve the main page
 app.get('/', (req, res) => {
