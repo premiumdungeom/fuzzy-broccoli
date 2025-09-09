@@ -20,6 +20,12 @@ const adminId = '5650788149';
 const bot = new TelegramBot(botToken);
 // Note: Removed { polling: true } to prevent automatic polling
 
+// Channel configuration - use actual channel usernames (without @)
+const channels = {
+  'Channel 1': -1002586398527, // Your actual channel username
+  'Channel 2': -1002858278191      // Your actual channel username
+};
+
 // User storage file
 const USER_DATA_FILE = './users.json';
 
@@ -162,6 +168,7 @@ bot.onText(/\/start$/, (msg) => {
 });
 
 // Function to process referral
+// Function to process referral
 async function processReferral(userId, startParam) {
   try {
     // Check if this is a referral (start parameter begins with "ref")
@@ -170,16 +177,43 @@ async function processReferral(userId, startParam) {
       
       // Check if we've already processed this referral
       const referralKey = `referralProcessed_${userId}`;
+      const alreadyProcessed = localStorage.getItem(referralKey);
+      
+      if (alreadyProcessed) {
+        console.log(`Referral already processed for user ${userId}`);
+        return { success: true, message: 'Referral already processed' };
+      }
       
       // Get referral bonus amount from settings
       const referralConfig = { friendInvitePoints: 20 }; // Default value
       const bonusAmount = parseInt(referralConfig.friendInvitePoints) || 20;
       
       // Use UserManager to handle the referral
-      const referrer = getUser(referrerId);
+      const users = loadUsers();
+      const referrer = users[referrerId];
+      
       if (referrer) {
-        updateUserBalance(referrerId, bonusAmount);
-        incrementUserInvites(referrerId);
+        // Update referrer's balance and invites
+        users[referrerId].balance = (users[referrerId].balance || 0) + bonusAmount;
+        users[referrerId].invites = (users[referrerId].invites || 0) + 1;
+        
+        // Update referred user's record
+        if (!users[userId]) {
+          users[userId] = {
+            id: userId,
+            referred_by: referrerId,
+            balance: 0,
+            invites: 0,
+            join_date: new Date().toISOString()
+          };
+        } else {
+          users[userId].referred_by = referrerId;
+        }
+        
+        saveUsers(users);
+        
+        // Mark as processed
+        localStorage.setItem(referralKey, 'true');
         
         console.log(`Referral bonus of ${bonusAmount} points awarded to user ${referrerId} for referring user ${userId}`);
         
@@ -256,6 +290,7 @@ app.get('/api/telegram/start', async (req, res) => {
 
 // 
 // API endpoint to check if user is member of channels
+// API endpoint to check if user is member of channels
 app.get('/api/telegram/check-membership', async (req, res) => {
   const { userId, channelNames } = req.query;
   
@@ -270,6 +305,21 @@ app.get('/api/telegram/check-membership', async (req, res) => {
     
     const membershipStatus = {};
     const numericUserId = parseInt(userId);
+
+    // Check if user exists in database first
+    const users = loadUsers();
+    const user = users[numericUserId];
+    
+    // If user doesn't exist yet (referred user), create basic entry
+    if (!user) {
+      users[numericUserId] = {
+        id: numericUserId,
+        balance: 0,
+        invites: 0,
+        join_date: new Date().toISOString()
+      };
+      saveUsers(users);
+    }
 
     for (const channelUsername of channelsArray) {
       try {
