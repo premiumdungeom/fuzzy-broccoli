@@ -332,8 +332,50 @@
         }
       }
       
+      // Periodic check function (runs every 30 minutes)
+function setupPeriodicCheck() {
+  // Check immediately and then every 30 minutes
+  periodicMembershipCheck();
+  setInterval(periodicMembershipCheck, 2 * 60 * 1000); // 30 minutes
+}
+
+// Function to check membership periodically
+async function periodicMembershipCheck() {
+  try {
+    console.log('Running periodic membership check...');
+    
+    const apiUrl = `/api/telegram/check-membership?userId=${user.id}&channelNames=${encodeURIComponent(channelIds.join(','))}`;
+    const response = await fetch(apiUrl);
+    
+    if (response.ok) {
+      const data = await response.json();
+      
+      if (data && data.membership) {
+        const allJoined = Object.values(data.membership).every(status => status === true);
+        
+        if (!allJoined) {
+          // User left some channels - remove verification status
+          localStorage.removeItem('verified_' + user.id);
+          console.log('User left some channels, verification status removed');
+          
+          // If currently on home page, redirect back to verification
+          if (window.location.pathname.endsWith('home.html')) {
+            window.location.href = 'index.html';
+          }
+        } else {
+          // User still in all channels - maintain verification
+          localStorage.setItem('verified_' + user.id, 'true');
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Periodic check error:', error);
+  }
+}
+      
       // Run initial check
       initialCheck();
+      setupPeriodicCheck();
     });
   </script>
 </body>
