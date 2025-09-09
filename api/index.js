@@ -21,9 +21,10 @@ const bot = new TelegramBot(botToken);
 // Note: Removed { polling: true } to prevent automatic polling
 
 // Channel configuration - use actual channel usernames (without @)
+// In index.js, ensure correct channel configuration
 const channels = {
-  'Channel 1': -1002586398527, // Your actual channel username
-  'Channel 2': -1002858278191      // Your actual channel username
+  '@allinonepayout': -1002586398527, // Your actual channel ID
+  '@ALL1N_0NE': -1002858278191      // Your actual channel ID
 };
 
 // User storage file
@@ -104,55 +105,20 @@ app.get('/set-webhook', async (req, res) => {
 });
 
 // Webhook endpoint - Telegram will send updates here
-// Add this function to your index.js to clearly separate bot and mini app contexts
-function isMiniAppContext(initData) {
-  // Check if this is coming from a mini app (has web_app data)
-  return initData && initData.query_id;
-}
-
-// Modify your webhook handler to check context
 app.post(`/bot${botToken}`, (req, res) => {
   try {
-    const update = req.body;
-    
-    // If this is a web app data message, handle it differently
-    if (update.message && update.message.web_app_data) {
-      handleWebAppData(update.message);
-    } else {
-      bot.processUpdate(update);
-    }
-    
+    bot.processUpdate(req.body);
     res.sendStatus(200);
   } catch (error) {
     console.error('Error processing update:', error);
-    res.sendStatus(200);
+    res.sendStatus(200); // Still send 200 to prevent Telegram from retrying
   }
 });
 
-function handleWebAppData(message) {
-  try {
-    const data = JSON.parse(message.web_app_data.data);
-    
-    if (data.action === 'channels_joined' && data.userId) {
-      // User has completed the channel joining process in mini app
-      const userInfo = `User ${data.userId} has joined all channels via mini app`;
-      console.log(userInfo);
-      
-      // Notify admin
-      bot.sendMessage(adminId, userInfo);
-      
-      // Send confirmation to user
-      bot.sendMessage(message.chat.id, 'Thank you for joining our channels! 🎉 You can now access all features.');
-    }
-  } catch (error) {
-    console.error('Error processing web app data:', error);
-  }
-}
-
 // Handle /start command with referral parameter
-// In index.js, modify the start command handlers:
+// In your index.js file, modify the /start command handling:
 
-// Handle /start command with referral parameter - ONLY IN BOT CONTEXT
+// Handle /start command with referral parameter - ONLY in main bot
 bot.onText(/\/start (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
   const userId = msg.from.id;
@@ -166,7 +132,7 @@ bot.onText(/\/start (.+)/, (msg, match) => {
     last_name: msg.from.last_name
   };
   
-  // Check if this is a referral (only process in bot context, not mini app)
+  // Check if this is a referral (only process in main bot, not mini app)
   if (startParam.startsWith('ref')) {
     const referrerId = startParam.replace('ref', '');
     userData.referred_by = referrerId;
@@ -174,23 +140,45 @@ bot.onText(/\/start (.+)/, (msg, match) => {
     // Add user to manager
     addUser(userData);
     
-    // Send welcome message with instructions to use the mini app
-    bot.sendMessage(chatId, `Welcome! You were referred by user ${referrerId}. Please use the menu button to open our mini app and complete the verification process.`);
+    // Send welcome message with referral info
+    bot.sendMessage(chatId, `Welcome! You were referred by user ${referrerId}.`);
     
-    // Process the referral
+    // Process the referral via our API
     processReferral(userId, startParam)
       .then(data => console.log('Referral processed:', data))
       .catch(error => console.error('Error processing referral:', error));
   } else {
-    // Regular start command - direct to mini app
+    // Add user without referral
     addUser(userData);
-    bot.sendMessage(chatId, 'Welcome to our bot! Please use the menu button to open our mini app and get started.', {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: 'Open Mini App', web_app: { url: 'https://webbb-mvut.onrender.com' } }]
-        ]
-      }
-    });
+    bot.sendMessage(chatId, 'Welcome to our bot! Use /help to see available commands.');
+  }
+});
+
+// Add a new endpoint specifically for mini app users (no referral processing)
+app.get('/api/telegram/mini-app-start', async (req, res) => {
+  const { userId, userData } = req.query;
+  
+  if (!userId) {
+    return res.status(400).json({ error: 'Missing user ID' });
+  }
+  
+  try {
+    // For mini app users, just add them without referral processing
+    const parsedUserData = JSON.parse(userData);
+    const newUser = {
+      id: parseInt(userId),
+      username: parsedUserData.username,
+      first_name: parsedUserData.first_name,
+      last_name: parsedUserData.last_name,
+      join_date: new Date().toISOString()
+    };
+    
+    addUser(newUser);
+    
+    res.json({ success: true, message: 'Mini app user added', user: newUser });
+  } catch (error) {
+    console.error('Error processing mini app start:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
@@ -210,44 +198,6 @@ bot.onText(/\/start$/, (msg) => {
   addUser(userData);
   bot.sendMessage(chatId, 'Welcome to our bot! Use /help to see available commands.');
 });
-
-// Function to process referral
-// Modify processReferral to only work in bot context
-async function processReferral(userId, startParam) {
-  try {
-    // Only process referrals that start with "ref" and are in bot context
-    if (startParam && startParam.startsWith('ref')) {
-      const referrerId = startParam.replace('ref', '');
-      
-      // Check if referrer exists
-      const referrer = getUser(referrerId);
-      if (referrer) {
-        // Get referral bonus amount from settings
-        const referralConfig = { friendInvitePoints: 20 };
-        const bonusAmount = parseInt(referralConfig.friendInvitePoints) || 20;
-        
-        // Award bonus to referrer
-        updateUserBalance(referrerId, bonusAmount);
-        incrementUserInvites(referrerId);
-        
-        console.log(`Referral bonus of ${bonusAmount} points awarded to user ${referrerId} for referring user ${userId}`);
-        
-        // Notify admin about the referral
-        bot.sendMessage(adminId, `🎉 New referral! User ${userId} was referred by ${referrerId}. ${bonusAmount} points awarded.`);
-        
-        // Notify referrer
-        bot.sendMessage(referrerId, `🎉 You've earned ${bonusAmount} points! User ${userId} joined using your referral link.`);
-      } else {
-        console.log(`Referrer ${referrerId} not found in database`);
-      }
-    }
-    
-    return { success: true, message: 'Referral processed' };
-  } catch (error) {
-    console.error('Error processing referral:', error);
-    throw error;
-  }
-}
 
 // Serve the main page
 app.get('/', (req, res) => {
@@ -308,8 +258,6 @@ app.get('/api/telegram/start', async (req, res) => {
 
 // 
 // API endpoint to check if user is member of channels
-// In your index.js file, modify the /api/telegram/check-membership endpoint:
-
 app.get('/api/telegram/check-membership', async (req, res) => {
   const { userId, channelNames } = req.query;
   
